@@ -33,6 +33,7 @@
             button2 = new Button();
             button3 = new Button();
             button4 = new Button();
+            button5 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -40,7 +41,7 @@
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
-            pictureBox1.Location = new Point(219, 32);
+            pictureBox1.Location = new Point(213, 32);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(529, 380);
             pictureBox1.TabIndex = 0;
@@ -85,15 +86,26 @@
             button4.Name = "button4";
             button4.Size = new Size(115, 44);
             button4.TabIndex = 4;
-            button4.Text = "button4";
+            button4.Text = "Выбрать картинку";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(55, 368);
+            button5.Name = "button5";
+            button5.Size = new Size(115, 44);
+            button5.TabIndex = 5;
+            button5.Text = "Заполнить картинкой";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
@@ -113,5 +125,6 @@
         private Button button2;
         private Button button3;
         private Button button4;
+        private Button button5;
     }
 }

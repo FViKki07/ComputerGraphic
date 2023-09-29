@@ -17,9 +17,10 @@ namespace Laba3
         bool DrawLine;
         Point? prev;
         Graphics g;
-        Point? mouseCoord;
         bool FillFigurebyColor;
+        bool ImageLoad = true;
         TextureBrush textureBrush;
+        HashSet<Point> visited = new HashSet<Point>();
 
         public Form2()
         {
@@ -40,15 +41,21 @@ namespace Laba3
         {
             // mouseCoord = e.Location;
             prev = e.Location;
-            if (DrawLine)
+            if (button1.Focused)
             {
                 pictureBox1_MouseMove(sender, e);
                 pictureBox1.Invalidate();
             }
-            if (FillFigurebyColor)
+            if (button2.Focused)
             {
                 ColorFill(e.Location, Color.Red, Color.Black);
                 pictureBox1.Invalidate();
+            }
+            if (textureBrush != null && button5.Focused)
+            {
+                ImageFill(e.Location, Color.Black);
+                pictureBox1.Invalidate();
+                visited.Clear();
             }
         }
 
@@ -76,6 +83,8 @@ namespace Laba3
 
         private bool IsWindowBorder(Point p)
         {
+
+            //return pictureBox1.ClientRectangle.Contains(p);
             return (p.X <= 0) || (p.X >= bmp.Width) || (p.Y <= 0) || (p.Y >= bmp.Height);
         }
 
@@ -92,16 +101,16 @@ namespace Laba3
 
         private void ColorFill(Point current, Color colorFill, Color colorBorder)
         {
-            bmp = (Bitmap)pictureBox1.Image;
 
             if (IsBorder(current, colorBorder) || colorFill.ToArgb() == ((Bitmap)(pictureBox1.Image)).GetPixel(current.X, current.Y).ToArgb())
                 return;
+
 
             int left = current.X;
 
             while (!IsBorder(new Point(left, current.Y), colorBorder))
             {
-                bmp.SetPixel(left, current.Y, colorFill);
+                //bmp.SetPixel(left, current.Y, colorFill);
                 left--;
             }
             left++;
@@ -109,11 +118,12 @@ namespace Laba3
             int right = current.X;
             while (!IsBorder(new Point(right, current.Y), colorBorder))
             {
-                bmp.SetPixel(right, current.Y, colorFill);
+                //bmp.SetPixel(right, current.Y, colorFill);
                 right++;
             }
             right--;
 
+            g.DrawLine(new Pen(Color.Red), new Point(left, current.Y), new Point(right, current.Y));
 
             for (int x = left; x <= right; x++)
             {
@@ -130,6 +140,7 @@ namespace Laba3
         {
             g.Clear(Color.White);
             pictureBox1.Invalidate();
+            DrawLine = false;
         }
 
         private void Form2_SizeChanged(object sender, EventArgs e)
@@ -144,10 +155,56 @@ namespace Laba3
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Изображения (*.jpg; *.png; *.bmp)|*.jpg;*.png;*.bmp|Все файлы (*.*)|*.*";
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK){
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
                 Image img = Image.FromFile(openFileDialog.FileName);
                 textureBrush = new TextureBrush(img);
             }
+            DrawLine = false;
+        }
+
+        private void ImageFill(Point current, Color colorBorder)
+        {
+
+            if (visited.Contains(current) || IsBorder(current, colorBorder))
+                return;
+
+            int left = current.X;
+
+            while (!IsBorder(new Point(left, current.Y), colorBorder))
+            {
+                //bmp.SetPixel(left, current.Y, colorFill);
+                left--;
+            }
+            left++;
+
+            int right = current.X;
+            while (!IsBorder(new Point(right, current.Y), colorBorder))
+            {
+                //bmp.SetPixel(right, current.Y, colorFill);
+                right++;
+            }
+            right--;
+
+            g.FillRectangle(textureBrush, left, current.Y, Math.Abs(right - left) + 1, 1);
+            for (int i = left; i <= right; ++i)
+                visited.Add(new Point(i, current.Y));
+
+            for (int x = left; x <= right; x++)
+            {
+                ImageFill(new Point(x, current.Y - 1), colorBorder);
+            }
+
+            for (int x = left; x <= right; x++)
+            {
+                ImageFill(new Point(x, current.Y + 1), colorBorder);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            DrawLine = false;
+            //ImageLoad = true;
         }
     }
 }

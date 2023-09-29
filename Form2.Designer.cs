@@ -38,6 +38,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Location = new Point(219, 32);
             pictureBox1.Name = "pictureBox1";
@@ -46,10 +47,10 @@
             pictureBox1.TabStop = false;
             pictureBox1.MouseDown += pictureBox1_MouseDown;
             pictureBox1.MouseMove += pictureBox1_MouseMove;
+            pictureBox1.MouseUp += pictureBox1_MouseUp;
             // 
             // button1
             // 
-            button1.Enabled = false;
             button1.Location = new Point(55, 44);
             button1.Name = "button1";
             button1.Size = new Size(115, 44);
@@ -60,33 +61,33 @@
             // 
             // button2
             // 
-            button2.Enabled = false;
             button2.Location = new Point(55, 128);
             button2.Name = "button2";
             button2.Size = new Size(115, 44);
             button2.TabIndex = 2;
-            button2.Text = "button2";
+            button2.Text = "Заливка";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
-            button3.Enabled = false;
-            button3.Location = new Point(55, 216);
+            button3.Location = new Point(55, 208);
             button3.Name = "button3";
             button3.Size = new Size(115, 44);
             button3.TabIndex = 3;
-            button3.Text = "button3";
+            button3.Text = "Очистить";
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // button4
             // 
-            button4.Enabled = false;
             button4.Location = new Point(55, 289);
             button4.Name = "button4";
             button4.Size = new Size(115, 44);
             button4.TabIndex = 4;
             button4.Text = "button4";
             button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // Form2
             // 
@@ -100,6 +101,7 @@
             Controls.Add(pictureBox1);
             Name = "Form2";
             Text = "Form2";
+            SizeChanged += Form2_SizeChanged;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

@@ -16,3 +16,21 @@ D:\Вика\Универ\4\Комп графика\Laba3\obj\Debug\net6.0-window
 D:\Вика\Универ\4\Комп графика\Laba3\obj\Debug\net6.0-windows\Laba3.genruntimeconfig.cache
 D:\Вика\Универ\4\Комп графика\Laba3\obj\Debug\net6.0-windows\ref\Laba3.dll
 D:\Вика\Универ\4\Комп графика\Laba3\obj\Debug\net6.0-windows\Laba3.Form2.resources
+C:\Users\lobch\Source\Repos\Laba3\bin\Debug\net6.0-windows\Laba3.exe
+C:\Users\lobch\Source\Repos\Laba3\bin\Debug\net6.0-windows\Laba3.deps.json
+C:\Users\lobch\Source\Repos\Laba3\bin\Debug\net6.0-windows\Laba3.runtimeconfig.json
+C:\Users\lobch\Source\Repos\Laba3\bin\Debug\net6.0-windows\Laba3.dll
+C:\Users\lobch\Source\Repos\Laba3\bin\Debug\net6.0-windows\Laba3.pdb
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.Form1.resources
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.Form2.resources
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.Form3.resources
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.csproj.GenerateResource.cache
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.AssemblyInfoInputs.cache
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.AssemblyInfo.cs
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.csproj.CoreCompileInputs.cache
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.dll
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\refint\Laba3.dll
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.pdb
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\Laba3.genruntimeconfig.cache
+C:\Users\lobch\Source\Repos\Laba3\obj\Debug\net6.0-windows\ref\Laba3.dll

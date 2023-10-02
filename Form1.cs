@@ -20,5 +20,14 @@ namespace Laba3
             form3.Show();
 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form4 form4 = new Form4();
+            form4.Show();
+
+        }
+
+
     }
 }

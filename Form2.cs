@@ -206,5 +206,6 @@ namespace Laba3
             DrawLine = false;
             //ImageLoad = true;
         }
+
     }
 }

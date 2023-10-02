@@ -56,12 +56,13 @@
             button2.TabIndex = 1;
             button2.Text = "button2";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
             button3.Anchor = AnchorStyles.None;
             button3.AutoSize = true;
-            button3.Location = new Point(593, 64);
+            button3.Location = new Point(573, 64);
             button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
             button3.Size = new Size(250, 139);

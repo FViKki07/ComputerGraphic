@@ -59,7 +59,6 @@ namespace Laba3
         Bitmap bmp;
         PictureBox pbox;
         Dictionary<int, GradientColors> dictionary = new Dictionary<int, GradientColors>();
-        bool assrt;
         private class GradientColors
         {
             public int leftX;
@@ -79,10 +78,12 @@ namespace Laba3
         public Form3()
         {
             InitializeComponent();
-            bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(bmp);
             pictureBox1.BackColor = Color.White;
-            assrt = false;
+            CounterSetPoint = 0;
+            pbox = this.pictureBox1;
+            bmp = new Bitmap(pbox.Width, pbox.Height);
+            pictureBox1.Image = bmp;
+            g = Graphics.FromImage(bmp);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -123,15 +124,9 @@ namespace Laba3
             //   return;
             if (CounterSetPoint > 2)
             {
-            
+
                 CreateGradient();
             }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            assrt = true;
-            pictureBox1.Invalidate();
         }
 
         private Color LerpRGB(Color color1, Color color2)
@@ -265,5 +260,12 @@ namespace Laba3
             }
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+           // g.Clear(Color.White);
+           // pictureBox1.Invalidate();
+          //  pictureBox1.Image = bmp;
+
+        }
     }
 }

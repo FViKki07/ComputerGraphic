@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button4 = new Button();
             pictureBox1 = new PictureBox();
             colorDialog1 = new ColorDialog();
             colorDialog2 = new ColorDialog();
@@ -36,20 +35,9 @@
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
+            button4 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
-            // 
-            // button4
-            // 
-            button4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            button4.Font = new Font("Segoe UI Semibold", 13.8F, FontStyle.Bold, GraphicsUnit.Point);
-            button4.Location = new Point(38, 261);
-            button4.Name = "button4";
-            button4.Size = new Size(114, 61);
-            button4.TabIndex = 3;
-            button4.Text = "Ок";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
             // 
             // pictureBox1
             // 
@@ -92,16 +80,26 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // button4
+            // 
+            button4.Location = new Point(50, 291);
+            button4.Name = "button4";
+            button4.Size = new Size(105, 36);
+            button4.TabIndex = 8;
+            button4.Text = "очистить";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(pictureBox1);
-            Controls.Add(button4);
             Name = "Form3";
             Text = "Form3";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -109,7 +107,6 @@
         }
 
         #endregion
-        private Button button4;
         private PictureBox pictureBox1;
         private ColorDialog colorDialog1;
         private ColorDialog colorDialog2;
@@ -117,5 +114,6 @@
         private Button button1;
         private Button button2;
         private Button button3;
+        private Button button4;
     }
 }

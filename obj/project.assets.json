@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lobch\\Source\\Repos\\Laba3\\Laba3.csproj",
+      "projectUniqueName": "C:\\Users\\lobch\\OneDrive\\Документы\\GitHub\\Laba3\\Laba3.csproj",
       "projectName": "Laba3",
-      "projectPath": "C:\\Users\\lobch\\Source\\Repos\\Laba3\\Laba3.csproj",
+      "projectPath": "C:\\Users\\lobch\\OneDrive\\Документы\\GitHub\\Laba3\\Laba3.csproj",
       "packagesPath": "C:\\Users\\lobch\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lobch\\Source\\Repos\\Laba3\\obj\\",
+      "outputPath": "C:\\Users\\lobch\\OneDrive\\Документы\\GitHub\\Laba3\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lobch\\AppData\\Roaming\\NuGet\\NuGet.Config",

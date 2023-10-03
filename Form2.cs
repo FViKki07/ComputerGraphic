@@ -21,7 +21,8 @@ namespace Laba3
         bool ImageLoad = true;
         TextureBrush textureBrush;
         HashSet<Point> visited = new HashSet<Point>();
-        Color colorFill;
+        Color selectedColor;
+        Color borderColor;
 
         public Form2()
         {
@@ -29,34 +30,35 @@ namespace Laba3
             bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(pictureBox1.Image);
-            colorFill = Color.Red;
-            button6.BackColor = colorFill;
             g.Clear(Color.White);
+            selectedColor = Color.Red;
+            button6.BackColor = selectedColor;
+            borderColor = Color.Black;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             DrawLine = true;
-            //FillFigurebyColor = false;
+            FillFigurebyColor = false;
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             // mouseCoord = e.Location;
             prev = e.Location;
-            if (DrawLine)
+            if (button1.Focused)
             {
                 pictureBox1_MouseMove(sender, e);
                 pictureBox1.Invalidate();
             }
             if (button2.Focused)
             {
-                ColorFill(e.Location, colorFill, Color.Black);
+                ColorFill(e.Location, selectedColor, borderColor);
                 pictureBox1.Invalidate();
             }
             if (textureBrush != null && button5.Focused)
             {
-                ImageFill(e.Location, Color.Black);
+                ImageFill(e.Location, borderColor);
                 pictureBox1.Invalidate();
                 visited.Clear();
             }
@@ -66,7 +68,7 @@ namespace Laba3
         {
             if (prev != null && DrawLine)
             {
-                g.DrawLine(new Pen(Color.FromArgb(255, 0, 0, 0), 1), prev.Value, e.Location);
+                g.DrawLine(new Pen(borderColor), prev.Value, e.Location);
                 prev = e.Location;
                 pictureBox1.Invalidate();
             }
@@ -80,7 +82,7 @@ namespace Laba3
 
         private void button2_Click(object sender, EventArgs e)
         {
-           // FillFigurebyColor = true;
+            FillFigurebyColor = true;
             DrawLine = false;
         }
 
@@ -207,20 +209,18 @@ namespace Laba3
         private void button5_Click(object sender, EventArgs e)
         {
             DrawLine = false;
-            //ImageLoad = true;
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            ColorDialog clrDialog = new ColorDialog();
+            ColorDialog colorDialog = new ColorDialog();
             DrawLine = false;
-            //show the colour dialog and check that user clicked ok
-            if (clrDialog.ShowDialog() == DialogResult.OK)
+            if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                //save the colour that the user chose
-                colorFill = clrDialog.Color;
+                selectedColor = colorDialog.Color;
+                button6.BackColor = selectedColor;
+
             }
-            button6.BackColor = colorFill;
         }
     }
 }

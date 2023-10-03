@@ -21,6 +21,8 @@ namespace Laba3
         bool ImageLoad = true;
         TextureBrush textureBrush;
         HashSet<Point> visited = new HashSet<Point>();
+        Color selectedColor;
+        Color borderColor;
 
         public Form2()
         {
@@ -29,6 +31,10 @@ namespace Laba3
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(pictureBox1.Image);
             g.Clear(Color.White);
+            selectedColor = Color.Red;
+            button6.BackColor = selectedColor;
+            borderColor = Color.Black;
+            button7.BackColor = borderColor;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,12 +54,12 @@ namespace Laba3
             }
             if (button2.Focused)
             {
-                ColorFill(e.Location, Color.Red, Color.Black);
+                ColorFill(e.Location, selectedColor, borderColor);
                 pictureBox1.Invalidate();
             }
             if (textureBrush != null && button5.Focused)
             {
-                ImageFill(e.Location, Color.Black);
+                ImageFill(e.Location, borderColor);
                 pictureBox1.Invalidate();
                 visited.Clear();
             }
@@ -63,7 +69,7 @@ namespace Laba3
         {
             if (prev != null && DrawLine)
             {
-                g.DrawLine(new Pen(Color.FromArgb(255, 0, 0, 0), 1), prev.Value, e.Location);
+                g.DrawLine(new Pen(borderColor), prev.Value, e.Location);
                 prev = e.Location;
                 pictureBox1.Invalidate();
             }
@@ -123,7 +129,7 @@ namespace Laba3
             }
             right--;
 
-            g.DrawLine(new Pen(Color.Red), new Point(left, current.Y), new Point(right, current.Y));
+            g.DrawLine(new Pen(colorFill), new Point(left, current.Y), new Point(right, current.Y));
 
             for (int x = left; x <= right; x++)
             {
@@ -205,6 +211,38 @@ namespace Laba3
         {
             DrawLine = false;
             //ImageLoad = true;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            DrawLine = false;
+            // Откройте диалоговое окно выбора цвета
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                // Получите выбранный цвет
+                selectedColor = colorDialog.Color;
+
+                // Установите цвет кнопки на выбранный цвет
+                button6.BackColor = selectedColor;
+
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            ColorDialog colorDialog = new ColorDialog();
+            DrawLine = false;
+            // Откройте диалоговое окно выбора цвета
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                // Получите выбранный цвет
+                borderColor = colorDialog.Color;
+
+                // Установите цвет кнопки на выбранный цвет
+                button7.BackColor = borderColor;
+
+            }
         }
     }
 }

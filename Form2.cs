@@ -34,7 +34,6 @@ namespace Laba3
             selectedColor = Color.Red;
             button6.BackColor = selectedColor;
             borderColor = Color.Black;
-            button7.BackColor = borderColor;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -210,37 +209,16 @@ namespace Laba3
         private void button5_Click(object sender, EventArgs e)
         {
             DrawLine = false;
-            //ImageLoad = true;
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             ColorDialog colorDialog = new ColorDialog();
             DrawLine = false;
-            // Откройте диалоговое окно выбора цвета
             if (colorDialog.ShowDialog() == DialogResult.OK)
             {
-                // Получите выбранный цвет
                 selectedColor = colorDialog.Color;
-
-                // Установите цвет кнопки на выбранный цвет
                 button6.BackColor = selectedColor;
-
-            }
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            DrawLine = false;
-            // Откройте диалоговое окно выбора цвета
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                // Получите выбранный цвет
-                borderColor = colorDialog.Color;
-
-                // Установите цвет кнопки на выбранный цвет
-                button7.BackColor = borderColor;
 
             }
         }

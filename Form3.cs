@@ -84,26 +84,39 @@ namespace Laba3
             bmp = new Bitmap(pbox.Width, pbox.Height);
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(bmp);
+            colors[0] = Color.Brown;
+            colors[1] = Color.Blue;
+            colors[2] = Color.Red;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            chooseColor1();
+        }
+
+        private void chooseColor1()
+        {
             colorDialog1.ShowDialog();
             colors[0] = colorDialog1.Color;
         }
-
         private void button2_Click(object sender, EventArgs e)
+        {
+            chooseColor2();
+        }
+        private void chooseColor2()
         {
             colorDialog2.ShowDialog();
             colors[1] = colorDialog2.Color;
         }
-
         private void button3_Click(object sender, EventArgs e)
+        {
+            chooseColor3();
+        }
+        private void chooseColor3()
         {
             colorDialog3.ShowDialog();
             colors[2] = colorDialog3.Color;
         }
-
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (CounterSetPoint > 2)
@@ -122,7 +135,7 @@ namespace Laba3
         {
             //if (!assrt)
             //   return;
-            if (CounterSetPoint > 2)
+            if (CounterSetPoint == 3)
             {
 
                 CreateGradient();
@@ -262,9 +275,12 @@ namespace Laba3
 
         private void button4_Click(object sender, EventArgs e)
         {
-            // g.Clear(Color.White);
-            // pictureBox1.Invalidate();
-            //  pictureBox1.Image = bmp;
+            CounterSetPoint = 0;
+            Array.Clear(points, 0, points.Length);
+            bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            g = Graphics.FromImage(bmp);
+            pictureBox1.Image = bmp;
+            pictureBox1.Invalidate();
 
         }
     }

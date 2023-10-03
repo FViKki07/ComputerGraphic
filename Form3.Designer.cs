@@ -30,8 +30,6 @@
         {
             pictureBox1 = new PictureBox();
             colorDialog1 = new ColorDialog();
-            colorDialog2 = new ColorDialog();
-            colorDialog3 = new ColorDialog();
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
@@ -109,8 +107,6 @@
         #endregion
         private PictureBox pictureBox1;
         private ColorDialog colorDialog1;
-        private ColorDialog colorDialog2;
-        private ColorDialog colorDialog3;
         private Button button1;
         private Button button2;
         private Button button3;

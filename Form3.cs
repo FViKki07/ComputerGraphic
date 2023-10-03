@@ -91,35 +91,27 @@ namespace Laba3
 
         private void button1_Click(object sender, EventArgs e)
         {
-            chooseColor1();
+            chooseColor(0);
         }
 
-        private void chooseColor1()
-        {
-            colorDialog1.ShowDialog();
-            colors[0] = colorDialog1.Color;
-        }
         private void button2_Click(object sender, EventArgs e)
         {
-            chooseColor2();
-        }
-        private void chooseColor2()
-        {
-            colorDialog2.ShowDialog();
-            colors[1] = colorDialog2.Color;
+            chooseColor(1);
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            chooseColor3();
+            chooseColor(2);
         }
-        private void chooseColor3()
+
+        private void chooseColor(int index)
         {
-            colorDialog3.ShowDialog();
-            colors[2] = colorDialog3.Color;
+            colorDialog1.ShowDialog();
+            colors[index] = colorDialog1.Color;
         }
+
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (CounterSetPoint > 2)
+            if (CounterSetPoint == 3)
             {
                 CounterSetPoint = 0;
                 CreateGradient();
@@ -133,8 +125,6 @@ namespace Laba3
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            //if (!assrt)
-            //   return;
             if (CounterSetPoint == 3)
             {
 
@@ -189,6 +179,14 @@ namespace Laba3
 
         private void DrawBordersGradient(Point point1, Point point2, Color color1, Color color2, Dictionary<int, GradientColors> dict)
         {
+            int minY = Math.Min(point1.Y, point2.Y);
+            int maxY = Math.Max(point1.Y, point2.Y);
+
+            if (minY == maxY)
+            {
+                return; // Горизонтальная линия, пропускаем
+            }
+
             step = 0;
             steps = CalculateCountSteps(point1, point2);
 
@@ -258,13 +256,13 @@ namespace Laba3
         }
         private void CreateGradient()
         {
-            Dictionary<int, GradientColors> dict = new Dictionary<int, GradientColors>();
+            dictionary.Clear();
 
-            DrawBordersGradient(points[0], points[1], colors[0], colors[1], dict);
-            DrawBordersGradient(points[0], points[2], colors[0], colors[2], dict);
-            DrawBordersGradient(points[1], points[2], colors[1], colors[2], dict);
+            DrawBordersGradient(points[0], points[1], colors[0], colors[1], dictionary);
+            DrawBordersGradient(points[0], points[2], colors[0], colors[2], dictionary);
+            DrawBordersGradient(points[1], points[2], colors[1], colors[2], dictionary);
 
-            foreach (var t in dict)
+            foreach (var t in dictionary)
             {
                 int y = t.Key;
                 Point pt1 = new Point(t.Value.leftX, y);

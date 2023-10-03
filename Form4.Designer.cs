@@ -42,7 +42,7 @@
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
             pictureBox1.Location = new Point(12, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(517, 390);
+            pictureBox1.Size = new Size(588, 492);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
@@ -50,29 +50,29 @@
             // radioButton1
             // 
             radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(596, 160);
+            radioButton1.Location = new Point(658, 149);
             radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(117, 24);
+            radioButton1.Size = new Size(106, 24);
             radioButton1.TabIndex = 1;
             radioButton1.TabStop = true;
-            radioButton1.Text = "radioButton1";
+            radioButton1.Text = "Брезенхем";
             radioButton1.UseVisualStyleBackColor = true;
             // 
             // radioButton2
             // 
             radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(597, 209);
+            radioButton2.Location = new Point(658, 206);
             radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(117, 24);
+            radioButton2.Size = new Size(48, 24);
             radioButton2.TabIndex = 2;
             radioButton2.TabStop = true;
-            radioButton2.Text = "radioButton2";
+            radioButton2.Text = "ВУ";
             radioButton2.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(591, 116);
+            label1.Location = new Point(649, 103);
             label1.Name = "label1";
             label1.Size = new Size(151, 20);
             label1.TabIndex = 3;
@@ -80,7 +80,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(599, 265);
+            button1.Location = new Point(658, 278);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 4;
@@ -92,7 +92,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(796, 414);
+            ClientSize = new Size(867, 516);
             Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(radioButton2);

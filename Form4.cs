@@ -38,6 +38,7 @@ namespace Laba3
             {
                 BresenhamAlghoritm();
             }
+            else if (radioButton2.Checked) { WuAlghoritm(); }
         }
 
         private void SetPoints(Point p)
@@ -45,13 +46,13 @@ namespace Laba3
             if (!is_start)
             {
                 start_point = new Point(p.X, pictureBox1.Height - p.Y);
-                //g.DrawLine(new Pen(Color.Black), start_point.X, start_point.Y, 1, 1);
+                g.DrawEllipse(new Pen(Color.Black), start_point.X, start_point.Y, 2, 2);
                 is_start = true;
             }
             else
             {
                 end_point = new Point(p.X, pictureBox1.Height - p.Y);
-                //g.DrawLine(new Pen(Color.Black), end_point.X, end_point.Y, 1, 1);
+                g.DrawEllipse(new Pen(Color.Black), end_point.X, end_point.Y, 2, 2);
 
             }
         }
@@ -68,7 +69,6 @@ namespace Laba3
             MouseEventArgs m = (MouseEventArgs)e;
             Point point = m.Location;
 
-            //g.DrawLine(new Pen(Color.Black), point.X, point.Y, 1, 1);
             SetPoints(point);
             if (!end_point.IsEmpty)
             {
@@ -167,5 +167,88 @@ namespace Laba3
             }
         }
 
+        private void DrawWuLineX(Point start, Point end)
+        {
+            float delta_x = end.X - start.X;
+            float delta_y = end.Y - start.Y;
+            float gradient = delta_y / delta_x;
+
+            float y = start.Y + gradient;
+
+            Brush brush;
+            for (int x = start.X + 1; x < end.X; x++)
+            {
+
+                int color = (int)((1 - (y - (int)y)) * 255);
+                Color c = Color.FromArgb(color, 0, 0, 0);
+                brush = (Brush)(new SolidBrush(c));
+                g.FillRectangle(brush, x, (int)y, 2, 2);
+
+                color = (int)((y - (int)y) * 255);
+                c = Color.FromArgb(color, 0, 0, 0);
+                brush = (Brush)(new SolidBrush(c));
+                g.FillRectangle(brush, x, (int)y + 1, 2, 2);
+
+                brush.Dispose();
+
+                y += gradient;
+            }
+        }
+
+        private void DrawWuLineY(Point start, Point end)
+        {
+            float delta_x = end.X - start.X;
+            float delta_y = end.Y - start.Y;
+            float gradient = delta_x / delta_y;
+
+            float x = start.X + gradient;
+
+            Brush brush;
+            for (int y = start.Y + 1; y < end.Y; y++)
+            {
+                int color = (int)((1 - (x - (int)x)) * 255);
+                Color c = Color.FromArgb(color, 0, 0, 0);
+                brush = (Brush)(new SolidBrush(c));
+                g.FillRectangle(brush, (int)x, y, 2, 2);
+
+                color = (int)((x - (int)x) * 255);
+                c = Color.FromArgb(color, 0, 0, 0);
+                brush = (Brush)(new SolidBrush(c));
+                g.FillRectangle(brush, (int)x + 1, y, 2, 2);
+
+                brush.Dispose();
+
+                x += gradient;
+            }
+        }
+
+
+
+        private void WuAlghoritm()
+        {
+            if (Math.Abs(start_point.Y - end_point.Y) < Math.Abs(start_point.X - end_point.X))
+            {
+                if (start_point.X > end_point.X)
+                {
+                    DrawWuLineX(end_point, start_point);
+                }
+                else
+                {
+                    DrawWuLineX(start_point, end_point);
+                }
+            }
+            else
+            {
+                if (start_point.Y > end_point.Y)
+                {
+                    DrawWuLineY(end_point, start_point);
+                }
+                else
+                {
+                    DrawWuLineY(start_point, end_point);
+                }
+
+            }
+        }
     }
 }

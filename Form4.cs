@@ -142,9 +142,9 @@ namespace Laba3
 
         private void BresenhamAlghoritm()
         {
-            if (Math.Abs(start_point.Y - end_point.Y) < Math.Abs(start_point.X - end_point.X))
+            if (Math.Abs(start_point.Y - end_point.Y) < Math.Abs(start_point.X - end_point.X)) // наклон ближе к х
             {
-                if (start_point.X > end_point.X)
+                if (start_point.X > end_point.X) // справа налево
                 {
                     DrawLineBresenhamX(end_point, start_point);
                 }
@@ -153,7 +153,7 @@ namespace Laba3
                     DrawLineBresenhamX(start_point, end_point);
                 }
             }
-            else
+            else // наклон ближе у
             {
                 if (start_point.Y > end_point.Y)
                 {

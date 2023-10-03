@@ -49,6 +49,7 @@
             button4.TabIndex = 3;
             button4.Text = "Ок";
             button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // pictureBox1
             // 
@@ -59,6 +60,7 @@
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
+            pictureBox1.MouseClick += pictureBox1_MouseClick;
             // 
             // button1
             // 

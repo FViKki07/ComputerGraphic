@@ -5,6 +5,8 @@ using System.Data;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +18,7 @@ namespace Laba3
         Bitmap bmp;
         bool DrawLine;
         Point? prev;
+        Point border;
         Graphics g;
         bool FillFigurebyColor;
         bool ImageLoad = true;
@@ -23,6 +26,7 @@ namespace Laba3
         HashSet<Point> visited = new HashSet<Point>();
         Color selectedColor;
         Color borderColor;
+        bool flag;
 
         public Form2()
         {
@@ -34,6 +38,7 @@ namespace Laba3
             selectedColor = Color.Red;
             button6.BackColor = selectedColor;
             borderColor = Color.Black;
+            flag = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -46,6 +51,7 @@ namespace Laba3
         {
             // mouseCoord = e.Location;
             prev = e.Location;
+            border = e.Location;
             if (button1.Focused)
             {
                 pictureBox1_MouseMove(sender, e);
@@ -61,6 +67,11 @@ namespace Laba3
                 ImageFill(e.Location, borderColor);
                 pictureBox1.Invalidate();
                 visited.Clear();
+            }
+            if (button7.Focused)
+            {
+                selectBorder(Color.Red);
+                pictureBox1.Invalidate();
             }
         }
 
@@ -186,7 +197,6 @@ namespace Laba3
             int right = current.X;
             while (!IsBorder(new Point(right, current.Y), colorBorder))
             {
-                //bmp.SetPixel(right, current.Y, colorFill);
                 right++;
             }
             right--;
@@ -206,6 +216,85 @@ namespace Laba3
             }
         }
 
+        private Point findStartPoint(Point P)
+        {
+            int x = P.X; //border.X;
+            int y = P.Y;//border.Y;
+
+            Color bgColor = bmp.GetPixel(border.X, border.Y);
+            Color currColor = bgColor;
+            while (x < bmp.Width - 2 && currColor.ToArgb() != borderColor.ToArgb())
+            {
+                x++;
+                currColor = bmp.GetPixel(x, y);
+            }
+
+            return new Point(x, y);
+        }
+
+        void printBorder(Color c)
+        {
+            List<Point> pixels = new List<Point>();
+            selectBorder(new Point(border.X, border.Y), ref pixels);
+            List<Point> sortedPoints = pixels.OrderBy(p => p.Y).ThenBy(p => p.X).ToList();
+            pixels.First();
+        }
+        private void selectBorder(Point p, ref List<Point> pixels)
+        {
+            //List<Point> pixels = new List<Point>();
+            Point start = findStartPoint(p);
+            Point cur = start;
+            pixels.Add(start);
+            Color color = bmp.GetPixel(cur.X, cur.Y);
+
+            Point next = new Point();
+            int currPos = 6;
+            int nextPos = -1;
+            int moveTo = 0;
+            while (next != start)
+            {
+                flag = false;
+                moveTo = (currPos - 2 + 8) % 8;
+                int cnst = moveTo;
+                int mt = -1;
+                while (moveTo != mt)
+                {
+                    if(mt != -1 && moveTo == cnst) { return;  }
+                    mt = moveTo;
+                    next = cur;
+                    switch (moveTo)
+                    {
+                        case 0: next.X++; nextPos = 0; break;
+                        case 1: next.X++; next.Y++; nextPos = 1; break;
+                        case 2: next.Y++; nextPos = 2; break;
+                        case 3: next.X--; next.Y++; nextPos = 3; break;
+                        case 4: next.X--; nextPos = 4; break;
+                        case 5: next.X--; next.Y--; nextPos = 5; break;
+                        case 6: next.Y--; nextPos = 6; break;
+                        case 7: next.X++; next.Y--; nextPos = 7; break;
+                    }
+
+                    if (next == start)
+                        break;
+
+                    if (bmp.GetPixel(next.X, next.Y) == color && !pixels.Contains(next) )
+                    {
+                        pixels.Add(next);
+                        cur = next;
+                        currPos = nextPos;
+                        break;
+                    }
+                    moveTo = (moveTo + 1) % 8;
+
+                }
+            }
+
+          
+            /*foreach (var p in pixels)
+                bmp.SetPixel(p.X, p.Y, c);*/
+
+        }
+
         private void button5_Click(object sender, EventArgs e)
         {
             DrawLine = false;
@@ -221,6 +310,11 @@ namespace Laba3
                 button6.BackColor = selectedColor;
 
             }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            DrawLine = false;
         }
     }
 }

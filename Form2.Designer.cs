@@ -35,6 +35,7 @@
             button4 = new Button();
             button5 = new Button();
             button6 = new Button();
+            button7 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(55, 44);
+            button1.Location = new Point(55, 54);
             button1.Name = "button1";
             button1.Size = new Size(115, 44);
             button1.TabIndex = 1;
@@ -63,7 +64,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(55, 128);
+            button2.Location = new Point(55, 117);
             button2.Name = "button2";
             button2.Size = new Size(115, 44);
             button2.TabIndex = 2;
@@ -73,7 +74,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(55, 208);
+            button3.Location = new Point(55, 178);
             button3.Name = "button3";
             button3.Size = new Size(115, 44);
             button3.TabIndex = 3;
@@ -83,7 +84,7 @@
             // 
             // button4
             // 
-            button4.Location = new Point(55, 289);
+            button4.Location = new Point(55, 242);
             button4.Name = "button4";
             button4.Size = new Size(115, 44);
             button4.TabIndex = 4;
@@ -93,7 +94,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(55, 368);
+            button5.Location = new Point(55, 303);
             button5.Name = "button5";
             button5.Size = new Size(115, 44);
             button5.TabIndex = 5;
@@ -110,11 +111,22 @@
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
+            // button7
+            // 
+            button7.Location = new Point(55, 366);
+            button7.Name = "button7";
+            button7.Size = new Size(115, 44);
+            button7.TabIndex = 7;
+            button7.Text = "Граница";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button7);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(button4);
@@ -138,5 +150,6 @@
         private Button button4;
         private Button button5;
         private Button button6;
+        private Button button7;
     }
 }

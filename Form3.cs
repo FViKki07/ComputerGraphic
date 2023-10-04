@@ -126,10 +126,8 @@ namespace Laba3
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (CounterSetPoint == 3)
-            {
-
                 CreateGradient();
-            }
+
         }
 
         private Color LerpRGB(Color color1, Color color2)
@@ -179,13 +177,6 @@ namespace Laba3
 
         private void DrawBordersGradient(Point point1, Point point2, Color color1, Color color2, Dictionary<int, GradientColors> dict)
         {
-            int minY = Math.Min(point1.Y, point2.Y);
-            int maxY = Math.Max(point1.Y, point2.Y);
-
-            if (minY == maxY)
-            {
-                return; // Горизонтальная линия, пропускаем
-            }
 
             step = 0;
             steps = CalculateCountSteps(point1, point2);
@@ -213,7 +204,6 @@ namespace Laba3
                 step++;
 
                 bmp.SetPixel(point1.X, point1.Y, colorForWork);
-                pictureBox1.Invalidate();
 
                 e2 = e1;
 
@@ -238,7 +228,6 @@ namespace Laba3
             {
                 Color colorForWork = LerpRGB(color1, color2);
                 bmp.SetPixel(point1.X, point1.Y, colorForWork);
-                pictureBox1.Invalidate();
 
                 e2 = e1;
                 if (e2 > -deltaX)
@@ -269,6 +258,7 @@ namespace Laba3
                 Point pt2 = new Point(t.Value.rightX, y);
                 DrawOneLineGradient(pt1, pt2, t.Value.leftColor, t.Value.rightColor);
             }
+            pictureBox1.Invalidate();
         }
 
         private void button4_Click(object sender, EventArgs e)

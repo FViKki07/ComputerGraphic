@@ -40,9 +40,9 @@
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            pictureBox1.Location = new Point(203, 12);
+            pictureBox1.Location = new Point(212, 5);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(585, 426);
+            pictureBox1.Size = new Size(753, 551);
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
             pictureBox1.Paint += pictureBox1_Paint;
@@ -92,7 +92,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(977, 568);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);

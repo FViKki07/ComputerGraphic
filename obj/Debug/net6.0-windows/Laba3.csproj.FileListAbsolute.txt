@@ -72,3 +72,4 @@ C:\git\Laba3\obj\Debug\net6.0-windows\Laba3.pdb
 C:\git\Laba3\obj\Debug\net6.0-windows\Laba3.genruntimeconfig.cache
 C:\git\Laba3\obj\Debug\net6.0-windows\ref\Laba3.dll
 C:\git\Laba3\obj\Debug\net6.0-windows\Laba3.Form4.resources
+C:\Users\Viktoria\Documents\GitHub\Laba3\obj\Debug\net6.0-windows\Laba3.Form4.resources

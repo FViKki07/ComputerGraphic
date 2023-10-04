@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
@@ -70,7 +71,8 @@ namespace Laba3
             }
             if (button7.Focused)
             {
-                selectBorder(Color.Red);
+                //selectBorder(Color.Red);
+                printBorder(selectedColor);
                 pictureBox1.Invalidate();
             }
         }
@@ -235,13 +237,49 @@ namespace Laba3
         void printBorder(Color c)
         {
             List<Point> pixels = new List<Point>();
-            selectBorder(new Point(border.X, border.Y), ref pixels);
+            List<Point> newpixels = new List<Point>();
+            selectBorder(new Point(border.X, border.Y), ref pixels, ref newpixels);
             List<Point> sortedPoints = pixels.OrderBy(p => p.Y).ThenBy(p => p.X).ToList();
-            pixels.First();
+            //pixels.First();
+            flag = true;
+            List<Point> newList = pixels.ToList();
+           /* if(sortedPoints.Count() > 0)
+            {
+                Point prev = sortedPoints.First();
+                Point tmp = sortedPoints.First();
+                foreach (Point p in sortedPoints)
+                {
+                    Point next = p;
+                    if(next.Y == prev.Y)
+                    {
+                        tmp = next;
+                    }
+                    else
+                    {
+                        int oldX = prev.X;
+                        int oldY = prev.Y;
+                        while (oldX < bmp.Width && bmp.GetPixel(oldX, oldY).ToArgb() != Color.Black.ToArgb())
+                            oldX++;
+                        if(tmp.X != oldX )
+                        {
+                            selectBorder(new Point(oldX, oldY), ref pixels, ref newpixels);
+                        }
+                        prev = next;
+                    }
+                }
+            }*/
+
+            if (pixels.Count > 0)
+            {
+                foreach (var p in pixels)
+                    bmp.SetPixel(p.X, p.Y, c);
+
+            }
+          
         }
-        private void selectBorder(Point p, ref List<Point> pixels)
+        private void selectBorder(Point p, ref List<Point> newpixels, ref List<Point> pixels)
         {
-            //List<Point> pixels = new List<Point>();
+           //List<Point> newpixels = new List<Point>();
             Point start = findStartPoint(p);
             Point cur = start;
             pixels.Add(start);
@@ -259,7 +297,9 @@ namespace Laba3
                 int mt = -1;
                 while (moveTo != mt)
                 {
-                    if(mt != -1 && moveTo == cnst) { return;  }
+                    if(mt != -1 && moveTo == cnst) { 
+                        pixels.Clear(); 
+                        return;  }
                     mt = moveTo;
                     next = cur;
                     switch (moveTo)
@@ -277,7 +317,7 @@ namespace Laba3
                     if (next == start)
                         break;
 
-                    if (bmp.GetPixel(next.X, next.Y) == color && !pixels.Contains(next) )
+                    if (bmp.GetPixel(next.X, next.Y).ToArgb() == Color.Black.ToArgb() && !pixels.Contains(next) )
                     {
                         pixels.Add(next);
                         cur = next;
@@ -289,7 +329,7 @@ namespace Laba3
                 }
             }
 
-          
+            newpixels = pixels.ToList();
             /*foreach (var p in pixels)
                 bmp.SetPixel(p.X, p.Y, c);*/
 

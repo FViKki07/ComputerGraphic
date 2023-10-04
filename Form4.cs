@@ -85,7 +85,6 @@ namespace Laba3
             pictureBox1.Invalidate();
         }
 
-
         private void DrawLineBresenhamX(Point start, Point end)
         {
             int dx = end.X - start.X;
@@ -108,7 +107,7 @@ namespace Laba3
                     y += yi; // движемся вверх по вертикали
                     delta += 2 * (dy - dx);
                 }
-                else
+                else // двигаемся горизонально
                     delta += 2 * dy;
             }
         }

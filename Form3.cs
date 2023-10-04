@@ -57,7 +57,6 @@ namespace Laba3
         int e1, e2;
 
         Bitmap bmp;
-        PictureBox pbox;
         Dictionary<int, GradientColors> dictionary = new Dictionary<int, GradientColors>();
         private class GradientColors
         {
@@ -80,8 +79,7 @@ namespace Laba3
             InitializeComponent();
             pictureBox1.BackColor = Color.White;
             CounterSetPoint = 0;
-            pbox = this.pictureBox1;
-            bmp = new Bitmap(pbox.Width, pbox.Height);
+            bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(bmp);
             colors[0] = Color.Cyan;
@@ -210,6 +208,7 @@ namespace Laba3
                 step++;
 
                 bmp.SetPixel(point1.X, point1.Y, colorForWork);
+                pictureBox1.Invalidate();
 
                 e2 = e1;
 
@@ -223,6 +222,7 @@ namespace Laba3
                     e1 += deltaX;
                     point1.Y += signY;
                 }
+
             }
         }
         private void DrawOneLineGradient(Point point1, Point point2, Color color1, Color color2)
@@ -254,8 +254,8 @@ namespace Laba3
             dictionary.Clear();
 
             DrawBordersGradient(points[0], points[1], colors[0], colors[1], dictionary);
-            DrawBordersGradient(points[0], points[2], colors[0], colors[2], dictionary);
             DrawBordersGradient(points[1], points[2], colors[1], colors[2], dictionary);
+            DrawBordersGradient(points[2], points[0], colors[2], colors[0], dictionary);
 
             foreach (var t in dictionary)
             {

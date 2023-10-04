@@ -91,7 +91,7 @@ namespace Laba3
             int dx = end.X - start.X;
             int dy = end.Y - start.Y;
 
-            int yi; // направление движения по оси y
+            int yi; // направление движения по оси y, 1 - вверх, -1 - вниз
             if (dy > 0) { yi = 1; }
             else { yi = -1; }
 
@@ -103,9 +103,9 @@ namespace Laba3
             for (int x = start.X; x <= end.X; x++)
             {
                 g.FillRectangle(Brushes.Black, x, y, 2, 2);
-                if (delta > 0)
+                if (delta > 0) // следующий пиксель будет находиться выше текущей позиции по вертикали
                 {
-                    y += yi;
+                    y += yi; // движемся вверх по вертикали
                     delta += 2 * (dy - dx);
                 }
                 else
@@ -176,16 +176,17 @@ namespace Laba3
             float y = start.Y + gradient;
 
             Brush brush;
-            for (int x = start.X + 1; x < end.X; x++)
+            for (int x = start.X + 1; x <= end.X - 1; x++)
             {
-
-                int color = (int)((1 - (y - (int)y)) * 255);
-                Color c = Color.FromArgb(color, 0, 0, 0);
+                // яркость для верхней части пикселя на текущей позиции x
+                int brightness = (int)((1 - (y - (int)y)) * 255);
+                Color c = Color.FromArgb(brightness, 0, 0, 0);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, x, (int)y, 2, 2);
 
-                color = (int)((y - (int)y) * 255);
-                c = Color.FromArgb(color, 0, 0, 0);
+                // яркость для нижней части пикселя
+                brightness = (int)((y - (int)y) * 255);
+                c = Color.FromArgb(brightness, 0, 0, 0);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, x, (int)y + 1, 2, 2);
 
@@ -204,15 +205,17 @@ namespace Laba3
             float x = start.X + gradient;
 
             Brush brush;
-            for (int y = start.Y + 1; y < end.Y; y++)
+            for (int y = start.Y + 1; y <= end.Y - 1; y++)
             {
-                int color = (int)((1 - (x - (int)x)) * 255);
-                Color c = Color.FromArgb(color, 0, 0, 0);
+                // яркость для верхней части пикселя
+                int brightness = (int)((1 - (x - (int)x)) * 255);
+                Color c = Color.FromArgb(brightness, 0, 0, 0);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, (int)x, y, 2, 2);
 
-                color = (int)((x - (int)x) * 255);
-                c = Color.FromArgb(color, 0, 0, 0);
+                // яркость для нижней части пикселя
+                brightness = (int)((x - (int)x) * 255);
+                c = Color.FromArgb(brightness, 0, 0, 0);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, (int)x + 1, y, 2, 2);
 
@@ -228,7 +231,7 @@ namespace Laba3
         {
             if (Math.Abs(start_point.Y - end_point.Y) < Math.Abs(start_point.X - end_point.X))
             {
-                if (start_point.X > end_point.X)
+                if (start_point.X > end_point.X) // справа налево
                 {
                     DrawWuLineX(end_point, start_point);
                 }
@@ -239,7 +242,7 @@ namespace Laba3
             }
             else
             {
-                if (start_point.Y > end_point.Y)
+                if (start_point.Y > end_point.Y) // сверху вниз
                 {
                     DrawWuLineY(end_point, start_point);
                 }

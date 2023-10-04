@@ -84,23 +84,29 @@ namespace Laba3
             bmp = new Bitmap(pbox.Width, pbox.Height);
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(bmp);
-            colors[0] = Color.Brown;
+            colors[0] = Color.Cyan;
             colors[1] = Color.Blue;
             colors[2] = Color.Red;
+            button1.BackColor = colors[0];
+            button2.BackColor = colors[1];
+            button3.BackColor = colors[2];
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             chooseColor(0);
+            button1.BackColor = colors[0];
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             chooseColor(1);
+            button2.BackColor = colors[1];
         }
         private void button3_Click(object sender, EventArgs e)
         {
             chooseColor(2);
+            button3.BackColor = colors[2];
         }
 
         private void chooseColor(int index)

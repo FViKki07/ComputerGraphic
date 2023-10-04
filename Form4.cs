@@ -179,13 +179,13 @@ namespace Laba3
             {
                 // яркость для верхней части пикселя на текущей позиции x
                 int brightness = (int)((1 - (y - (int)y)) * 255);
-                Color c = Color.FromArgb(brightness, 0, 0, 0);
+                Color c = Color.FromArgb(brightness, 0, 0, 255);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, x, (int)y, 2, 2);
 
                 // яркость для нижней части пикселя
                 brightness = (int)((y - (int)y) * 255);
-                c = Color.FromArgb(brightness, 0, 0, 0);
+                c = Color.FromArgb(brightness, 0, 0, 255);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, x, (int)y + 1, 2, 2);
 
@@ -208,13 +208,13 @@ namespace Laba3
             {
                 // яркость для верхней части пикселя
                 int brightness = (int)((1 - (x - (int)x)) * 255);
-                Color c = Color.FromArgb(brightness, 0, 0, 0);
+                Color c = Color.FromArgb(brightness, 0, 0, 255);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, (int)x, y, 2, 2);
 
                 // яркость для нижней части пикселя
                 brightness = (int)((x - (int)x) * 255);
-                c = Color.FromArgb(brightness, 0, 0, 0);
+                c = Color.FromArgb(brightness, 0, 0, 255);
                 brush = (Brush)(new SolidBrush(c));
                 g.FillRectangle(brush, (int)x + 1, y, 2, 2);
 

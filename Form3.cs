@@ -57,7 +57,6 @@ namespace Laba3
         int e1, e2;
 
         Bitmap bmp;
-        PictureBox pbox;
         Dictionary<int, GradientColors> dictionary = new Dictionary<int, GradientColors>();
         private class GradientColors
         {
@@ -80,27 +79,32 @@ namespace Laba3
             InitializeComponent();
             pictureBox1.BackColor = Color.White;
             CounterSetPoint = 0;
-            pbox = this.pictureBox1;
-            bmp = new Bitmap(pbox.Width, pbox.Height);
+            bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = bmp;
             g = Graphics.FromImage(bmp);
-            colors[0] = Color.Brown;
+            colors[0] = Color.Cyan;
             colors[1] = Color.Blue;
             colors[2] = Color.Red;
+            button1.BackColor = colors[0];
+            button2.BackColor = colors[1];
+            button3.BackColor = colors[2];
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             chooseColor(0);
+            button1.BackColor = colors[0];
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             chooseColor(1);
+            button2.BackColor = colors[1];
         }
         private void button3_Click(object sender, EventArgs e)
         {
             chooseColor(2);
+            button3.BackColor = colors[2];
         }
 
         private void chooseColor(int index)
@@ -126,10 +130,8 @@ namespace Laba3
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (CounterSetPoint == 3)
-            {
-
                 CreateGradient();
-            }
+
         }
 
         private Color LerpRGB(Color color1, Color color2)
@@ -179,13 +181,6 @@ namespace Laba3
 
         private void DrawBordersGradient(Point point1, Point point2, Color color1, Color color2, Dictionary<int, GradientColors> dict)
         {
-            int minY = Math.Min(point1.Y, point2.Y);
-            int maxY = Math.Max(point1.Y, point2.Y);
-
-            if (minY == maxY)
-            {
-                return; // Горизонтальная линия, пропускаем
-            }
 
             step = 0;
             steps = CalculateCountSteps(point1, point2);
@@ -227,6 +222,7 @@ namespace Laba3
                     e1 += deltaX;
                     point1.Y += signY;
                 }
+
             }
         }
         private void DrawOneLineGradient(Point point1, Point point2, Color color1, Color color2)
@@ -238,7 +234,6 @@ namespace Laba3
             {
                 Color colorForWork = LerpRGB(color1, color2);
                 bmp.SetPixel(point1.X, point1.Y, colorForWork);
-                pictureBox1.Invalidate();
 
                 e2 = e1;
                 if (e2 > -deltaX)
@@ -259,8 +254,8 @@ namespace Laba3
             dictionary.Clear();
 
             DrawBordersGradient(points[0], points[1], colors[0], colors[1], dictionary);
-            DrawBordersGradient(points[0], points[2], colors[0], colors[2], dictionary);
             DrawBordersGradient(points[1], points[2], colors[1], colors[2], dictionary);
+            DrawBordersGradient(points[2], points[0], colors[2], colors[0], dictionary);
 
             foreach (var t in dictionary)
             {
@@ -269,6 +264,7 @@ namespace Laba3
                 Point pt2 = new Point(t.Value.rightX, y);
                 DrawOneLineGradient(pt1, pt2, t.Value.leftColor, t.Value.rightColor);
             }
+            pictureBox1.Invalidate();
         }
 
         private void button4_Click(object sender, EventArgs e)

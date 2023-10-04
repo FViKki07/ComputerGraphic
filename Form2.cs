@@ -242,32 +242,32 @@ namespace Laba3
             List<Point> sortedPoints = pixels.OrderBy(p => p.Y).ThenBy(p => p.X).ToList();
             //pixels.First();
             flag = true;
-            List<Point> newList = pixels.ToList();
-           /* if(sortedPoints.Count() > 0)
+            //List<Point> newList = pixels.ToList();
+            if(sortedPoints.Count() > 0)
             {
-                Point prev = sortedPoints.First();
-                Point tmp = sortedPoints.First();
+                Point start = sortedPoints.First();
+                Point end = sortedPoints.First();
                 foreach (Point p in sortedPoints)
                 {
-                    Point next = p;
-                    if(next.Y == prev.Y)
+                    if(p.Y == start.Y)
                     {
-                        tmp = next;
+                        end = p;
                     }
                     else
                     {
-                        int oldX = prev.X;
-                        int oldY = prev.Y;
+                        int oldX = start.X + 1;
+                        int oldY = start.Y;
+                        if (oldX == end.X) continue;
                         while (oldX < bmp.Width && bmp.GetPixel(oldX, oldY).ToArgb() != Color.Black.ToArgb())
                             oldX++;
-                        if(tmp.X != oldX )
+                        if(end.X != oldX && !pixels.Contains(new Point(oldX,oldY)))
                         {
-                            selectBorder(new Point(oldX, oldY), ref pixels, ref newpixels);
+                            selectBorder(new Point(oldX + 1 , oldY), ref pixels, ref newpixels);
                         }
-                        prev = next;
+                        start = p;
                     }
                 }
-            }*/
+            }
 
             if (pixels.Count > 0)
             {
@@ -283,7 +283,7 @@ namespace Laba3
             Point start = findStartPoint(p);
             Point cur = start;
             pixels.Add(start);
-            Color color = bmp.GetPixel(cur.X, cur.Y);
+            //Color color = bmp.GetPixel(cur.X, cur.Y);
 
             Point next = new Point();
             int currPos = 6;
@@ -329,7 +329,8 @@ namespace Laba3
                 }
             }
 
-            newpixels = pixels.ToList();
+
+            newpixels.AddRange(pixels);
             /*foreach (var p in pixels)
                 bmp.SetPixel(p.X, p.Y, c);*/
 

@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "t/fm1OBzeJnTmEmll8vdkQFZdUga1B6ODSOhn9ykNSU6mVgWPXbqPogmcrZsz9zbJZaL2MoWJ8jOHMxM4WthoA==",
+  "dgSpecHash": "l5dzfKJ8u0DBRgi/gYD9tKaQeWhx6bwRfmwt/M3xvz9beiL9jWhrHBwAStqx9buxnrygasSUnV9RMWNc2NdHKA==",
   "success": true,
-  "projectFilePath": "D:\\Вика\\Универ\\4\\Комп графика\\Laba3\\Laba3.csproj",
+  "projectFilePath": "C:\\git\\Laba3\\Laba3.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Ошибка чтения файла кэша C:\\git\\Laba3\\obj\\project.nuget.cache: Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

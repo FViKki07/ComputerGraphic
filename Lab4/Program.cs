@@ -14,4 +14,19 @@ namespace Lab4
             Application.Run(new Form1());
         }
     }
+
+    public class Line
+    {
+        public Point leftP, rightP;
+
+        public Line() { leftP = new Point(); rightP = new Point(); }
+
+        public Line(Point l, Point r) { leftP = l; rightP = r; }
+
+        public (Point, Point) GetPoints()
+        {
+            return (leftP, rightP);
+        }
+    }
+
 }

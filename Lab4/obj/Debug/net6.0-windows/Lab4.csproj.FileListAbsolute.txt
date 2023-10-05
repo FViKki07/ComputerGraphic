@@ -1,0 +1,17 @@
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\bin\Debug\net6.0-windows\Lab4.exe
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\bin\Debug\net6.0-windows\Lab4.deps.json
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\bin\Debug\net6.0-windows\Lab4.runtimeconfig.json
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\bin\Debug\net6.0-windows\Lab4.dll
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\bin\Debug\net6.0-windows\Lab4.pdb
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.csproj.AssemblyReference.cache
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.Form1.resources
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.csproj.GenerateResource.cache
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.GeneratedMSBuildEditorConfig.editorconfig
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.AssemblyInfoInputs.cache
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.AssemblyInfo.cs
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.csproj.CoreCompileInputs.cache
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.dll
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\refint\Lab4.dll
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.pdb
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\Lab4.genruntimeconfig.cache
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab4\obj\Debug\net6.0-windows\ref\Lab4.dll

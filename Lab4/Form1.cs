@@ -160,6 +160,13 @@ namespace Lab4
                 }
             }
 
+            if (!pointLocation.IsEmpty && polygonPoints.Count > 2)
+            {
+
+                label6.Text = "Точка принадлежит полигону: " + (isPointInPolygon(pointLocation) ? "даа" : "неет");
+                label6.Refresh();
+            }
+
             pictureBox1.Invalidate();
         }
 
@@ -260,7 +267,7 @@ namespace Lab4
                   { sinD, cosD, 0 },
                   {0, 0,  1 }
                };
-         
+
             for (int i = 0; i < polygonPoints.Count; i++)
             {
                 polygonPoints[i] = new Point(polygonPoints[i].X - pointLocation.X, polygonPoints[i].Y - pointLocation.Y);
@@ -538,6 +545,50 @@ namespace Lab4
                     label5.Text = "Точка относительно ребра: справа";
                 else label5.Text = "Точка относительно ребра: на ребре";
             }
+        }
+
+        public bool isPointInPolygon(Point userPoint)
+        {
+            if (polygonPoints.Count < 3)
+                return false;
+
+            Point p = new Point(pb.Width, userPoint.Y);
+
+            int count = 0;
+
+            for (int i = 0; i < polygonPoints.Count - 1; i++)
+            {
+                PointF intersection = findPoint(new Line(polygonPoints[i], polygonPoints[i + 1]), new Line(userPoint, p));
+                if (!intersection.IsEmpty)
+                {
+                    if (areColinear(polygonPoints[i], userPoint, polygonPoints[i + 1]))
+                        return isPointOnLine(new Line(polygonPoints[i], polygonPoints[i + 1]), userPoint);
+                    count++;
+                }
+
+            }
+
+            PointF intersect = findPoint(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), new Line(userPoint, p));
+            if (!intersect.IsEmpty)
+            {
+                if (areColinear(polygonPoints[polygonPoints.Count - 1], userPoint, polygonPoints[0]))
+                    return isPointOnLine(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), userPoint);
+                count++;
+            }
+
+            return count % 2 != 0;
+        }
+
+        private bool isPointOnLine(Line l, Point p)
+        {
+            return (p.X <= Math.Max(l.leftP.X, l.rightP.X)) && (p.X >= Math.Min(l.leftP.X, l.rightP.X)
+                && (p.Y >= Math.Min(l.rightP.Y, l.leftP.Y)) && (p.Y <= Math.Max(l.rightP.Y, l.leftP.Y)));
+        }
+
+        private bool areColinear(Point p, Point p1, Point p2)
+        {
+
+            return p.X * (p1.Y - p2.Y) + p1.X * (p.Y - p2.Y) + p2.X * (p.Y - p1.Y) == 0;
         }
 
     }

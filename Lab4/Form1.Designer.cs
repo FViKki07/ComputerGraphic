@@ -46,12 +46,13 @@
             button3 = new Button();
             label3 = new Label();
             groupBox4 = new GroupBox();
+            button7 = new Button();
             label4 = new Label();
             textBox4 = new TextBox();
             button4 = new Button();
             button6 = new Button();
             label5 = new Label();
-            button7 = new Button();
+            label6 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -257,6 +258,16 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Масштабировать:";
             // 
+            // button7
+            // 
+            button7.Location = new Point(135, 60);
+            button7.Name = "button7";
+            button7.Size = new Size(81, 29);
+            button7.TabIndex = 4;
+            button7.Text = "точка";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
             // label4
             // 
             label4.AutoSize = true;
@@ -304,21 +315,21 @@
             label5.TabIndex = 30;
             label5.Text = "Точка относительно ребра:";
             // 
-            // button7
+            // label6
             // 
-            button7.Location = new Point(135, 60);
-            button7.Name = "button7";
-            button7.Size = new Size(81, 29);
-            button7.TabIndex = 4;
-            button7.Text = "точка";
-            button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
+            label6.AutoSize = true;
+            label6.Location = new Point(21, 576);
+            label6.Name = "label6";
+            label6.Size = new Size(220, 20);
+            label6.TabIndex = 31;
+            label6.Text = "Точка принадлежит полигону:";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1102, 720);
+            Controls.Add(label6);
             Controls.Add(label5);
             Controls.Add(button6);
             Controls.Add(groupBox4);
@@ -370,5 +381,6 @@
         private Button button5;
         private Label label5;
         private Button button7;
+        private Label label6;
     }
 }

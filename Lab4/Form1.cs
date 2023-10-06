@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace Lab4
         Point down;
         int dx, dy;
         double degree, k;
+        List<PointF> intersection = new List<PointF>();
 
         public Form1()
         {
@@ -147,6 +149,16 @@ namespace Lab4
                 }
                 g.DrawLine(Pens.Red, polygonPoints[0], polygonPoints[polygonPoints.Count() - 1]);
             }
+
+            if (intersection.Count > 0)
+            {
+                foreach (var i in intersection)
+                {
+                    g.DrawEllipse(Pens.Red, i.X - 1, i.Y - 1, 3, 3);
+                    g.FillEllipse(Brushes.Red, i.X - 1, i.Y - 1, 3, 3);
+                }
+            }
+
             pictureBox1.Invalidate();
         }
 
@@ -157,6 +169,7 @@ namespace Lab4
             pointLocation = Point.Empty;
             g.Clear(Color.White);
             pictureBox1.Invalidate();
+            intersection .Clear();
         }
 
         private void offsetPolygon()
@@ -425,15 +438,59 @@ namespace Lab4
 
         private void button6_Click(object sender, EventArgs e)
         {
+            for(int i=0;i<lines.Count - 1;i++)
+            {
+                for (int j = i; j < lines.Count; j++)
+                {
+                    PointF inter = findPoint(lines[i], lines[j]);
+                    if (!inter.IsEmpty)
+                    {
+                        intersection.Add(inter);
+                    }
+                }
+            }
 
         }
 
-        private void findPoint()
+        private int GetScalarMult(Point a, Point b)
+        {
+            return a.X * b.X + a.Y * b.Y;
+        }
+
+        private PointF findPoint(Line l1, Line l2)
         {
 
+            Point a = l1.leftP;
+            Point b = l1.rightP;
+            Point c = l2.leftP;
+            Point d = l2.rightP;
 
+
+            Point ab = l1.Diff();
+            Point cd = l2.Diff();
+
+            Point n = new Point(-cd.Y, cd.X);
+
+            int perp = GetScalarMult(n,ab);
+            if(perp != 0)
+            {
+                Point ac = new Point(a.X - c.X, a.Y - c.Y);
+
+                float t = -1 * GetScalarMult(n, ac) * 1.0f / perp;
+                Point k = new Point(-ab.Y, ab.X);
+
+                float u = -1 * GetScalarMult(k, ac) * 1.0f / perp;
+
+                if (u >= 0 && u < 1 && t >= 0 && t <= 1)
+                {
+                    PointF intersection = new PointF(((b.X - a.X) * t + a.X), (t * (b.Y - a.Y) + a.Y));
+                    return intersection;
+                }
+
+            }
+
+            return PointF.Empty;
         }
-
     }
 
 }

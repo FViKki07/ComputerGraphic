@@ -27,6 +27,11 @@ namespace Lab4
         {
             return (leftP, rightP);
         }
+
+        public Point Diff()
+        {
+            return new Point(rightP.X - leftP.X, rightP.Y - leftP.Y);
+        }
     }
 
 }

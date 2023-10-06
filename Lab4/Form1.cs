@@ -206,8 +206,11 @@ namespace Lab4
                 centerY += polygonPoints[i].Y;
             }
 
-            centerX /= polygonPoints.Count;
-            centerY /= polygonPoints.Count;
+            if (polygonPoints.Count > 0)
+            {
+                centerX /= polygonPoints.Count;
+                centerY /= polygonPoints.Count;
+            }
 
             for (int i = 0; i < polygonPoints.Count; i++)
             {
@@ -338,7 +341,7 @@ namespace Lab4
 
         private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',' )
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',')
             {
                 e.Handled = true; // Запрещаем ввод других символов
             }
@@ -359,6 +362,17 @@ namespace Lab4
                 k = double.Parse(textBox4.Text);
                 dilatationPolygon();
             }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void findPoint()
+        {
+
+
         }
     }
 

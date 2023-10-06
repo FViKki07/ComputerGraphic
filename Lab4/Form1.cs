@@ -260,21 +260,7 @@ namespace Lab4
                   { sinD, cosD, 0 },
                   {0, 0,  1 }
                };
-            int centerX = 0;
-            int centerY = 0;
-
-            for (int i = 0; i < polygonPoints.Count; i++)
-            {
-                centerX += polygonPoints[i].X;
-                centerY += polygonPoints[i].Y;
-            }
-
-            if (polygonPoints.Count > 0)
-            {
-                centerX /= polygonPoints.Count;
-                centerY /= polygonPoints.Count;
-            }
-
+         
             for (int i = 0; i < polygonPoints.Count; i++)
             {
                 polygonPoints[i] = new Point(polygonPoints[i].X - pointLocation.X, polygonPoints[i].Y - pointLocation.Y);
@@ -298,7 +284,7 @@ namespace Lab4
 
         }
 
-        private void dilatationPolygon()
+        private void dilatationPolygonCenter()
         {
             double[,] m = new double[3, 3]
                           {
@@ -336,6 +322,37 @@ namespace Lab4
             for (int i = 0; i < polygonPoints.Count; i++)
             {
                 polygonPoints[i] = new Point(polygonPoints[i].X + centerX, polygonPoints[i].Y + centerY);
+            }
+
+            pictureBox1.Invalidate();
+
+        }
+        private void dilatationPolygonPoint()
+        {
+            double[,] m = new double[3, 3]
+                          {
+                  { k, 0, 0 },
+                  { 0, k, 0 },
+                  {0, 0,  1 }
+             };
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                polygonPoints[i] = new Point(polygonPoints[i].X - pointLocation.X, polygonPoints[i].Y - pointLocation.Y);
+            }
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                int x = polygonPoints[i].X;
+                int y = polygonPoints[i].Y;
+                int newX = (int)(m[0, 0] * x + m[0, 1] * y + m[0, 2]);
+                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
+                polygonPoints[i] = new Point(newX, newY);
+            }
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                polygonPoints[i] = new Point(polygonPoints[i].X + pointLocation.X, polygonPoints[i].Y + pointLocation.Y);
             }
 
             pictureBox1.Invalidate();
@@ -433,7 +450,18 @@ namespace Lab4
             if (textBox4.Text != "")
             {
                 k = double.Parse(textBox4.Text);
-                dilatationPolygon();
+                dilatationPolygonCenter();
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (textBox4.Text != "" && !pointLocation.IsEmpty)
+            {
+
+                k = double.Parse(textBox4.Text);
+                dilatationPolygonPoint();
+
             }
         }
 
@@ -506,11 +534,12 @@ namespace Lab4
                 label5.Text = "Точка относительно ребра: слева";
             else
             {
-                if(sin < 0)
+                if (sin < 0)
                     label5.Text = "Точка относительно ребра: справа";
                 else label5.Text = "Точка относительно ребра: на ребре";
             }
         }
+
     }
 
 }

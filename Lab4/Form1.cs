@@ -127,7 +127,8 @@ namespace Lab4
             {
                 g.DrawEllipse(Pens.Blue, pointLocation.X - 1, pointLocation.Y - 1, 3, 3);
                 g.FillEllipse(Brushes.Blue, pointLocation.X - 1, pointLocation.Y - 1, 3, 3);
-
+                if (lines.Count > 0)
+                    wherePoint(lines.Last(), pointLocation);
             }
 
             if (LineRadioButton.Checked && drawLine && !endPoint.IsEmpty && !startPoint.IsEmpty)
@@ -169,7 +170,7 @@ namespace Lab4
             pointLocation = Point.Empty;
             g.Clear(Color.White);
             pictureBox1.Invalidate();
-            intersection .Clear();
+            intersection.Clear();
         }
 
         private void offsetPolygon()
@@ -438,7 +439,7 @@ namespace Lab4
 
         private void button6_Click(object sender, EventArgs e)
         {
-            for(int i=0;i<lines.Count - 1;i++)
+            for (int i = 0; i < lines.Count - 1; i++)
             {
                 for (int j = i; j < lines.Count; j++)
                 {
@@ -471,8 +472,8 @@ namespace Lab4
 
             Point n = new Point(-cd.Y, cd.X);
 
-            int perp = GetScalarMult(n,ab);
-            if(perp != 0)
+            int perp = GetScalarMult(n, ab);
+            if (perp != 0)
             {
                 Point ac = new Point(a.X - c.X, a.Y - c.Y);
 
@@ -490,6 +491,25 @@ namespace Lab4
             }
 
             return PointF.Empty;
+        }
+
+        public void wherePoint(Line line, Point p)
+        {
+            int line_temp_x = line.leftP.X - line.rightP.X;
+            int line_temp_Y = line.leftP.Y - line.rightP.Y;
+
+            int user_temp_x = p.X - line.rightP.X;
+            int user_temp_y = p.Y - line.rightP.Y;
+
+            int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_Y;
+            if (sin > 0)
+                label5.Text = "Точка относительно ребра: слева";
+            else
+            {
+                if(sin < 0)
+                    label5.Text = "Точка относительно ребра: справа";
+                else label5.Text = "Точка относительно ребра: на ребре";
+            }
         }
     }
 

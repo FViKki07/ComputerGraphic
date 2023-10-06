@@ -185,7 +185,7 @@ namespace Lab4
         }
 
 
-        void rotatePolygon()
+        void rotatePolygonArCenter()
         {
             degree *= Math.PI / 180;
             double cosD = Math.Cos(degree);
@@ -229,6 +229,55 @@ namespace Lab4
             for (int i = 0; i < polygonPoints.Count; i++)
             {
                 polygonPoints[i] = new Point(polygonPoints[i].X + centerX, polygonPoints[i].Y + centerY);
+            }
+
+            pictureBox1.Invalidate();
+
+        }
+        void rotatePolygonArPoint()
+        {
+            degree *= Math.PI / 180;
+            double cosD = Math.Cos(degree);
+            double sinD = Math.Sin(degree);
+
+            double[,] m = new double[3, 3]
+               {
+                  { cosD, sinD, 0 },
+                  { sinD, cosD, 0 },
+                  {0, 0,  1 }
+               };
+            int centerX = 0;
+            int centerY = 0;
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                centerX += polygonPoints[i].X;
+                centerY += polygonPoints[i].Y;
+            }
+
+            if (polygonPoints.Count > 0)
+            {
+                centerX /= polygonPoints.Count;
+                centerY /= polygonPoints.Count;
+            }
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                polygonPoints[i] = new Point(polygonPoints[i].X - pointLocation.X, polygonPoints[i].Y - pointLocation.Y);
+            }
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                int x = polygonPoints[i].X;
+                int y = polygonPoints[i].Y;
+                int newX = (int)(m[0, 0] * x - m[0, 1] * y + m[0, 2]);
+                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
+                polygonPoints[i] = new Point(newX, newY);
+            }
+
+            for (int i = 0; i < polygonPoints.Count; i++)
+            {
+                polygonPoints[i] = new Point(polygonPoints[i].X + pointLocation.X, polygonPoints[i].Y + pointLocation.Y);
             }
 
             pictureBox1.Invalidate();
@@ -296,7 +345,17 @@ namespace Lab4
             if (textBox3.Text != "")
             {
                 degree = double.Parse(textBox3.Text);
-                rotatePolygon();
+                rotatePolygonArCenter();
+            }
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (textBox3.Text != "" && !pointLocation.IsEmpty)
+            {
+                degree = double.Parse(textBox3.Text);
+                rotatePolygonArPoint();
             }
 
         }
@@ -366,7 +425,7 @@ namespace Lab4
 
         private void button6_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void findPoint()
@@ -374,6 +433,7 @@ namespace Lab4
 
 
         }
+
     }
 
 }

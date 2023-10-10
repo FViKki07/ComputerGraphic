@@ -566,8 +566,7 @@ namespace Lab4
                 if (!intersection.IsEmpty)
                 {
                     if (areColinear(polygonPoints[i], userPoint, polygonPoints[i + 1]))
-                        //return isPointOnLine(new Line(polygonPoints[i], polygonPoints[i + 1]), userPoint);
-                        return true;
+                        return isPointOnLine(new Line(polygonPoints[i], polygonPoints[i + 1]), userPoint);
                     count++;
                 }
 
@@ -577,8 +576,7 @@ namespace Lab4
             if (!intersect.IsEmpty)
             {
                 if (areColinear(polygonPoints[polygonPoints.Count - 1], userPoint, polygonPoints[0]))
-                    //return isPointOnLine(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), userPoint);
-                    return true;
+                    return isPointOnLine(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), userPoint);
                 count++;
             }
 

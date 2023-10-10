@@ -178,6 +178,8 @@ namespace Lab4
             g.Clear(Color.White);
             pictureBox1.Invalidate();
             intersection.Clear();
+            label5.Text = "Точка относительно ребра:";
+            label6.Text = "Точка принадлежит полигону:";
         }
 
         private void offsetPolygon()
@@ -538,14 +540,16 @@ namespace Lab4
 
             int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_Y;
             if (sin > 0)
-                label5.Text = "Точка относительно ребра: слева";
+                label5.Text = "Точка относительно ребра: справа";
             else
             {
                 if (sin < 0)
-                    label5.Text = "Точка относительно ребра: справа";
+                    label5.Text = "Точка относительно ребра: слева";
                 else label5.Text = "Точка относительно ребра: на ребре";
             }
         }
+
+
 
         public bool isPointInPolygon(Point userPoint)
         {
@@ -562,7 +566,8 @@ namespace Lab4
                 if (!intersection.IsEmpty)
                 {
                     if (areColinear(polygonPoints[i], userPoint, polygonPoints[i + 1]))
-                        return isPointOnLine(new Line(polygonPoints[i], polygonPoints[i + 1]), userPoint);
+                        //return isPointOnLine(new Line(polygonPoints[i], polygonPoints[i + 1]), userPoint);
+                        return true;
                     count++;
                 }
 
@@ -572,12 +577,15 @@ namespace Lab4
             if (!intersect.IsEmpty)
             {
                 if (areColinear(polygonPoints[polygonPoints.Count - 1], userPoint, polygonPoints[0]))
-                    return isPointOnLine(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), userPoint);
+                    //return isPointOnLine(new Line(polygonPoints[polygonPoints.Count - 1], polygonPoints[0]), userPoint);
+                    return true;
                 count++;
             }
 
             return count % 2 != 0;
         }
+
+
 
         private bool isPointOnLine(Line l, Point p)
         {

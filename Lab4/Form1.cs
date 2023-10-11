@@ -546,12 +546,15 @@ namespace Lab4
             int user_temp_y = p.Y - line.rightP.Y;
 
             int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_Y;
-            if (sin > 0)
-                label5.Text = "Точка относительно ребра: справа";
-            else if (sin < 0)
-                label5.Text = "Точка относительно ребра: слева";
-            else
-                label5.Text = "Точка относительно ребра: на ребре";
+            if (line.leftP != line.rightP)
+            {
+                if (sin > 0)
+                    label5.Text = "Точка относительно ребра: справа";
+                else if (sin < 0)
+                    label5.Text = "Точка относительно ребра: слева";
+                else
+                    label5.Text = "Точка относительно ребра: на ребре";
+            }
         }
 
         // снизу вверх
@@ -564,12 +567,15 @@ namespace Lab4
             int user_temp_y = line.rightP.Y - p.Y; // изменение направления вектора по оси y
 
             int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_y;
-            if (sin > 0)
-                label5.Text = "Точка относительно ребра: справа";
-            else if (sin < 0)
-                label5.Text = "Точка относительно ребра: слева";
-            else
-                label5.Text = "Точка относительно ребра: на ребре";
+            if (line.leftP != line.rightP)
+            {
+                if (sin > 0)
+                    label5.Text = "Точка относительно ребра: справа";
+                else if (sin < 0)
+                    label5.Text = "Точка относительно ребра: слева";
+                else
+                    label5.Text = "Точка относительно ребра: на ребре";
+            }
         }
 
 

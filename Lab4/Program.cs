@@ -15,23 +15,5 @@ namespace Lab4
         }
     }
 
-    public class Line
-    {
-        public Point leftP, rightP;
-
-        public Line() { leftP = new Point(); rightP = new Point(); }
-
-        public Line(Point l, Point r) { leftP = l; rightP = r; }
-
-        public (Point, Point) GetPoints()
-        {
-            return (leftP, rightP);
-        }
-
-        public Point Diff()
-        {
-            return new Point(rightP.X - leftP.X, rightP.Y - leftP.Y);
-        }
-    }
 
 }

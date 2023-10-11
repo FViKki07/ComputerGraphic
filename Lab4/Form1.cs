@@ -565,10 +565,10 @@ namespace Lab4
         public void wherePointBottom(Line line, Point p)
         {
             int line_temp_x = line.leftP.X - line.rightP.X;
-            int line_temp_y = line.rightP.Y - line.leftP.Y; // Изменение направления вектора по оси Y
+            int line_temp_y = line.rightP.Y - line.leftP.Y; // изменение направления вектора по оси y
 
             int user_temp_x = p.X - line.rightP.X;
-            int user_temp_y = line.rightP.Y - p.Y; // Изменение направления вектора по оси Y
+            int user_temp_y = line.rightP.Y - p.Y; // изменение направления вектора по оси y
 
             int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_y;
             if (sin > 0)

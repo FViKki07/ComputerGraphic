@@ -553,12 +553,10 @@ namespace Lab4
             int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_Y;
             if (sin > 0)
                 label5.Text = "Точка относительно ребра: справа";
+            else if (sin < 0)
+                label5.Text = "Точка относительно ребра: слева";
             else
-            {
-                if (sin < 0)
-                    label5.Text = "Точка относительно ребра: слева";
-                else label5.Text = "Точка относительно ребра: на ребре";
-            }
+                label5.Text = "Точка относительно ребра: на ребре";
         }
 
         // снизу вверх

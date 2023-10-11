@@ -128,7 +128,16 @@ namespace Lab4
                 g.DrawEllipse(Pens.Blue, pointLocation.X - 1, pointLocation.Y - 1, 3, 3);
                 g.FillEllipse(Brushes.Blue, pointLocation.X - 1, pointLocation.Y - 1, 3, 3);
                 if (lines.Count > 0)
-                    wherePoint(lines.Last(), pointLocation);
+                {
+                    if (lines.Last().rightP.Y > lines.Last().leftP.Y)
+                    {
+                        wherePointTop(lines.Last(), pointLocation);
+                    }
+                    else
+                    {
+                        wherePointBottom(lines.Last(), pointLocation);
+                    }
+                }
             }
 
             if (LineRadioButton.Checked && drawLine && !endPoint.IsEmpty && !startPoint.IsEmpty)
@@ -530,11 +539,14 @@ namespace Lab4
             return PointF.Empty;
         }
 
-        public void wherePoint(Line line, Point p)
+        // сверху вниз
+        public void wherePointTop(Line line, Point p)
         {
+            // вектор, представл€ющий направление и длину ребра
             int line_temp_x = line.leftP.X - line.rightP.X;
             int line_temp_Y = line.leftP.Y - line.rightP.Y;
 
+            // вектор от правого конца ребра до точки p
             int user_temp_x = p.X - line.rightP.X;
             int user_temp_y = p.Y - line.rightP.Y;
 
@@ -547,6 +559,24 @@ namespace Lab4
                     label5.Text = "“очка относительно ребра: слева";
                 else label5.Text = "“очка относительно ребра: на ребре";
             }
+        }
+
+        // снизу вверх
+        public void wherePointBottom(Line line, Point p)
+        {
+            int line_temp_x = line.leftP.X - line.rightP.X;
+            int line_temp_y = line.rightP.Y - line.leftP.Y; // »зменение направлени€ вектора по оси Y
+
+            int user_temp_x = p.X - line.rightP.X;
+            int user_temp_y = line.rightP.Y - p.Y; // »зменение направлени€ вектора по оси Y
+
+            int sin = user_temp_y * line_temp_x - user_temp_x * line_temp_y;
+            if (sin > 0)
+                label5.Text = "“очка относительно ребра: справа";
+            else if (sin < 0)
+                label5.Text = "“очка относительно ребра: слева";
+            else
+                label5.Text = "“очка относительно ребра: на ребре";
         }
 
 

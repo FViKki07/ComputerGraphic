@@ -100,10 +100,6 @@ namespace Lab4
                 {
                     lines.Add(new Line(startPoint, endPoint));
                     drawLine = false;
-                    //up = startPoint;
-                    //down = endPoint;
-                    //startPoint = Point.Empty;
-                    //endPoint = Point.Empty;
                 }
 
             }
@@ -513,19 +509,18 @@ namespace Lab4
             Point d = l2.rightP;
 
 
-            Point ab = l1.Diff();
-            Point cd = l2.Diff();
+            Point ba = l1.Diff();
+            Point dc = l2.Diff();
 
-            Point n = new Point(-cd.Y, cd.X);
+            Point n = new Point(-dc.Y, dc.X);
 
-            int perp = GetScalarMult(n, ab);
+            int perp = GetScalarMult(n, ba);
             if (perp != 0)
             {
                 Point ac = new Point(a.X - c.X, a.Y - c.Y);
-
                 float t = -1 * GetScalarMult(n, ac) * 1.0f / perp;
-                Point k = new Point(-ab.Y, ab.X);
-
+                
+                Point k = new Point(-ba.Y, ba.X);
                 float u = -1 * GetScalarMult(k, ac) * 1.0f / perp;
 
                 if (u >= 0 && u < 1 && t >= 0 && t <= 1)

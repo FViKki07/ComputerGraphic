@@ -297,12 +297,12 @@
             // 
             // button6
             // 
-            button6.Location = new Point(88, 461);
+            button6.Location = new Point(34, 457);
             button6.Margin = new Padding(3, 4, 3, 4);
             button6.Name = "button6";
-            button6.Size = new Size(149, 31);
+            button6.Size = new Size(232, 31);
             button6.TabIndex = 29;
-            button6.Text = "Точка пересечения ";
+            button6.Text = "Точки пересечения ";
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 

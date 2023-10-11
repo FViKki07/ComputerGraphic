@@ -186,26 +186,38 @@ namespace Lab4
             label5.Text = "Точка относительно ребра:";
             label6.Text = "Точка принадлежит полигону:";
         }
+        private Point MultiplyVectorByMatrix(double[] point, double[,] m)
+        {
+            double[] new_point = { 0, 0, 0 };
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    new_point[i] += point[j] * m[j, i];
+                }
+            }
+            return new Point((int)new_point[0], (int)new_point[1]);
+        }
 
         private void offsetPolygon()
         {
             double[,] m = new double[3, 3]
                 {
-                  { 1, 0, dx },
-                  { 0, 1, -dy },
-                  {0, 0,  1 }
+                  { 1, 0, 0 },
+                  { 0, 1, 0 },
+                  {dx, -dy,  1 }
                 };
+
 
             for (int i = 0; i < polygonPoints.Count; i++)
             {
 
                 int x = polygonPoints[i].X;
                 int y = polygonPoints[i].Y;
+                double[] point = { x, y, 1 };
 
-                int newX = (int)(m[0, 0] * x + m[0, 1] * y + m[0, 2]);
-                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
 
-                polygonPoints[i] = new Point(newX, newY);
+                polygonPoints[i] = MultiplyVectorByMatrix(point, m);
             }
 
             pictureBox1.Invalidate();
@@ -221,7 +233,7 @@ namespace Lab4
 
             double[,] m = new double[3, 3]
                {
-                  { cosD, sinD, 0 },
+                  { cosD, -sinD, 0 },
                   { sinD, cosD, 0 },
                   {0, 0,  1 }
                };
@@ -249,9 +261,10 @@ namespace Lab4
             {
                 int x = polygonPoints[i].X;
                 int y = polygonPoints[i].Y;
-                int newX = (int)(m[0, 0] * x - m[0, 1] * y + m[0, 2]);
-                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
-                polygonPoints[i] = new Point(newX, newY);
+                double[] point = { x, y, 1 };
+
+
+                polygonPoints[i] = MultiplyVectorByMatrix(point, m);
             }
 
             for (int i = 0; i < polygonPoints.Count; i++)
@@ -270,7 +283,7 @@ namespace Lab4
 
             double[,] m = new double[3, 3]
                {
-                  { cosD, sinD, 0 },
+                  { cosD, -sinD, 0 },
                   { sinD, cosD, 0 },
                   {0, 0,  1 }
                };
@@ -284,9 +297,10 @@ namespace Lab4
             {
                 int x = polygonPoints[i].X;
                 int y = polygonPoints[i].Y;
-                int newX = (int)(m[0, 0] * x - m[0, 1] * y + m[0, 2]);
-                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
-                polygonPoints[i] = new Point(newX, newY);
+                double[] point = { x, y, 1 };
+
+
+                polygonPoints[i] = MultiplyVectorByMatrix(point, m);
             }
 
             for (int i = 0; i < polygonPoints.Count; i++)
@@ -328,9 +342,10 @@ namespace Lab4
             {
                 int x = polygonPoints[i].X;
                 int y = polygonPoints[i].Y;
-                int newX = (int)(m[0, 0] * x + m[0, 1] * y + m[0, 2]);
-                int newY = (int)(m[1, 0] * x + m[1, 1] * y + m[1, 2]);
-                polygonPoints[i] = new Point(newX, newY);
+                double[] point = { x, y, 1 };
+
+
+                polygonPoints[i] = MultiplyVectorByMatrix(point, m);
             }
 
             for (int i = 0; i < polygonPoints.Count; i++)
@@ -519,7 +534,7 @@ namespace Lab4
             {
                 Point ac = new Point(a.X - c.X, a.Y - c.Y);
                 float t = -1 * GetScalarMult(n, ac) * 1.0f / perp;
-                
+
                 Point k = new Point(-ba.Y, ba.X);
                 float u = -1 * GetScalarMult(k, ac) * 1.0f / perp;
 

@@ -1,2 +1,10 @@
-Lab5/.vs/*
-*\*\obj/
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+.idea
+.vs

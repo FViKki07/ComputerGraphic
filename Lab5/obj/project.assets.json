@@ -81,24 +81,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\koval\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\lobch\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\git\\Laba3\\Lab5\\Lab5.csproj",
+      "projectUniqueName": "C:\\Users\\lobch\\OneDrive\\Рабочий стол\\Laba3\\Lab5\\Lab5.csproj",
       "projectName": "Lab5",
-      "projectPath": "C:\\git\\Laba3\\Lab5\\Lab5.csproj",
-      "packagesPath": "C:\\Users\\koval\\.nuget\\packages\\",
-      "outputPath": "C:\\git\\Laba3\\Lab5\\obj\\",
+      "projectPath": "C:\\Users\\lobch\\OneDrive\\Рабочий стол\\Laba3\\Lab5\\Lab5.csproj",
+      "packagesPath": "C:\\Users\\lobch\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lobch\\OneDrive\\Рабочий стол\\Laba3\\Lab5\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\koval\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\lobch\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -106,7 +101,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -153,7 +147,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   },

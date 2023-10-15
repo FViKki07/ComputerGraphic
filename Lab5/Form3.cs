@@ -108,6 +108,7 @@ namespace Lab5
             g.Clear(Color.White);
             pictureBox1.Invalidate();
             currentIteration = 0;
+            label3.Text = "";
         }
 
     }

@@ -1,8 +1,32 @@
 {
   "version": 2,
-  "dgSpecHash": "7RtQk8NOXWVDgp8z5RCF+bbAM4f1D7y6J0AOfzOUMDEXIdiRoYfcQq3ks4+dx06x5wSgyqRa5F2lk3F0BfDMfQ==",
+  "dgSpecHash": "RgGTPTFwElzskiIAi6WQ58p59Rf8Bs/rNzha/p16vnCPMxGSgwFkMVEqeKGvBmqRqKenXuCnmXdQldF/pkVZuw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lobch\\OneDrive\\Рабочий стол\\Laba3\\Lab5\\Lab5.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "projectFilePath": "C:\\git\\Laba3\\Lab5\\Lab5.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\koval\\.nuget\\packages\\entityframework\\5.0.0\\entityframework.5.0.0.nupkg.sha512",
+    "C:\\Users\\koval\\.nuget\\packages\\entityframework.ru\\5.0.0\\entityframework.ru.5.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"EntityFramework 5.0.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net6.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "EntityFramework",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"EntityFramework.ru 5.0.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\", а не целевой платформы проекта \"net6.0-windows7.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "EntityFramework.ru",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    }
+  ]
 }

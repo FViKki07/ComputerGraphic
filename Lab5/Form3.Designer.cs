@@ -30,11 +30,9 @@
         {
             pictureBox1 = new PictureBox();
             button1 = new Button();
-            numericUpDown1 = new NumericUpDown();
             label1 = new Label();
             button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -57,19 +55,11 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // numericUpDown1
-            // 
-            numericUpDown1.Location = new Point(23, 72);
-            numericUpDown1.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(114, 27);
-            numericUpDown1.TabIndex = 2;
-            // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(23, 27);
+            label1.Location = new Point(12, 66);
             label1.Name = "label1";
             label1.Size = new Size(96, 25);
             label1.TabIndex = 3;
@@ -78,7 +68,7 @@
             // button2
             // 
             button2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            button2.Location = new Point(23, 120);
+            button2.Location = new Point(12, 120);
             button2.Name = "button2";
             button2.Size = new Size(114, 36);
             button2.TabIndex = 4;
@@ -93,13 +83,11 @@
             ClientSize = new Size(800, 450);
             Controls.Add(button2);
             Controls.Add(label1);
-            Controls.Add(numericUpDown1);
             Controls.Add(button1);
             Controls.Add(pictureBox1);
             Name = "Form3";
             Text = "Form3";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -108,7 +96,6 @@
 
         private PictureBox pictureBox1;
         private Button button1;
-        private NumericUpDown numericUpDown1;
         private Label label1;
         private Button button2;
     }

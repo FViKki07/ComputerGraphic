@@ -118,7 +118,7 @@ namespace Lab5
             allY.Add(y);
 
             //double new_angle = angle;
-            double new_angle = rnd.Next((int)angle - 20, (int)angle + 20);
+            double new_angle = rnd.Next((int)angle - 15, (int)angle + 15);
             double cosD = Math.Cos(new_angle * Math.PI / 180);
             double sinD = Math.Sin(new_angle * Math.PI / 180);
             double[,] m = new double[3, 3]

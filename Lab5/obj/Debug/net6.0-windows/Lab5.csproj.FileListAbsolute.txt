@@ -62,3 +62,8 @@ C:\Users\lobch\OneDrive\Рабочий стол\Laba3\Lab5\bin\Debug\net6.0-wind
 C:\Users\lobch\OneDrive\Рабочий стол\Laba3\Lab5\obj\Debug\net6.0-windows\Lab5.csproj.AssemblyReference.cache
 C:\Users\lobch\OneDrive\Рабочий стол\Laba3\Lab5\obj\Debug\net6.0-windows\Lab5.Form4.resources
 C:\Users\lobch\OneDrive\Рабочий стол\Laba3\Lab5\obj\Debug\net6.0-windows\Lab5.csproj.CopyComplete
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab5\bin\Debug\net6.0-windows\EntityFramework.dll
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab5\bin\Debug\net6.0-windows\ru\EntityFramework.resources.dll
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab5\obj\Debug\net6.0-windows\Lab5.Form3.resources
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab5\obj\Debug\net6.0-windows\Lab5.Form4.resources
+D:\Вика\Универ\4\Комп графика\ComputerGraphic\Lab5\obj\Debug\net6.0-windows\Lab5.csproj.CopyComplete

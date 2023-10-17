@@ -16,9 +16,10 @@ namespace Lab5
         Graphics g;
         string axiom;
         double angle;
-        string start;
+        string direction;
         Dictionary<char, string> rules;
         int iterations;
+        Random rnd = new Random();
 
         public Form2()
         {
@@ -28,6 +29,8 @@ namespace Lab5
             g.Clear(Color.White);
 
             rules = new Dictionary<char, string>();
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,7 +47,8 @@ namespace Lab5
 
                     axiom = parameters[0];
                     angle = Convert.ToDouble(parameters[1]);
-                    start = parameters[2];
+               
+                    direction = parameters[2];
 
                     rules.Clear();
                     string[] rule;
@@ -62,8 +66,152 @@ namespace Lab5
             }
         }
 
+        private double[] MultiplyVectorByMatrix(double[] point, double[,] m)
+        {
+            double[] new_point = { 0, 0, 0 };
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    new_point[i] += point[j] * m[j, i];
+                }
+            }
+            return new_point;
+        }
+
         private void Fractus(string path)
         {
+            List<double>  allX = new List<double>();
+            List<double> allY = new List<double>();
+            List<Tuple<double, double, double, double>> listPoints = new List<Tuple<double, double, double, double>>();
+            Stack<Tuple<double, double, double, double>> stPoints = new Stack<Tuple<double, double, double, double>>();
+
+            double x = 0, y = 0, dx = 0, dy = 0;
+            switch (direction)
+            {
+                case "LEFT":
+                    x = pictureBox1.Width;
+                    y = pictureBox1.Height / 2;
+                    dx = -1;
+                    break;
+
+                case "RIGHT":
+                    y = pictureBox1.Height / 2;
+                    dx = 1;
+                    break;
+
+                case "UP":
+                    x = pictureBox1.Width / 2;
+                    y = pictureBox1.Height;
+                    dy = -1;
+                    break;
+
+                case "DOWN":
+                    x = pictureBox1.Width / 2;
+                    dy = 1;
+                    break;
+
+                default: break;
+            }
+
+            allX.Add(x);
+            allY.Add(y);
+
+            //double new_angle = angle;
+            double new_angle = rnd.Next((int)angle - 20, (int)angle + 20);
+            double cosD = Math.Cos(new_angle * Math.PI / 180);
+            double sinD = Math.Sin(new_angle * Math.PI / 180);
+            double[,] m = new double[3, 3]
+            {
+                  { cosD, sinD, 0 },
+                  { -sinD, cosD, 0 },
+                  {0, 0,  1 }
+            };
+            double cosD1 = Math.Cos(-new_angle * Math.PI / 180);
+            double sinD1 = Math.Sin(-new_angle * Math.PI / 180);
+            double[,] m1 = new double[3, 3]
+            {
+                  { cosD1, sinD1, 0 },
+                  { -sinD1, cosD1, 0 },
+                  {0, 0,  1 }
+            };
+            for (int i = 0; i < path.Length; ++i)
+            {
+               
+                switch (path[i])
+                {
+                    case 'F':
+                        listPoints.Add(
+                            new Tuple<double, double,double, double>(x, y, x + dx, y + dy));
+                        x += dx;
+                        y += dy;
+                        allX.Add(x);
+                        allY.Add(y);
+                        break;
+
+                    case '+':
+                        double[] point = { dx, dy, 1 };
+                        var new_point = MultiplyVectorByMatrix(point, m);
+                        dx = new_point[0];
+                        dy = new_point[1];
+                        break;
+
+                    case '-':
+                        double[] point1 = { dx, dy, 1 };
+                        new_point = MultiplyVectorByMatrix(point1, m1);
+                        dx = new_point[0];
+                        dy = new_point[1];
+                        break;
+
+                    case '[':
+                        stPoints.Push(new Tuple<double, double, double, double>(x, y, dx, dy));
+                        break;
+
+                    case ']':
+                        Tuple<double, double, double, double> coords = stPoints.Pop();
+                        x = coords.Item1;
+                        y = coords.Item2;
+                        dx = coords.Item3;
+                        dy = coords.Item4;
+                        break;
+
+                    default: break;
+                }
+            }
+            double xMax = allX.Max();
+            double xMin = allX.Min();
+            double yMax = allY.Max();
+            double yMin = allY.Min();
+            double scale = Math.Max(xMax - xMin, yMax - yMin);
+
+
+            float initialLineWidth = 3.0f;
+            Color startColor = Color.Brown;
+            Color endColor = Color.Green;
+            for (int i = 0; i < listPoints.Count; i++)
+            {
+                var a = listPoints[i];
+                float colorInterpolation = (float)i  / (listPoints.Count  * 0.5f);
+                if (colorInterpolation > 1.0f)
+                {
+                    colorInterpolation = 1.0f;
+                }
+                Color currentColor = Color.FromArgb(
+         (int)(startColor.R + colorInterpolation * (endColor.R - startColor.R)),
+         (int)(startColor.G + colorInterpolation * (endColor.G - startColor.G)),
+         (int)(startColor.B + colorInterpolation * (endColor.B - startColor.B)));
+                Pen pen = new Pen(currentColor, initialLineWidth);
+
+                g.DrawLine(pen,
+                    (float)((xMax - a.Item1) / scale * pictureBox1.Width),
+                    (float)((yMax - a.Item2) / scale * pictureBox1.Height),
+                    (float)((xMax - a.Item3) / scale * pictureBox1.Width),
+                    (float)((yMax - a.Item4) / scale * pictureBox1.Height));
+
+                float lineWidthReduction = (initialLineWidth + i)/ listPoints.Count;
+                initialLineWidth -= lineWidthReduction;
+
+            }
 
         }
 
@@ -98,6 +246,7 @@ namespace Lab5
                 string path = AllPath();
 
                 Fractus(path);
+                pictureBox1.Invalidate();
             }
         }
     }

@@ -55,8 +55,11 @@ namespace Lab5
             int ind = (int)Math.Floor(l * 0.3);
             float newX = (p1.X + p2.X) / 2;
             float newY = (float)((p1.Y + p2.Y) / 2 + random.Next(-ind, ind + 1));
-            if (newY > pb.Height)
-                newY = pb.Height - 5;
+            if (newY > pictureBox1.Height)
+                newY = pictureBox1.Height - 5;
+            if (newY < 0)
+                newY = 5;
+
             return new PointF(newX, newY);
         }
 

@@ -38,8 +38,8 @@ namespace Lab5
 
         private void AddPoint(Point point)
         {
-            g.DrawEllipse(Pens.Blue, point.X, point.Y, CircleRadius, CircleRadius);
-            g.FillEllipse(Brushes.Blue, point.X, point.Y, CircleRadius, CircleRadius);
+            g.DrawEllipse(Pens.Black, point.X, point.Y, CircleRadius, CircleRadius);
+            g.FillEllipse(Brushes.Black, point.X, point.Y, CircleRadius, CircleRadius);
             ControlPoints.Add(point);
             pictureBox1.Invalidate();
         }
@@ -56,7 +56,7 @@ namespace Lab5
                     middle.X = (ControlPoints[i].X + ControlPoints[i + 1].X) / 2;
                     middle.Y = (ControlPoints[i].Y + ControlPoints[i + 1].Y) / 2;
                 }
-                // 0 1 2 middle ; draw; middle 4 5 6;draw;
+                // 0 1 2 middle - рисуем сегмент - middle 4 5 6 - рисуем сегмент
                 if (ind == 3)
                 {
                     if (!middle.IsEmpty)
@@ -78,7 +78,7 @@ namespace Lab5
                 points[ind++] = ControlPoints[i];
 
             }
-
+            // остались точки 
             if (ind > 0)
             {
                 for (int i = ind; i < 4; i++)
@@ -107,8 +107,8 @@ namespace Lab5
             g.Clear(Color.White);
             for (int i = 0; i < ControlPoints.Count; i++)
             {
-                g.DrawEllipse(Pens.Blue, ControlPoints[i].X, ControlPoints[i].Y, CircleRadius, CircleRadius);
-                g.FillEllipse(Brushes.Blue, ControlPoints[i].X, ControlPoints[i].Y, CircleRadius, CircleRadius);
+                g.DrawEllipse(Pens.Black, ControlPoints[i].X, ControlPoints[i].Y, CircleRadius, CircleRadius);
+                g.FillEllipse(Brushes.Black, ControlPoints[i].X, ControlPoints[i].Y, CircleRadius, CircleRadius);
             }
 
             pictureBox1.Invalidate();
@@ -145,11 +145,6 @@ namespace Lab5
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            //if (e.Button == MouseButtons.Left)
-            //{
-            //    AddPoint(e.Location);
-            //    Redraw();
-            //}
             if (e.Button == MouseButtons.Right)
             {
                 ControlPoints.RemoveAll(point => IsInCircle(point, e.Location));
@@ -163,6 +158,14 @@ namespace Lab5
             ControlPoints.Clear();
             Redraw();
         }
+        private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                AddPoint(e.Location);
+                Redraw();
+            }
+        }
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             int pointIndex = GetPointIndex(e.Location);
@@ -175,14 +178,7 @@ namespace Lab5
             }
         }
 
-        private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                AddPoint(e.Location);
-                Redraw();
-            }
-        }
+        
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {

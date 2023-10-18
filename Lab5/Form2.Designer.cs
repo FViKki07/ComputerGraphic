@@ -39,9 +39,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(49, 41);
+            button1.Location = new Point(56, 55);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(116, 41);
+            button1.Size = new Size(133, 55);
             button1.TabIndex = 0;
             button1.Text = "Выбрать файл";
             button1.UseVisualStyleBackColor = true;
@@ -49,48 +50,52 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(221, 12);
+            pictureBox1.Location = new Point(253, 16);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(567, 426);
+            pictureBox1.Size = new Size(648, 568);
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
             // 
             // numericUpDown1
             // 
-            numericUpDown1.Location = new Point(49, 117);
+            numericUpDown1.Location = new Point(56, 156);
+            numericUpDown1.Margin = new Padding(3, 4, 3, 4);
             numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(116, 23);
+            numericUpDown1.Size = new Size(133, 27);
             numericUpDown1.TabIndex = 2;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(49, 99);
+            label1.Location = new Point(56, 132);
             label1.Name = "label1";
-            label1.Size = new Size(61, 15);
+            label1.Size = new Size(78, 20);
             label1.TabIndex = 3;
             label1.Text = "Итераций";
             // 
             // button2
             // 
-            button2.Location = new Point(49, 168);
+            button2.Location = new Point(56, 224);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(116, 40);
+            button2.Size = new Size(133, 53);
             button2.TabIndex = 4;
-            button2.Text = "Нариовать";
+            button2.Text = "Нарисовать";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
             // Form2
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(914, 600);
             Controls.Add(button2);
             Controls.Add(label1);
             Controls.Add(numericUpDown1);
             Controls.Add(pictureBox1);
             Controls.Add(button1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form2";
             Text = "Form2";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

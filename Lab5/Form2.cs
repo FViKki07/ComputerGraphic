@@ -47,7 +47,7 @@ namespace Lab5
 
                     axiom = parameters[0];
                     angle = Convert.ToDouble(parameters[1]);
-               
+
                     direction = parameters[2];
 
                     rules.Clear();
@@ -81,7 +81,7 @@ namespace Lab5
 
         private void Fractus(string path)
         {
-            List<double>  allX = new List<double>();
+            List<double> allX = new List<double>();
             List<double> allY = new List<double>();
             List<Tuple<double, double, double, double>> listPoints = new List<Tuple<double, double, double, double>>();
             Stack<Tuple<double, double, double, double>> stPoints = new Stack<Tuple<double, double, double, double>>();
@@ -137,12 +137,12 @@ namespace Lab5
             };
             for (int i = 0; i < path.Length; ++i)
             {
-               
+
                 switch (path[i])
                 {
                     case 'F':
                         listPoints.Add(
-                            new Tuple<double, double,double, double>(x, y, x + dx, y + dy));
+                            new Tuple<double, double, double, double>(x, y, x + dx, y + dy));
                         x += dx;
                         y += dy;
                         allX.Add(x);
@@ -191,7 +191,7 @@ namespace Lab5
             for (int i = 0; i < listPoints.Count; i++)
             {
                 var a = listPoints[i];
-                float colorInterpolation = (float)i  / (listPoints.Count  * 0.5f);
+                float colorInterpolation = (float)i / (listPoints.Count * 0.5f);
                 if (colorInterpolation > 1.0f)
                 {
                     colorInterpolation = 1.0f;
@@ -208,7 +208,7 @@ namespace Lab5
                     (float)((xMax - a.Item3) / scale * pictureBox1.Width),
                     (float)((yMax - a.Item4) / scale * pictureBox1.Height));
 
-                float lineWidthReduction = (initialLineWidth + i)/ listPoints.Count;
+                float lineWidthReduction = (initialLineWidth + i) / listPoints.Count;
                 initialLineWidth -= lineWidthReduction;
 
             }

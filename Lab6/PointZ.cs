@@ -56,11 +56,11 @@ namespace Lab6
             return new PointZ(x, y, Z);
         }
 
-        public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height)
+        public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
         {
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            g.DrawLine(Pens.Black, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
     }
 }

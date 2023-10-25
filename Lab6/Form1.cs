@@ -35,10 +35,13 @@ namespace Lab6
             p.Add(d);
 
 
-            for(int i =1;i<p.Count();i++)
+            for (int i = 1; i < p.Count(); i++)
             {
-                p[0].DrawLine(g, t, p[i],pictureBox1.Width,pictureBox1.Height);
+                p[0].DrawLine( g, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
             }
+
+            Tetrahedron tetrahedron = new Tetrahedron(0.5);
+            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Lab6
     {
         Graphics g;
         Bitmap bmp;
-
+        Polyhedron currentPolyhedron;
         public Form1()
         {
             InitializeComponent();
@@ -35,7 +35,6 @@ namespace Lab6
             p.Add(c);
             p.Add(d);
 
-
             for (int i = 1; i < p.Count(); i++)
             {
                 p[0].DrawLine(g, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
@@ -52,24 +51,28 @@ namespace Lab6
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(1);
                             tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            currentPolyhedron = tetrahedron;
                             break;
                         }
                     case "Гексаэдр":
                         {
                             Hexahedron hexahedron = new Hexahedron(0.5);
                             hexahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            currentPolyhedron = hexahedron;
                             break;
                         }
                     case "Октаэдр":
                         {
                             Octahedron octahedron = new Octahedron(1);
                             octahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            currentPolyhedron = octahedron;
                             break;
                         }
                     default:
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(0.5);
                             tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            currentPolyhedron = new Tetrahedron(0.5);
                             break;
                         }
                 }
@@ -79,8 +82,8 @@ namespace Lab6
         private void button1_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
-            DrawAxis(g, Transform.IsometricProjection());
             GetCurrentPolyhedron(Transform.IsometricProjection());
+            DrawAxis(g, Transform.IsometricProjection());
             pictureBox1.Invalidate();
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    internal class Hexahedron
+    internal class Hexahedron: Polyhedron
     {
         private PointZ[] vertices; // 8 вершин, 6 граней
 

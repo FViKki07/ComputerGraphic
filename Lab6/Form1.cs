@@ -78,10 +78,15 @@ namespace Lab6
 
         private void button1_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White); 
+            g.Clear(Color.White);
             DrawAxis(g, Transform.IsometricProjection());
             GetCurrentPolyhedron(Transform.IsometricProjection());
             pictureBox1.Invalidate();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

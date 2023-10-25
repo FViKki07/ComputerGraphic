@@ -34,7 +34,6 @@
             button1 = new Button();
             PerspectiveLabel = new Label();
             ApplyPerspective = new Button();
-            PerspectiveComboBox = new ComboBox();
             button2 = new Button();
             label8 = new Label();
             ApplyScaleCenter = new Button();
@@ -54,6 +53,7 @@
             numericUpDown3 = new NumericUpDown();
             numericUpDown2 = new NumericUpDown();
             numericUpDown1 = new NumericUpDown();
+            PerspectiveComboBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown10).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown7).BeginInit();
@@ -122,16 +122,6 @@
             ApplyPerspective.Text = "Применить";
             ApplyPerspective.UseVisualStyleBackColor = true;
             // 
-            // PerspectiveComboBox
-            // 
-            PerspectiveComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            PerspectiveComboBox.FormattingEnabled = true;
-            PerspectiveComboBox.Items.AddRange(new object[] { "Перспективная", "Изометрическая" });
-            PerspectiveComboBox.Location = new Point(235, 53);
-            PerspectiveComboBox.Name = "PerspectiveComboBox";
-            PerspectiveComboBox.Size = new Size(120, 23);
-            PerspectiveComboBox.TabIndex = 94;
-            // 
             // button2
             // 
             button2.Location = new Point(277, 289);
@@ -140,6 +130,7 @@
             button2.TabIndex = 115;
             button2.Text = "Применить";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // label8
             // 
@@ -158,6 +149,7 @@
             ApplyScaleCenter.TabIndex = 113;
             ApplyScaleCenter.Text = "Применить";
             ApplyScaleCenter.UseVisualStyleBackColor = true;
+            ApplyScaleCenter.Click += ApplyScaleCenter_Click;
             // 
             // numericUpDown10
             // 
@@ -296,8 +288,8 @@
             numericUpDown3.DecimalPlaces = 2;
             numericUpDown3.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             numericUpDown3.Location = new Point(383, 168);
-            numericUpDown3.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown3.Minimum = new decimal(new int[] { 5, 0, 0, int.MinValue });
+            numericUpDown3.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            numericUpDown3.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown3.Name = "numericUpDown3";
             numericUpDown3.Size = new Size(47, 23);
             numericUpDown3.TabIndex = 99;
@@ -307,8 +299,8 @@
             numericUpDown2.DecimalPlaces = 2;
             numericUpDown2.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             numericUpDown2.Location = new Point(324, 168);
-            numericUpDown2.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown2.Minimum = new decimal(new int[] { 5, 0, 0, int.MinValue });
+            numericUpDown2.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            numericUpDown2.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown2.Name = "numericUpDown2";
             numericUpDown2.Size = new Size(49, 23);
             numericUpDown2.TabIndex = 98;
@@ -318,17 +310,27 @@
             numericUpDown1.DecimalPlaces = 2;
             numericUpDown1.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
             numericUpDown1.Location = new Point(264, 168);
-            numericUpDown1.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown1.Minimum = new decimal(new int[] { 5, 0, 0, int.MinValue });
+            numericUpDown1.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            numericUpDown1.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(49, 23);
             numericUpDown1.TabIndex = 97;
+            // 
+            // PerspectiveComboBox
+            // 
+            PerspectiveComboBox.FormattingEnabled = true;
+            PerspectiveComboBox.Items.AddRange(new object[] { "Тетраэдр", "Гексаэдр", "Октаэдр" });
+            PerspectiveComboBox.Location = new Point(235, 53);
+            PerspectiveComboBox.Name = "PerspectiveComboBox";
+            PerspectiveComboBox.Size = new Size(121, 23);
+            PerspectiveComboBox.TabIndex = 116;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1211, 564);
+            Controls.Add(PerspectiveComboBox);
             Controls.Add(button2);
             Controls.Add(label8);
             Controls.Add(ApplyScaleCenter);
@@ -350,7 +352,6 @@
             Controls.Add(numericUpDown1);
             Controls.Add(PerspectiveLabel);
             Controls.Add(ApplyPerspective);
-            Controls.Add(PerspectiveComboBox);
             Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(comboBox1);
@@ -358,7 +359,6 @@
             Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown10).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown7).EndInit();
@@ -382,7 +382,6 @@
         private Button button1;
         private Label PerspectiveLabel;
         private Button ApplyPerspective;
-        private ComboBox PerspectiveComboBox;
         private Button button2;
         private Label label8;
         private Button ApplyScaleCenter;
@@ -402,5 +401,6 @@
         private NumericUpDown numericUpDown3;
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown1;
+        private ComboBox PerspectiveComboBox;
     }
 }

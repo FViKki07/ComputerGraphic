@@ -87,8 +87,53 @@ namespace Lab6
             pictureBox1.Invalidate();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        //масштаб относительно центра
+        private void ApplyScaleCenter_Click(object sender, EventArgs e)
         {
+            g.Clear(Color.White);
+            double C = (double)numericUpDown10.Value;
+            currentPolyhedron.Apply(Transform.Scale(C, C, C));
+            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, Transform.IsometricProjection());
+            pictureBox1.Invalidate();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            Translate();
+            Rotate();
+            Scale();
+
+            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, Transform.IsometricProjection());
+            pictureBox1.Invalidate();
+        }
+
+        private void Translate()
+        {
+            double X = (double)numericUpDown1.Value;
+            double Y = (double)numericUpDown2.Value;
+            double Z = (double)numericUpDown3.Value;
+            currentPolyhedron.Apply(Transform.Translate(X, Y, Z));
+        }
+
+        //Поворот
+        private void Rotate()
+        {
+            double X = (double)numericUpDown4.Value / 180 * Math.PI;
+            double Y = (double)numericUpDown5.Value / 180 * Math.PI;
+            double Z = (double)numericUpDown6.Value / 180 * Math.PI;
+            currentPolyhedron.Apply(Transform.RotateX(X) * Transform.RotateY(Y) * Transform.RotateZ(Z));
+        }
+
+        //Масштаб
+        private void Scale()
+        {
+            double X = (double)numericUpDown7.Value;
+            double Y = (double)numericUpDown8.Value;
+            double Z = (double)numericUpDown9.Value;
+            currentPolyhedron.Apply(Transform.Scale(X, Y, Z));
 
         }
     }

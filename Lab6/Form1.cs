@@ -16,6 +16,7 @@ namespace Lab6
             g = Graphics.FromImage(bmp);
             pictureBox1.Image = bmp;
             g.Clear(Color.White);
+            comboBox1.SelectedItem = 0;
 
             DrawAxis(g, Transform.IsometricProjection());
         }
@@ -37,11 +38,50 @@ namespace Lab6
 
             for (int i = 1; i < p.Count(); i++)
             {
-                p[0].DrawLine( g, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
+                p[0].DrawLine(g, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
             }
+        }
 
-            Tetrahedron tetrahedron = new Tetrahedron(0.5);
-            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+        private void GetCurrentPolyhedron(Transform t)
+        {
+            if (comboBox1.SelectedItem != null)
+            {
+                switch (comboBox1.SelectedItem.ToString())
+                {
+                    case "Тетраэдр":
+                        {
+                            Tetrahedron tetrahedron = new Tetrahedron(1);
+                            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            break;
+                        }
+                    case "Гексаэдр":
+                        {
+                            Hexahedron hexahedron = new Hexahedron(0.5);
+                            hexahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            break;
+                        }
+                    case "Октаэдр":
+                        {
+                            Octahedron octahedron = new Octahedron(1);
+                            octahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            break;
+                        }
+                    default:
+                        {
+                            Tetrahedron tetrahedron = new Tetrahedron(0.5);
+                            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            break;
+                        }
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White); 
+            DrawAxis(g, Transform.IsometricProjection());
+            GetCurrentPolyhedron(Transform.IsometricProjection());
+            pictureBox1.Invalidate();
         }
     }
 }

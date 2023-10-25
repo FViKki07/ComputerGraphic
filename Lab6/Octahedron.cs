@@ -35,7 +35,6 @@ namespace Lab6
             edges[6] = new int[] { 0, 2, 1 };
             edges[7] = new int[] { 2, 1, 3 };
 
-
             //Pen[] pens = { Pens.Red, Pens.Green, Pens.Yellow, Pens.Orange, Pens.Purple, Pens.Blue };
 
             for (int i = 0; i < edges.Length; i++)
@@ -46,6 +45,29 @@ namespace Lab6
                     int vertex2 = edges[i][(j + 1) % 3];
                     vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
                 }
+            }
+        }
+        public void Apply(Transform t)
+        {
+            foreach (var v in vertices)
+                v.Apply(t);
+        }
+
+        public PointZ Center
+        {
+            get
+            {
+                PointZ p = new PointZ(0, 0, 0);
+                for (int i = 0; i < 6; i++)
+                {
+                    p.X += vertices[i].X;
+                    p.Y += vertices[i].Y;
+                    p.Z += vertices[i].Z;
+                }
+                p.X /= 6;
+                p.Y /= 6;
+                p.Z /= 6;
+                return p;
             }
         }
     }

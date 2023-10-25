@@ -46,6 +46,29 @@ namespace Lab6
             }
         }
 
+        public void Apply(Transform t)
+        {
+            foreach (var v in vertices)
+                v.Apply(t);
+        }
+
+        public PointZ Center
+        {
+            get
+            {
+                PointZ p = new PointZ(0, 0, 0);
+                for (int i = 0; i < 4; i++)
+                {
+                    p.X += vertices[i].X;
+                    p.Y += vertices[i].Y;
+                    p.Z += vertices[i].Z;
+                }
+                p.X /= 4;
+                p.Y /= 4;
+                p.Z /= 4;
+                return p;
+            }
+        }
     }
 
 }

@@ -10,7 +10,8 @@ namespace Lab6
         public Form1()
         {
             InitializeComponent();
-
+            comboBox1.SelectedItem = comboBox1.Items[0];
+            comboBox2.SelectedItem = comboBox2.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
             bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g = Graphics.FromImage(bmp);
@@ -135,6 +136,43 @@ namespace Lab6
             double Z = (double)numericUpDown9.Value;
             currentPolyhedron.Apply(Transform.Scale(X, Y, Z));
 
+        }
+
+        //Отражение
+        private void Reflect()
+        {
+            switch (comboBox2.SelectedItem.ToString())
+            {
+                case "Отражение по X":
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectX());
+                        break;
+                    }
+                case "Отражение по Y":
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectY());
+                        break;
+                    }
+                case "Отражение по Z":
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectZ());
+                        break;
+                    }
+                default:
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectX());
+                        break;
+                    }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            Reflect();
+            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, Transform.IsometricProjection());
+            pictureBox1.Invalidate();
         }
     }
 }

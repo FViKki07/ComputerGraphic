@@ -154,13 +154,13 @@ namespace Lab6
             return Identity() * RotateY(Math.PI / 4) * RotateX(-Math.PI / 4);
         }
 
-        public static Transform PerspectiveProjection()
+        public static Transform PerspectiveProjection(float k)
         {
             return new Transform(
                 new double[,] {
                     { 1, 0, 0, 0 },
                     { 0, 1, 0, 0 },
-                    { 0, 0, 0, 2 },
+                    { 0, 0, 0, -1/k },
                     { 0, 0, 0, 1 }
                 });
         }

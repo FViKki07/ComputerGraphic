@@ -42,6 +42,26 @@ namespace Lab6
             }
         }
 
+        private Transform GetProjection()
+        {
+            if (ProjectionComboBox.SelectedItem != null)
+            {
+                switch (ProjectionComboBox.SelectedItem.ToString())
+                {
+                    case "Изометрическая":
+                        {
+                            return Transform.IsometricProjection();
+                        }
+
+                    case "Перcпективная":
+                        {
+                            return Transform.PerspectiveProjection(3);
+                        }
+                }
+            }
+            return Transform.IsometricProjection();
+        }
+
         private void GetCurrentPolyhedron(Transform t)
         {
             if (comboBox1.SelectedItem != null)
@@ -83,8 +103,8 @@ namespace Lab6
         private void button1_Click(object sender, EventArgs e)
         {
             g.Clear(Color.White);
-            GetCurrentPolyhedron(Transform.IsometricProjection());
-            DrawAxis(g, Transform.IsometricProjection());
+            GetCurrentPolyhedron(GetProjection());
+            DrawAxis(g, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -94,8 +114,8 @@ namespace Lab6
             g.Clear(Color.White);
             double C = (double)numericUpDown10.Value;
             currentPolyhedron.Apply(Transform.Scale(C, C, C));
-            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, Transform.IsometricProjection());
+            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -106,8 +126,8 @@ namespace Lab6
             Rotate();
             Scale();
 
-            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, Transform.IsometricProjection());
+            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -170,8 +190,16 @@ namespace Lab6
         {
             g.Clear(Color.White);
             Reflect();
-            currentPolyhedron.Draw(g, Transform.IsometricProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, Transform.IsometricProjection());
+            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, GetProjection());
+            pictureBox1.Invalidate();
+        }
+
+        private void ApplyProjection_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            GetCurrentPolyhedron(GetProjection());
+            DrawAxis(g, GetProjection());
             pictureBox1.Invalidate();
         }
     }

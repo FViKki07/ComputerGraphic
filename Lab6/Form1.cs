@@ -216,11 +216,11 @@ namespace Lab6
             PointZ p1 = new PointZ(X1, Y1, Z1);
             PointZ p2 = new PointZ(X2, Y2, Z2);
 
-           // p1.DrawLine(g, GetProjection(), p2,pictureBox1.Width,pictureBox1.Height, Pens.Red);
+            // p1.DrawLine(g, GetProjection(), p2,pictureBox1.Width,pictureBox1.Height, Pens.Red);
 
             double ang = (double)numericUpDown17.Value / 180 * Math.PI;
 
-            currentPolyhedron.Apply(Transform.RotateLine(p1,p2, ang));
+            currentPolyhedron.Apply(Transform.RotateLine(p1, p2, ang));
         }
         private void button4_Click(object sender, EventArgs e)
         {

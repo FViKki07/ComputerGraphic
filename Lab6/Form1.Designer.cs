@@ -101,16 +101,16 @@
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Тетраэдр", "Гексаэдр", "Октаэдр" });
-            comboBox1.Location = new Point(53, 71);
+            comboBox1.Location = new Point(54, 71);
             comboBox1.Margin = new Padding(3, 4, 3, 4);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(138, 28);
+            comboBox1.Size = new Size(154, 28);
             comboBox1.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(69, 47);
+            label1.Location = new Point(53, 47);
             label1.Name = "label1";
             label1.Size = new Size(133, 20);
             label1.TabIndex = 2;
@@ -118,10 +118,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(54, 121);
+            button1.Location = new Point(52, 107);
             button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(137, 31);
+            button1.Size = new Size(156, 31);
             button1.TabIndex = 3;
             button1.Text = "Применить ";
             button1.UseVisualStyleBackColor = true;
@@ -132,16 +132,16 @@
             PerspectiveLabel.AutoSize = true;
             PerspectiveLabel.Location = new Point(269, 47);
             PerspectiveLabel.Name = "PerspectiveLabel";
-            PerspectiveLabel.Size = new Size(154, 20);
+            PerspectiveLabel.Size = new Size(157, 20);
             PerspectiveLabel.TabIndex = 96;
-            PerspectiveLabel.Text = "Выберите проекцию";
+            PerspectiveLabel.Text = "Выберите проекцию:";
             // 
             // ApplyProjection
             // 
-            ApplyProjection.Location = new Point(270, 121);
+            ApplyProjection.Location = new Point(269, 107);
             ApplyProjection.Margin = new Padding(3, 4, 3, 4);
             ApplyProjection.Name = "ApplyProjection";
-            ApplyProjection.Size = new Size(137, 31);
+            ApplyProjection.Size = new Size(154, 31);
             ApplyProjection.TabIndex = 95;
             ApplyProjection.Text = "Применить";
             ApplyProjection.UseVisualStyleBackColor = true;
@@ -161,18 +161,18 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(12, 181);
+            label8.Location = new Point(52, 181);
             label8.Name = "label8";
-            label8.Size = new Size(177, 20);
+            label8.Size = new Size(180, 20);
             label8.TabIndex = 114;
-            label8.Text = "Масштаб отн-но центра";
+            label8.Text = "Масштаб отн-но центра:";
             // 
             // ApplyScaleCenter
             // 
-            ApplyScaleCenter.Location = new Point(12, 253);
+            ApplyScaleCenter.Location = new Point(54, 240);
             ApplyScaleCenter.Margin = new Padding(3, 4, 3, 4);
             ApplyScaleCenter.Name = "ApplyScaleCenter";
-            ApplyScaleCenter.Size = new Size(153, 31);
+            ApplyScaleCenter.Size = new Size(154, 31);
             ApplyScaleCenter.TabIndex = 113;
             ApplyScaleCenter.Text = "Применить";
             ApplyScaleCenter.UseVisualStyleBackColor = true;
@@ -182,12 +182,12 @@
             // 
             numericUpDown10.DecimalPlaces = 1;
             numericUpDown10.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown10.Location = new Point(12, 205);
+            numericUpDown10.Location = new Point(53, 205);
             numericUpDown10.Margin = new Padding(3, 4, 3, 4);
             numericUpDown10.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown10.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown10.Name = "numericUpDown10";
-            numericUpDown10.Size = new Size(91, 27);
+            numericUpDown10.Size = new Size(155, 27);
             numericUpDown10.TabIndex = 112;
             numericUpDown10.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -359,7 +359,7 @@
             ProjectionComboBox.Location = new Point(269, 71);
             ProjectionComboBox.Margin = new Padding(3, 4, 3, 4);
             ProjectionComboBox.Name = "ProjectionComboBox";
-            ProjectionComboBox.Size = new Size(138, 28);
+            ProjectionComboBox.Size = new Size(154, 28);
             ProjectionComboBox.TabIndex = 116;
             // 
             // label9
@@ -367,9 +367,9 @@
             label9.AutoSize = true;
             label9.Location = new Point(269, 181);
             label9.Name = "label9";
-            label9.Size = new Size(88, 20);
+            label9.Size = new Size(91, 20);
             label9.TabIndex = 117;
-            label9.Text = "Отражение";
+            label9.Text = "Отражение:";
             // 
             // comboBox2
             // 
@@ -377,14 +377,14 @@
             comboBox2.Items.AddRange(new object[] { "Отражение по X", "Отражение по Y", "Отражение по Z" });
             comboBox2.Location = new Point(269, 205);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(151, 28);
+            comboBox2.Size = new Size(154, 28);
             comboBox2.TabIndex = 118;
             // 
             // button3
             // 
-            button3.Location = new Point(269, 253);
+            button3.Location = new Point(269, 242);
             button3.Name = "button3";
-            button3.Size = new Size(102, 29);
+            button3.Size = new Size(154, 29);
             button3.TabIndex = 119;
             button3.Text = "Применить";
             button3.UseVisualStyleBackColor = true;

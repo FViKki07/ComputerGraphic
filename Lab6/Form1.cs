@@ -1,4 +1,5 @@
 using System.Security.Cryptography.Xml;
+using System.Windows.Forms;
 
 namespace Lab6
 {
@@ -201,6 +202,34 @@ namespace Lab6
             GetCurrentPolyhedron(GetProjection());
             DrawAxis(g, GetProjection());
             pictureBox1.Invalidate();
+        }
+        private void RotateLine()
+        {
+            double X1 = (double)numericUpDown13.Value;
+            double Y1 = (double)numericUpDown12.Value;
+            double Z1 = (double)numericUpDown11.Value;
+
+            double X2 = (double)numericUpDown16.Value;
+            double Y2 = (double)numericUpDown15.Value;
+            double Z2 = (double)numericUpDown14.Value;
+
+            PointZ p1 = new PointZ(X1, Y1, Z1);
+            PointZ p2 = new PointZ(X2, Y2, Z2);
+
+           // p1.DrawLine(g, GetProjection(), p2,pictureBox1.Width,pictureBox1.Height, Pens.Red);
+
+            double ang = (double)numericUpDown17.Value / 180 * Math.PI;
+
+            currentPolyhedron.Apply(Transform.RotateLine(p1,p2, ang));
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            g.Clear(Color.White);
+            RotateLine();
+            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g, GetProjection());
+            pictureBox1.Invalidate();
+
         }
     }
 }

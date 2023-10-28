@@ -63,14 +63,14 @@ namespace Lab6
                     { 0, 0, 0, 1 }
                 });
         }
-        /*
-        public static Transform RotateLine(XYZLine line, double angle)
+
+        public static Transform RotateLine(PointZ p1,PointZ p2, double angle)
         {
             double cos = Math.Cos(angle);
             double sin = Math.Sin(angle);
-            double l = Math.Sign(line.B.X - line.A.X);
-            double m = Math.Sign(line.B.Y - line.A.Y);
-            double n = Math.Sign(line.B.Z - line.A.Z);
+            double l = Math.Sign(p2.X - p1.X);
+            double m = Math.Sign(p2.Y - p1.Y);
+            double n = Math.Sign(p2.Z - p1.Z);
             double length = Math.Sqrt(l * l + m * m + n * n);
             l /= length; m /= length; n /= length;
             return new Transform(
@@ -82,7 +82,7 @@ namespace Lab6
                    {            0,                            0,                             0,               1   }
                 });
 
-        }*/
+        }
 
         public static Transform Scale(double fx, double fy, double fz)
         {

@@ -14,22 +14,29 @@ namespace Lab7
 {
     public partial class Form2 : Form
     {
-        Graphics g;
-        Bitmap bmp;
+        Graphics g1, g2;
+        Bitmap bmp1, bmp2;
         Polyhedron currentPolyhedron;
+        List<PointZ> points;
+        int steps;
         public Form2()
         {
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
-            bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            g = Graphics.FromImage(bmp);
-            pictureBox1.Image = bmp;
-            g.Clear(Color.White);
+            bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            g1 = Graphics.FromImage(bmp1);
+            pictureBox1.Image = bmp1;
+            g1.Clear(Color.White);
+            bmp2 = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+            g2 = Graphics.FromImage(bmp2);
+            pictureBox2.Image = bmp2;
+            g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
 
-            DrawAxis(g, Transform.IsometricProjection());
+            points = new List<PointZ>();
+            DrawAxis(g1, Transform.IsometricProjection());
         }
 
         //Рисует координатные оси 
@@ -81,28 +88,28 @@ namespace Lab7
                     case "Тетраэдр":
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(1);
-                            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = tetrahedron;
                             break;
                         }
                     case "Гексаэдр":
                         {
                             Hexahedron hexahedron = new Hexahedron(0.5);
-                            hexahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            hexahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = hexahedron;
                             break;
                         }
                     case "Октаэдр":
                         {
                             Octahedron octahedron = new Octahedron(1);
-                            octahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            octahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = octahedron;
                             break;
                         }
                     default:
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(0.5);
-                            tetrahedron.Draw(g, t, pictureBox1.Width, pictureBox1.Height);
+                            tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = new Tetrahedron(0.5);
                             break;
                         }
@@ -112,32 +119,32 @@ namespace Lab7
 
         private void button1_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             GetCurrentPolyhedron(GetProjection());
-            DrawAxis(g, GetProjection());
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
         //масштаб относительно центра
         private void ApplyScaleCenter_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             double C = (double)numericUpDown10.Value;
             currentPolyhedron.Apply(Transform.Scale(C, C, C));
-            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, GetProjection());
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             Translate();
             Rotate();
             Scale();
 
-            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, GetProjection());
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -198,18 +205,18 @@ namespace Lab7
 
         private void button3_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             Reflect();
-            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, GetProjection());
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
         private void ApplyProjection_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             GetCurrentPolyhedron(GetProjection());
-            DrawAxis(g, GetProjection());
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
         private void RotateLine()
@@ -233,12 +240,42 @@ namespace Lab7
         }
         private void button4_Click(object sender, EventArgs e)
         {
-            g.Clear(Color.White);
+            g1.Clear(Color.White);
             RotateLine();
-            currentPolyhedron.Draw(g, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g, GetProjection());
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
 
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            g1.Clear(Color.White);
+            g2.Clear(Color.White);
+            DrawAxis(g1, Transform.IsometricProjection());
+            points.Clear();
+            pictureBox1.Invalidate();
+            pictureBox2.Invalidate();
+        }
+
+        private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
+        {
+            PointZ newp = new PointZ(e.X, e.Y, 0);
+            points.Add(newp);
+            g2.DrawEllipse(Pens.Red, e.X, e.Y, 3, 3);
+            g2.FillEllipse(Brushes.Red, e.X, e.Y, 3, 3);
+            if (points.Count > 1)
+                for (int i = 0; i < points.Count - 1; i++)
+                {
+                    g2.DrawLine(Pens.Red, points[i].getPoint(), points[i + 1].getPoint());
+                }
+
+            pictureBox2.Invalidate();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            steps = ((int)numericUpDown18.Value);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -265,5 +302,7 @@ namespace Lab7
                 }
             }
         }
+
     }
 }
+

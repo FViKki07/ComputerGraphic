@@ -39,6 +39,13 @@ namespace Lab7
             coords = newCoords;
         }
 
+        public Point getPoint()
+        {
+            Point pt = new Point((int)X,(int)Y);
+            return pt;
+        }
+
+
         public PointZ Transform(Transform t)
         {
             var p = new PointZ(X, Y, Z);

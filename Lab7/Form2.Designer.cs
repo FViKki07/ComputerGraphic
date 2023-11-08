@@ -519,6 +519,7 @@
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
             сохранитьToolStripMenuItem.Size = new Size(180, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
+            сохранитьToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // загрузитьToolStripMenuItem
             // 

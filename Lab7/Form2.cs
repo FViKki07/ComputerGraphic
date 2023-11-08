@@ -240,5 +240,30 @@ namespace Lab7
             pictureBox1.Invalidate();
 
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //var path = figure.Name + ".obj";
+
+
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            sfd.Title = "Save as...";
+            sfd.CheckPathExists = true;
+            sfd.Filter = "OBJ Files(*.obj)|*.obj";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    ParserOBJ parser = new ParserOBJ();
+                    parser.SaveToFile(sfd.FileName, currentPolyhedron);
+                }
+                catch
+                {
+                    MessageBox.Show("Error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
     }
 }

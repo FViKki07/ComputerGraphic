@@ -47,6 +47,18 @@ namespace Lab7
                 }
             }
         }
+
+
+        public PointZ[] getVertice()
+        {
+            return vertices;
+        }
+
+        public List<List<int>> getPolygons()
+        {
+            return null;
+            //return polygons;
+        }
         public void Apply(Transform t)
         {
             foreach (var v in vertices)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -324,7 +325,7 @@ namespace Lab7
         {
             return (float)(x + y);
         }
-       
+
         private void GetFunction()
         {
             if (functiounComboBox.SelectedItem != null)
@@ -341,6 +342,11 @@ namespace Lab7
                         }
                 }
             }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

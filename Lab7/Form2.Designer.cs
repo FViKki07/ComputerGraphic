@@ -712,7 +712,6 @@
             // functiounComboBox
             // 
             functiounComboBox.FormattingEnabled = true;
-            functiounComboBox.Items.AddRange(new object[] { "Перcпективная", "Изометрическая" });
             functiounComboBox.Location = new Point(1556, 434);
             functiounComboBox.Margin = new Padding(3, 4, 3, 4);
             functiounComboBox.Name = "functiounComboBox";

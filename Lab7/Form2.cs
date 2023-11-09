@@ -19,6 +19,8 @@ namespace Lab7
         Polyhedron currentPolyhedron;
         List<PointZ> points;
         int steps;
+        Func<float, float, float> function;
+
         public Form2()
         {
             InitializeComponent();
@@ -275,7 +277,7 @@ namespace Lab7
 
         private void button5_Click(object sender, EventArgs e)
         {
-            steps = ((int)numericUpDown18.Value);
+            steps = ((int)stepsNumericUpDown.Value);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -302,6 +304,24 @@ namespace Lab7
                 }
             }
         }
+
+
+
+
+
+
+        ///////////// Task3
+
+        private float SimpleSquareFunction(float x, float y)
+        {
+            return x * x + y * y;
+        }
+
+        private float SimpleFunction(float x, float y)
+        {
+            return x * y;
+        }
+
 
     }
 }

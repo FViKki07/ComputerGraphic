@@ -41,7 +41,7 @@ namespace Lab7
 
         public Point getPoint()
         {
-            Point pt = new Point((int)X,(int)Y);
+            Point pt = new Point((int)X, (int)Y);
             return pt;
         }
 
@@ -59,7 +59,7 @@ namespace Lab7
         public PointZ NormalizedToDisplay(int width, int height)
         {
             var x = (X / coords[3] + 1) / 2 * width;
-            var y = (-Y / coords[3] + 1) / 2 *  height;
+            var y = (-Y / coords[3] + 1) / 2 * height;
             return new PointZ(x, y, Z);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -368,8 +369,24 @@ namespace Lab7
         {
             return (float)(x + y);
         }
-
-
+       
+        private void GetFunction()
+        {
+            if (functiounComboBox.SelectedItem != null)
+            {
+                switch (functiounComboBox.SelectedItem.ToString())
+                {
+                    case "10sin(x) + 10sin(y)":
+                        {
+                            function = (x, y) => SinFunction(x, y); break;
+                        }
+                    case "x + y":
+                        {
+                            function = (x, y) => AdditionFunction(x, y); break;
+                        }
+                }
+            }
+        }
     }
 }
 

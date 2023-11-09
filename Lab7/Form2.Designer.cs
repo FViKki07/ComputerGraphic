@@ -583,7 +583,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(1390, 613);
+            button5.Location = new Point(1390, 575);
             button5.Name = "button5";
             button5.Size = new Size(111, 85);
             button5.TabIndex = 177;
@@ -623,7 +623,7 @@
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label15.Location = new Point(1390, 473);
+            label15.Location = new Point(1390, 435);
             label15.Name = "label15";
             label15.Size = new Size(81, 23);
             label15.TabIndex = 182;
@@ -633,7 +633,7 @@
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(1390, 557);
+            label16.Location = new Point(1390, 519);
             label16.Name = "label16";
             label16.Size = new Size(32, 23);
             label16.TabIndex = 183;
@@ -643,7 +643,7 @@
             // 
             label17.AutoSize = true;
             label17.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.Location = new Point(1390, 517);
+            label17.Location = new Point(1390, 479);
             label17.Name = "label17";
             label17.Size = new Size(33, 23);
             label17.TabIndex = 184;
@@ -653,7 +653,7 @@
             // 
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label18.Location = new Point(1556, 517);
+            label18.Location = new Point(1556, 479);
             label18.Name = "label18";
             label18.Size = new Size(33, 23);
             label18.TabIndex = 186;
@@ -663,7 +663,7 @@
             // 
             label19.AutoSize = true;
             label19.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label19.Location = new Point(1556, 557);
+            label19.Location = new Point(1556, 519);
             label19.Name = "label19";
             label19.Size = new Size(32, 23);
             label19.TabIndex = 185;
@@ -672,7 +672,7 @@
             // y1NnumericUpDown
             // 
             y1NnumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y1NnumericUpDown.Location = new Point(1594, 557);
+            y1NnumericUpDown.Location = new Point(1594, 519);
             y1NnumericUpDown.Margin = new Padding(3, 4, 3, 4);
             y1NnumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             y1NnumericUpDown.Name = "y1NnumericUpDown";
@@ -682,7 +682,7 @@
             // x1NumericUpDown
             // 
             x1NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x1NumericUpDown.Location = new Point(1594, 517);
+            x1NumericUpDown.Location = new Point(1594, 479);
             x1NumericUpDown.Margin = new Padding(3, 4, 3, 4);
             x1NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             x1NumericUpDown.Name = "x1NumericUpDown";
@@ -692,7 +692,7 @@
             // y0NumericUpDown
             // 
             y0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y0NumericUpDown.Location = new Point(1429, 557);
+            y0NumericUpDown.Location = new Point(1429, 519);
             y0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
             y0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             y0NumericUpDown.Name = "y0NumericUpDown";
@@ -702,7 +702,7 @@
             // x0NumericUpDown
             // 
             x0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x0NumericUpDown.Location = new Point(1429, 517);
+            x0NumericUpDown.Location = new Point(1429, 479);
             x0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
             x0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             x0NumericUpDown.Name = "x0NumericUpDown";
@@ -712,8 +712,7 @@
             // functiounComboBox
             // 
             functiounComboBox.FormattingEnabled = true;
-            functiounComboBox.Items.AddRange(new object[] { "Перcпективная", "Изометрическая" });
-            functiounComboBox.Location = new Point(1556, 472);
+            functiounComboBox.Location = new Point(1556, 434);
             functiounComboBox.Margin = new Padding(3, 4, 3, 4);
             functiounComboBox.Name = "functiounComboBox";
             functiounComboBox.Size = new Size(154, 28);
@@ -721,7 +720,7 @@
             // 
             // button7
             // 
-            button7.Location = new Point(1556, 613);
+            button7.Location = new Point(1556, 575);
             button7.Name = "button7";
             button7.Size = new Size(111, 86);
             button7.TabIndex = 192;

@@ -38,6 +38,9 @@ namespace Lab7
             comboBox1.SelectedItem = 0;
 
             points = new List<PointZ>();
+
+            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "x + y" });
+
             DrawAxis(g1, Transform.IsometricProjection());
         }
 
@@ -356,15 +359,16 @@ namespace Lab7
 
         ///////////// Task3
 
-        private float SimpleSquareFunction(float x, float y)
+        private float SinFunction(float x, float y)
         {
-            return x * x + y * y;
+            return (float)(10 * Math.Sin(x) + 10 * Math.Sin(y));
         }
 
-        private float SimpleFunction(float x, float y)
+        private float AdditionFunction(float x, float y)
         {
-            return x * y;
+            return (float)(x + y);
         }
+
 
     }
 }

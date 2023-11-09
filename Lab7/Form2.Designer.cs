@@ -76,8 +76,19 @@
             pictureBox2 = new PictureBox();
             button5 = new Button();
             button6 = new Button();
-            numericUpDown18 = new NumericUpDown();
+            stepsNumericUpDown = new NumericUpDown();
             label14 = new Label();
+            label15 = new Label();
+            label16 = new Label();
+            label17 = new Label();
+            label18 = new Label();
+            label19 = new Label();
+            y1NnumericUpDown = new NumericUpDown();
+            x1NumericUpDown = new NumericUpDown();
+            y0NumericUpDown = new NumericUpDown();
+            x0NumericUpDown = new NumericUpDown();
+            functiounComboBox = new ComboBox();
+            button7 = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown15).BeginInit();
@@ -98,7 +109,11 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown18).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)stepsNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)y1NnumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)x1NumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)y0NumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)x0NumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // button4
@@ -568,18 +583,18 @@
             // 
             // button5
             // 
-            button5.Location = new Point(1361, 485);
+            button5.Location = new Point(1390, 575);
             button5.Name = "button5";
-            button5.Size = new Size(111, 29);
+            button5.Size = new Size(111, 85);
             button5.TabIndex = 177;
-            button5.Text = "Применить";
+            button5.Text = "Построить фигуру вращения";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
             // button6
             // 
             button6.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
-            button6.Location = new Point(1361, 721);
+            button6.Location = new Point(1390, 721);
             button6.Name = "button6";
             button6.Size = new Size(138, 45);
             button6.TabIndex = 178;
@@ -587,30 +602,150 @@
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
-            // numericUpDown18
+            // stepsNumericUpDown
             // 
-            numericUpDown18.Location = new Point(1361, 423);
-            numericUpDown18.Name = "numericUpDown18";
-            numericUpDown18.Size = new Size(150, 27);
-            numericUpDown18.TabIndex = 179;
+            stepsNumericUpDown.Location = new Point(1556, 400);
+            stepsNumericUpDown.Name = "stepsNumericUpDown";
+            stepsNumericUpDown.Size = new Size(150, 27);
+            stepsNumericUpDown.TabIndex = 179;
             // 
             // label14
             // 
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label14.Location = new Point(1361, 383);
+            label14.Location = new Point(1390, 399);
             label14.Name = "label14";
             label14.Size = new Size(160, 23);
             label14.TabIndex = 180;
             label14.Text = "Кол-во разбиений:";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label15.Location = new Point(1390, 435);
+            label15.Name = "label15";
+            label15.Size = new Size(81, 23);
+            label15.TabIndex = 182;
+            label15.Text = "Функция:";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label16.Location = new Point(1390, 519);
+            label16.Name = "label16";
+            label16.Size = new Size(32, 23);
+            label16.TabIndex = 183;
+            label16.Text = "Y0:";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label17.Location = new Point(1390, 479);
+            label17.Name = "label17";
+            label17.Size = new Size(33, 23);
+            label17.TabIndex = 184;
+            label17.Text = "X0:";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label18.Location = new Point(1556, 479);
+            label18.Name = "label18";
+            label18.Size = new Size(33, 23);
+            label18.TabIndex = 186;
+            label18.Text = "X1:";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
+            label19.Location = new Point(1556, 519);
+            label19.Name = "label19";
+            label19.Size = new Size(32, 23);
+            label19.TabIndex = 185;
+            label19.Text = "Y1:";
+            // 
+            // y1NnumericUpDown
+            // 
+            y1NnumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
+            y1NnumericUpDown.Location = new Point(1594, 519);
+            y1NnumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            y1NnumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            y1NnumericUpDown.Name = "y1NnumericUpDown";
+            y1NnumericUpDown.Size = new Size(56, 27);
+            y1NnumericUpDown.TabIndex = 187;
+            // 
+            // x1NumericUpDown
+            // 
+            x1NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
+            x1NumericUpDown.Location = new Point(1594, 479);
+            x1NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            x1NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            x1NumericUpDown.Name = "x1NumericUpDown";
+            x1NumericUpDown.Size = new Size(56, 27);
+            x1NumericUpDown.TabIndex = 188;
+            // 
+            // y0NumericUpDown
+            // 
+            y0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
+            y0NumericUpDown.Location = new Point(1429, 519);
+            y0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            y0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            y0NumericUpDown.Name = "y0NumericUpDown";
+            y0NumericUpDown.Size = new Size(56, 27);
+            y0NumericUpDown.TabIndex = 189;
+            // 
+            // x0NumericUpDown
+            // 
+            x0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
+            x0NumericUpDown.Location = new Point(1429, 479);
+            x0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            x0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            x0NumericUpDown.Name = "x0NumericUpDown";
+            x0NumericUpDown.Size = new Size(56, 27);
+            x0NumericUpDown.TabIndex = 190;
+            // 
+            // functiounComboBox
+            // 
+            functiounComboBox.FormattingEnabled = true;
+            functiounComboBox.Items.AddRange(new object[] { "Перcпективная", "Изометрическая" });
+            functiounComboBox.Location = new Point(1556, 434);
+            functiounComboBox.Margin = new Padding(3, 4, 3, 4);
+            functiounComboBox.Name = "functiounComboBox";
+            functiounComboBox.Size = new Size(154, 28);
+            functiounComboBox.TabIndex = 191;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(1556, 575);
+            button7.Name = "button7";
+            button7.Size = new Size(111, 86);
+            button7.TabIndex = 192;
+            button7.Text = "Построить график функции";
+            button7.UseVisualStyleBackColor = true;
             // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1769, 808);
+            Controls.Add(button7);
+            Controls.Add(functiounComboBox);
+            Controls.Add(x0NumericUpDown);
+            Controls.Add(y0NumericUpDown);
+            Controls.Add(x1NumericUpDown);
+            Controls.Add(y1NnumericUpDown);
+            Controls.Add(label18);
+            Controls.Add(label19);
+            Controls.Add(label17);
+            Controls.Add(label16);
+            Controls.Add(label15);
             Controls.Add(label14);
-            Controls.Add(numericUpDown18);
+            Controls.Add(stepsNumericUpDown);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(pictureBox2);
@@ -681,7 +816,11 @@
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown18).EndInit();
+            ((System.ComponentModel.ISupportInitialize)stepsNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)y1NnumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)x1NumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)y0NumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)x0NumericUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -736,7 +875,18 @@
         private PictureBox pictureBox2;
         private Button button5;
         private Button button6;
-        private NumericUpDown numericUpDown18;
+        private NumericUpDown stepsNumericUpDown;
         private Label label14;
+        private Label label15;
+        private Label label16;
+        private Label label17;
+        private Label label18;
+        private Label label19;
+        private NumericUpDown y1NnumericUpDown;
+        private NumericUpDown x1NumericUpDown;
+        private NumericUpDown y0NumericUpDown;
+        private NumericUpDown x0NumericUpDown;
+        private ComboBox functiounComboBox;
+        private Button button7;
     }
 }

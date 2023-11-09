@@ -346,7 +346,32 @@ namespace Lab7
 
         private void button7_Click(object sender, EventArgs e)
         {
-            
+            //List<PointZ> p1 = new List<PointZ>();
+            //p1.Add(new PointZ(0, 0.5, 1));
+            //p1.Add(new PointZ(0.5, 0.5, 1));
+            //p1.Add(new PointZ(0, 0, 1));
+
+            //List<PointZ> p2 = new List<PointZ>();
+            //p2.Add(new PointZ(0.5, 0.5, 1));
+            //p2.Add(new PointZ(0.5, 0, 0.5));
+            //p2.Add(new PointZ(1, 0, 1));
+
+            //List<PointZ> p3 = new List<PointZ>();
+            //p3.Add(new PointZ(0, 0.5, 0.5));
+            //p3.Add(new PointZ(0.5, 0.5, 0.5));
+            //p3.Add(new PointZ(0.5, 0, 1));
+
+            //Triangle t1 = new Triangle(p1);
+            //Triangle t2 = new Triangle(p2);
+            //Triangle t3 = new Triangle(p3);
+
+            //List<Triangle> triangles = new List<Triangle>();
+            //triangles.Add(t1);
+            //triangles.Add(t2);
+            //triangles.Add(t3);
+            //Obgect3D obgect3D = new Obgect3D(triangles);
+            //obgect3D.Draw(g1,GetProjection(),pictureBox1.Width, pictureBox1.Height);
+            //pictureBox1.Invalidate();
         }
     }
 }

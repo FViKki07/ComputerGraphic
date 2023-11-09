@@ -321,10 +321,10 @@ namespace Lab7
                 foreach (PointZ point in newPoints)
                     points.Add(point);
             }
-            currentPolyhedron = polygons[1];
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
-            pictureBox1.Invalidate();
+           // currentPolyhedron = polygons[1];
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+           // DrawAxis(g1, GetProjection());
+           // pictureBox1.Invalidate();
 
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)

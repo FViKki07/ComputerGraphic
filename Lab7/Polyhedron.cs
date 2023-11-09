@@ -13,5 +13,6 @@ namespace Lab7
         public PointZ[] getVertice();
         void Apply(Transform t);
         PointZ Center { get; }
+
     }
 }

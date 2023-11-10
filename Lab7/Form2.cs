@@ -282,7 +282,31 @@ namespace Lab7
         private void button5_Click(object sender, EventArgs e)
         {
             steps = ((int)stepsNumericUpDown.Value);
+            centerPoints();
             rotationFigure();
+        }
+
+        public void centerPoints()
+        {
+            double min_x = double.MaxValue;
+            double min_y = double.MaxValue;
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i].X < min_x)
+                {
+                    min_x = points[i].X;
+                }
+                if (points[i].Y < min_y)
+                {
+                    min_y = points[i].Y;
+                }
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                points[i].X = points[i].X - min_x;
+                points[i].Y = points[i].Y - min_y;
+            }
         }
 
         private void rotationFigure()
@@ -322,10 +346,12 @@ namespace Lab7
                 foreach (PointZ point in newPoints)
                     points.Add(point);
             }
-           // currentPolyhedron = polygons[1];
+            Object3D obj = new Object3D(polygons);
+            obj.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            // currentPolyhedron = polygons[1];
             //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-           // DrawAxis(g1, GetProjection());
-           // pictureBox1.Invalidate();
+            DrawAxis(g1, GetProjection());
+            pictureBox1.Invalidate();
 
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -369,7 +395,7 @@ namespace Lab7
         {
             return (float)(x + y);
         }
-       
+
         private void GetFunction()
         {
             if (functiounComboBox.SelectedItem != null)
@@ -390,7 +416,7 @@ namespace Lab7
 
         private void button7_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

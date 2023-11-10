@@ -319,10 +319,10 @@ namespace Lab7
                 foreach (PointZ point in newPoints)
                     points.Add(point);
             }
-           // currentPolyhedron = polygons[1];
+            // currentPolyhedron = polygons[1];
             //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-           // DrawAxis(g1, GetProjection());
-           // pictureBox1.Invalidate();
+            // DrawAxis(g1, GetProjection());
+            // pictureBox1.Invalidate();
 
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -366,8 +366,36 @@ namespace Lab7
         {
             return x * y;
         }
-       
+
         private void GetFunction()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+
+                    try
+                    {
+                        g1.Clear(Color.White);
+                        var filename = openFileDialog.FileName;
+                        ParserOBJ parser = new ParserOBJ(filename);
+                        currentPolyhedron = parser.LoadFromFile();
+                        StringBuilder figureName = new StringBuilder();
+                        currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                        DrawAxis(g1, GetProjection());
+                        pictureBox1.Invalidate();
+                    }
+                    catch
+                    {
+                        DialogResult result = MessageBox.Show("Could not open file",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {

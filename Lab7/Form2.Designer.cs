@@ -726,7 +726,7 @@
             button7.TabIndex = 192;
             button7.Text = "Построить график функции";
             button7.UseVisualStyleBackColor = true;
-            button7.Click += button7_Click;
+            //button7.Click += button7_Click;
             // 
             // Form2
             // 

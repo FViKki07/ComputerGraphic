@@ -279,8 +279,52 @@ namespace Lab7
         private void button5_Click(object sender, EventArgs e)
         {
             steps = ((int)stepsNumericUpDown.Value);
+            rotationFigure();
         }
 
+        private void rotationFigure()
+        {
+            float rotAngle = 360f / steps;
+            List<PointZ> newPoints = new List<PointZ>();
+
+            List<Triangle> polygons = new List<Triangle>();
+
+            for (int i = 0; i < steps; i++)
+            {
+                newPoints.Clear();
+                foreach (PointZ point in points)
+                {
+                    point.Apply(Transform.RotateX(rotAngle) * Transform.RotateY(rotAngle) * Transform.RotateZ(rotAngle));
+                    newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                }
+
+                for (int j = 1; j < newPoints.Count; ++j)
+                {
+
+                    polygons.Add(new Triangle(new List<PointZ>()
+                        {
+                                newPoints[j - 1],
+                                points[j - 1],
+                                points[j]
+                        }));
+                    polygons.Add(new Triangle(new List<PointZ>()
+                        {
+                                newPoints[j - 1],
+                                points[j],
+                                newPoints[j]
+                        }));
+                }
+                points.Clear();
+
+                foreach (PointZ point in newPoints)
+                    points.Add(point);
+            }
+           // currentPolyhedron = polygons[1];
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+           // DrawAxis(g1, GetProjection());
+           // pictureBox1.Invalidate();
+
+        }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //var path = figure.Name + ".obj";
@@ -322,8 +366,8 @@ namespace Lab7
         {
             return x * y;
         }
-
-        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+       
+        private void GetFunction()
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {

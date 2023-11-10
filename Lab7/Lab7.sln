@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab7", "Lab7.csproj", "{CA832349-CA8E-4C3C-9DDD-D8318B389CED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{6B97D268-95CF-47F2-99A9-AD7475529394}"
-	ProjectSection(SolutionItems) = preProject
-		FunctionFigureBuilder.cs = FunctionFigureBuilder.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

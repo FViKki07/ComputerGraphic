@@ -311,62 +311,57 @@ namespace Lab7
             List<PointZ> newPoints = new List<PointZ>();
             List<PointZ> allPoints = new List<PointZ>();
             List<List<int>> polygons = new List<List<int>>();
-
+            int index = 0;
             for (int i = 0; i < steps; i++)
             {
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
-
-                    point.Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
                     newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                    newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+
                     allPoints.Add(point);
                 }
 
-                for (int j = 1; j < newPoints.Count; ++j)
+                for (int j = 0; j < newPoints.Count - 1; j++)
                 {
-
-                    allPoints.Add(newPoints[j]);
                     polygons.Add(new List<int>()
-                      {
-                              (i+1)*points.Count()+(j-1),
-                              //newPoints[j - 1],
-                              i*points.Count()+(j-1),
-                              //points[j - 1],
-                              i*points.Count()+j,
-                              //points[j]
-                      });
+            {
+                index + j, index + 1 + j, index + newPoints.Count() + j
+            });
                     polygons.Add(new List<int>()
-                      {
-                              (i+1)*points.Count()+(j-1),
-                               i*points.Count()+j,
-                               (i+1)*points.Count()+j,
-                      });
-
-                    //polygons.Add(new List<PointZ>()
-                    //    {
-                    //            newPoints[j - 1],
-                    //            points[j - 1],
-                    //            points[j]
-                    //    });
-                    //polygons.Add(new List<PointZ>()
-                    //    {
-                    //            newPoints[j - 1],
-                    //            points[j],
-                    //            newPoints[j]
-                    //    });
+            {
+                index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
+            });
                 }
                 points.Clear();
 
                 foreach (PointZ point in newPoints)
                     points.Add(point);
+                index += points.Count;
             }
+            foreach (PointZ point in points)
+            {
+                newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+
+                allPoints.Add(point);
+            }
+            List<int> up = new();
+            for (int i = 0; i < steps; i++)
+                up.Add(i * points.Count());
+            polygons.Add(up);
+
+            List<int> down = new();
+            for (int i = 0; i < steps; i++)
+                down.Add(i * points.Count() + points.Count() - 1);
+            polygons.Add(down);
+
             currentPolyhedron = new NoNameFigure(allPoints, polygons);
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
-
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -409,7 +404,7 @@ namespace Lab7
         {
             return x * y;
         }
-       
+
         private void GetFunction()
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())

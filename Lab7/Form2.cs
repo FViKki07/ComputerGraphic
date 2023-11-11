@@ -279,50 +279,93 @@ namespace Lab7
         private void button5_Click(object sender, EventArgs e)
         {
             steps = ((int)stepsNumericUpDown.Value);
+            centerPoints();
             rotationFigure();
+        }
+
+        public void centerPoints()
+        {
+            double min_x = double.MaxValue;
+            double min_y = double.MaxValue;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i].X < min_x)
+                {
+                    min_x = points[i].X;
+                }
+                if (points[i].Y < min_y)
+                {
+                    min_y = points[i].Y;
+                }
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                points[i].X = points[i].X - min_x;
+                points[i].Y = points[i].Y - min_y;
+            }
         }
 
         private void rotationFigure()
         {
             float rotAngle = 360f / steps;
             List<PointZ> newPoints = new List<PointZ>();
-
-            List<Triangle> polygons = new List<Triangle>();
+            List<PointZ> allPoints = new List<PointZ>();
+            List<List<int>> polygons = new List<List<int>>();
 
             for (int i = 0; i < steps; i++)
             {
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
-                    point.Apply(Transform.RotateX(rotAngle) * Transform.RotateY(rotAngle) * Transform.RotateZ(rotAngle));
+
+                    point.Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
                     newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                    allPoints.Add(point);
                 }
 
                 for (int j = 1; j < newPoints.Count; ++j)
                 {
 
-                    polygons.Add(new Triangle(new List<PointZ>()
-                        {
-                                newPoints[j - 1],
-                                points[j - 1],
-                                points[j]
-                        }));
-                    polygons.Add(new Triangle(new List<PointZ>()
-                        {
-                                newPoints[j - 1],
-                                points[j],
-                                newPoints[j]
-                        }));
+                    allPoints.Add(newPoints[j]);
+                    polygons.Add(new List<int>()
+                      {
+                              (i+1)*points.Count()+(j-1),
+                              //newPoints[j - 1],
+                              i*points.Count()+(j-1),
+                              //points[j - 1],
+                              i*points.Count()+j,
+                              //points[j]
+                      });
+                    polygons.Add(new List<int>()
+                      {
+                              (i+1)*points.Count()+(j-1),
+                               i*points.Count()+j,
+                               (i+1)*points.Count()+j,
+                      });
+
+                    //polygons.Add(new List<PointZ>()
+                    //    {
+                    //            newPoints[j - 1],
+                    //            points[j - 1],
+                    //            points[j]
+                    //    });
+                    //polygons.Add(new List<PointZ>()
+                    //    {
+                    //            newPoints[j - 1],
+                    //            points[j],
+                    //            newPoints[j]
+                    //    });
                 }
                 points.Clear();
 
                 foreach (PointZ point in newPoints)
                     points.Add(point);
             }
-           // currentPolyhedron = polygons[1];
-            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-           // DrawAxis(g1, GetProjection());
-           // pictureBox1.Invalidate();
+            currentPolyhedron = new NoNameFigure(allPoints, polygons);
+            g1.Clear(Color.White);
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
+            pictureBox1.Invalidate();
 
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)

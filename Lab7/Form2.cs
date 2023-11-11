@@ -283,7 +283,7 @@ namespace Lab7
                 if (comboBox3.SelectedItem != null)
                 {
                     steps = ((int)stepsNumericUpDown.Value);
-                    centerPoints();
+                    // centerPoints();
                     rotationFigure();
                 }
                 else MessageBox.Show("Выберите ось");
@@ -354,24 +354,25 @@ namespace Lab7
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
+                    //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                    //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+
+                    //allPoints.Add(point);
                     PointZ newp = new PointZ(point.X, point.Y, point.Z);
                     newPoints.Add(chooseAxis(newp, rotAngle));
-                    // newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-
-                    //newPoints.Last().Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
                     allPoints.Add(point);
                 }
 
                 for (int j = 0; j < newPoints.Count - 1; j++)
                 {
                     polygons.Add(new List<int>()
-                    {
+                {
                 index + j, index + 1 + j, index + newPoints.Count() + j
-                    });
+                });
                     polygons.Add(new List<int>()
-                    {
+                {
                 index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
-                    });
+                });
                 }
                 points.Clear();
 
@@ -381,9 +382,11 @@ namespace Lab7
             }
             foreach (PointZ point in points)
             {
-                newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-                newPoints.Last().Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
-
+                //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+                //allPoints.Add(point);
+                PointZ newp = new PointZ(point.X, point.Y, point.Z);
+                newPoints.Add(chooseAxis(newp, rotAngle));
                 allPoints.Add(point);
             }
             List<int> up = new();

@@ -21,7 +21,7 @@ namespace Lab7
         List<PointZ> points;
         int steps;
         Func<float, float, float> function;
-        bool figure; 
+        bool figure;
 
         public Form2()
         {
@@ -42,7 +42,7 @@ namespace Lab7
 
             points = new List<PointZ>();
 
-            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "x + y" });
+            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "10cos(x) + 10cos(y)", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
         }
@@ -295,7 +295,7 @@ namespace Lab7
                 if (comboBox3.SelectedItem != null)
                 {
                     steps = ((int)stepsNumericUpDown.Value);
-                    // centerPoints();
+                    centerPoints();
                     rotationFigure();
                 }
                 else MessageBox.Show("Выберите ось");
@@ -442,21 +442,96 @@ namespace Lab7
             }
         }
 
-
-
-
-
-
-        ///////////// Task3
-
-        private float SimpleSquareFunction(float x, float y)
+        private float SinFunction(float x, float y)
         {
-            return x * x + y * y;
+            return (float)(10 * Math.Sin(x) + 10 * Math.Sin(y));
         }
 
-        private float SimpleFunction(float x, float y)
+        private float AdditionFunction(float x, float y)
         {
-            return x * y;
+            return (float)(x * x) / 100;
+        }
+        private float CosFunction(float x, float y)
+        {
+            return (float)(Math.Sign(x) * 10);
+        }
+
+        private void GetUserFunction()
+        {
+            if (functiounComboBox.SelectedItem != null)
+            {
+                switch (functiounComboBox.SelectedItem.ToString())
+                {
+                    case "10sin(x) + 10sin(y)":
+                        {
+                            function = (x, y) => SinFunction(x, y); break;
+                        }
+                    case "10cos(x) + 10cos(y)":
+                        {
+                            function = (x, y) => CosFunction(x, y); break;
+                        }
+                    case "x^2 / 100":
+                        {
+                            function = (x, y) => AdditionFunction(x, y); break;
+                        }
+                }
+            }
+        }
+
+        public void GetFunctionFigure(int x0, int y0, int x1, int y1, int steps, Func<float, float, float> func)
+        {
+            List<PointZ> newPoints = new List<PointZ>();
+            List<PointZ> allPoints = new List<PointZ>();
+            List<PointZ> pointp = new List<PointZ>();
+            List<List<int>> polygons = new List<List<int>>();
+            float stepX = (x1 - x0) * 1.0f / steps;
+            float stepY = (y1 - y0) * 1.0f / steps;
+            float dx = -(x1 + x0) / 2.0f;
+            float dy = -(y1 + y0) / 2.0f;
+
+            int index = 0;
+            for (int i = 0; i <= steps; i++)
+            {
+                for (int j = 0; j <= steps; j++)
+                {
+                    float x = x0 + i * stepX;
+                    float y = y0 + j * stepY;
+                    float z = func(x, y);
+
+                    newPoints.Add(new PointZ(dx + x, dy + y, z));
+                    allPoints.Add(new PointZ(dx + x, dy + y, z));
+                }
+
+                if (pointp.Count > 0)
+                {
+
+                    for (int x = 0; x < pointp.Count - 1; x++)
+                    {
+                        polygons.Add(new List<int>
+                        {
+                            index + x,
+                            index + x + 1,
+                            index+newPoints.Count + x
+                        });
+                        polygons.Add(new List<int>()
+                        {
+                            index + x + 1,
+                            index + newPoints.Count() + x,
+                            index + newPoints.Count() + x + 1
+                        });
+                    }
+                    index += newPoints.Count();
+                }
+                pointp.Clear();
+                pointp.AddRange(newPoints);
+                newPoints.Clear();
+            }
+
+            currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.008);
+            g1.Clear(Color.White);
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjection());
+            pictureBox1.Invalidate();
         }
 
         private void GetFunction()
@@ -485,60 +560,6 @@ namespace Lab7
                     }
                 }
             }
-        }
-
-        static Object3D GetFunctionFigure(int x0, int y0, int x1, int y1, int steps, Func<float, float, float> func)
-        {
-            var polygons = new List<Triangle>();
-
-            float stepX = (x1 - x0) * 1.0f / steps;
-            float stepY = (y1 - y0) * 1.0f / steps;
-            float dx = -(x1 + x0) / 2.0f;
-            float dy = -(y1 + y0) / 2.0f;
-
-            List<PointZ> points = new List<PointZ>();
-            float minZ = float.MaxValue;
-            float maxZ = float.MinValue;
-
-            for (float x = x0; x < x1; x += stepX)
-            {
-                for (float y = y0; y < y1; y += stepY)
-                {
-                    float z = func(x, y);
-                    if (z > maxZ)
-                        maxZ = z;
-                    if (z < minZ)
-                        minZ = z;
-
-                    points.Add(new PointZ(dx + x, dy + y, z));
-
-                    if (x > x0 && y > y0)
-                    {
-                        int currentIndex = points.Count - 1;
-                        int prevIndex = currentIndex - 1 - (int)steps;
-
-                        polygons.Add(new Triangle(new List<PointZ>()
-                {
-                    points[prevIndex],
-                    points[currentIndex - 1],
-                    points[currentIndex]
-                }));
-
-                        polygons.Add(new Triangle(new List<PointZ>()
-                {
-                    points[prevIndex],
-                    points[currentIndex],
-                    points[prevIndex + 1]
-                }));
-                    }
-                }
-            }
-
-            Object3D obgect = new Object3D(polygons);
-            //obgect.Translate(new PointZ(0, 0, -(maxZ - minZ) / 2.0f));
-
-            return obgect;
-            //return (obgect, new PointZ(dx, dy, minZ - (maxZ - minZ) / 2.0f));
         }
 
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -579,6 +600,13 @@ namespace Lab7
             //Obgect3D obgect3D = new Obgect3D(triangles);
             //obgect3D.Draw(g1,GetProjection(),pictureBox1.Width, pictureBox1.Height);
             //pictureBox1.Invalidate();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+            GetUserFunction();
+            GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
         }
     }
 }

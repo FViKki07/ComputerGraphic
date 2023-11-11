@@ -589,7 +589,7 @@
             // 
             // button5
             // 
-            button5.Location = new Point(1402, 634);
+            button5.Location = new Point(1400, 634);
             button5.Margin = new Padding(3, 4, 3, 4);
             button5.Name = "button5";
             button5.Size = new Size(111, 85);
@@ -601,7 +601,7 @@
             // button6
             // 
             button6.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
-            button6.Location = new Point(1390, 737);
+            button6.Location = new Point(1400, 737);
             button6.Name = "button6";
             button6.Size = new Size(138, 45);
             button6.TabIndex = 178;
@@ -642,7 +642,7 @@
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(1402, 581);
+            label16.Location = new Point(1400, 575);
             label16.Name = "label16";
             label16.Size = new Size(32, 23);
             label16.TabIndex = 183;
@@ -652,7 +652,7 @@
             // 
             label17.AutoSize = true;
             label17.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.Location = new Point(1402, 528);
+            label17.Location = new Point(1400, 522);
             label17.Name = "label17";
             label17.Size = new Size(33, 23);
             label17.TabIndex = 184;
@@ -662,7 +662,7 @@
             // 
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label18.Location = new Point(1591, 528);
+            label18.Location = new Point(1589, 522);
             label18.Name = "label18";
             label18.Size = new Size(33, 23);
             label18.TabIndex = 186;
@@ -672,7 +672,7 @@
             // 
             label19.AutoSize = true;
             label19.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label19.Location = new Point(1591, 581);
+            label19.Location = new Point(1589, 575);
             label19.Name = "label19";
             label19.Size = new Size(32, 23);
             label19.TabIndex = 185;
@@ -681,7 +681,7 @@
             // y1NnumericUpDown
             // 
             y1NnumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y1NnumericUpDown.Location = new Point(1635, 581);
+            y1NnumericUpDown.Location = new Point(1633, 575);
             y1NnumericUpDown.Margin = new Padding(3, 5, 3, 5);
             y1NnumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             y1NnumericUpDown.Name = "y1NnumericUpDown";
@@ -691,7 +691,7 @@
             // x1NumericUpDown
             // 
             x1NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x1NumericUpDown.Location = new Point(1635, 528);
+            x1NumericUpDown.Location = new Point(1633, 522);
             x1NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             x1NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             x1NumericUpDown.Name = "x1NumericUpDown";
@@ -701,9 +701,10 @@
             // y0NumericUpDown
             // 
             y0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y0NumericUpDown.Location = new Point(1446, 581);
+            y0NumericUpDown.Location = new Point(1444, 575);
             y0NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             y0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            y0NumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
             y0NumericUpDown.Name = "y0NumericUpDown";
             y0NumericUpDown.Size = new Size(56, 27);
             y0NumericUpDown.TabIndex = 189;
@@ -711,9 +712,10 @@
             // x0NumericUpDown
             // 
             x0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x0NumericUpDown.Location = new Point(1446, 528);
+            x0NumericUpDown.Location = new Point(1444, 522);
             x0NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             x0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
+            x0NumericUpDown.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
             x0NumericUpDown.Name = "x0NumericUpDown";
             x0NumericUpDown.Size = new Size(56, 27);
             x0NumericUpDown.TabIndex = 190;
@@ -729,13 +731,14 @@
             // 
             // button7
             // 
-            button7.Location = new Point(1591, 634);
+            button7.Location = new Point(1589, 634);
             button7.Margin = new Padding(3, 4, 3, 4);
             button7.Name = "button7";
             button7.Size = new Size(111, 85);
             button7.TabIndex = 192;
             button7.Text = "Построить график функции";
             button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
             // 
             // comboBox3
             // 

@@ -69,5 +69,7 @@ namespace Lab7
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
             g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
+
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +9,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Lab7
 {
@@ -40,6 +40,7 @@ namespace Lab7
             points = new List<PointZ>();
 
             functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "x + y" });
+
             DrawAxis(g1, Transform.IsometricProjection());
         }
 
@@ -280,8 +281,52 @@ namespace Lab7
         private void button5_Click(object sender, EventArgs e)
         {
             steps = ((int)stepsNumericUpDown.Value);
+            rotationFigure();
         }
 
+        private void rotationFigure()
+        {
+            float rotAngle = 360f / steps;
+            List<PointZ> newPoints = new List<PointZ>();
+
+            List<Triangle> polygons = new List<Triangle>();
+
+            for (int i = 0; i < steps; i++)
+            {
+                newPoints.Clear();
+                foreach (PointZ point in points)
+                {
+                    point.Apply(Transform.RotateX(rotAngle) * Transform.RotateY(rotAngle) * Transform.RotateZ(rotAngle));
+                    newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                }
+
+                for (int j = 1; j < newPoints.Count; ++j)
+                {
+
+                    polygons.Add(new Triangle(new List<PointZ>()
+                        {
+                                newPoints[j - 1],
+                                points[j - 1],
+                                points[j]
+                        }));
+                    polygons.Add(new Triangle(new List<PointZ>()
+                        {
+                                newPoints[j - 1],
+                                points[j],
+                                newPoints[j]
+                        }));
+                }
+                points.Clear();
+
+                foreach (PointZ point in newPoints)
+                    points.Add(point);
+            }
+            // currentPolyhedron = polygons[1];
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            // DrawAxis(g1, GetProjection());
+            // pictureBox1.Invalidate();
+
+        }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //var path = figure.Name + ".obj";
@@ -314,30 +359,40 @@ namespace Lab7
 
         ///////////// Task3
 
-        private float SinFunction(float x, float y)
+        private float SimpleSquareFunction(float x, float y)
         {
-            return (float)(10 * Math.Sin(x) + 10 * Math.Sin(y));
+            return x * x + y * y;
         }
 
-        private float AdditionFunction(float x, float y)
+        private float SimpleFunction(float x, float y)
         {
-            return (float)(x + y);
+            return x * y;
         }
 
         private void GetFunction()
         {
-            if (functiounComboBox.SelectedItem != null)
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                switch (functiounComboBox.SelectedItem.ToString())
+                openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    case "10sin(x) + 10sin(y)":
-                        {
-                            function = (x, y) => SinFunction(x, y); break;
-                        }
-                    case "x + y":
-                        {
-                            function = (x, y) => AdditionFunction(x, y); break;
-                        }
+
+                    try
+                    {
+                        g1.Clear(Color.White);
+                        var filename = openFileDialog.FileName;
+                        ParserOBJ parser = new ParserOBJ(filename);
+                        currentPolyhedron = parser.LoadFromFile();
+                        StringBuilder figureName = new StringBuilder();
+                        currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                        DrawAxis(g1, GetProjection());
+                        pictureBox1.Invalidate();
+                    }
+                    catch
+                    {
+                        DialogResult result = MessageBox.Show("Could not open file",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -396,26 +451,36 @@ namespace Lab7
             //return (obgect, new PointZ(dx, dy, minZ - (maxZ - minZ) / 2.0f));
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //List<PointZ> p1 = new List<PointZ>();
-            //p1.Add(new PointZ(0, 0.5, 1));
-            //p1.Add(new PointZ(0.5, 0.5, 1));
-            //p1.Add(new PointZ(0, 0, 1));
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
 
-            //List<PointZ> p2 = new List<PointZ>();
-            //p2.Add(new PointZ(0.5, 0.5, 1));
-            //p2.Add(new PointZ(0.5, 0, 0.5));
-            //p2.Add(new PointZ(1, 0, 1));
+                    try
+                    {
+                        g1.Clear(Color.White);
+                        var filename = openFileDialog.FileName;
+                        ParserOBJ parser = new ParserOBJ(filename);
+                        currentPolyhedron = parser.LoadFromFile();
+                        StringBuilder figureName = new StringBuilder();
+                        currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                        DrawAxis(g1, GetProjection());
+                        pictureBox1.Invalidate();
+                    }
+                    catch
+                    {
+                        DialogResult result = MessageBox.Show("Could not open file",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
 
-            //List<PointZ> p3 = new List<PointZ>();
-            //p3.Add(new PointZ(0, 0.5, 0.5));
-            //p3.Add(new PointZ(0.5, 0.5, 0.5));
-            //p3.Add(new PointZ(0.5, 0, 1));
-
-            //Triangle t1 = new Triangle(p1);
-            //Triangle t2 = new Triangle(p2);
-            //Triangle t3 = new Triangle(p3);
+        private void DrawFromFile()
+        {
 
             //List<Triangle> triangles = new List<Triangle>();
             //triangles.Add(t1);
@@ -424,10 +489,6 @@ namespace Lab7
             //Obgect3D obgect3D = new Obgect3D(triangles);
             //obgect3D.Draw(g1,GetProjection(),pictureBox1.Width, pictureBox1.Height);
             //pictureBox1.Invalidate();
-            GetFunction();
-            Object3D object3D = GetFunctionFigure(0, 0, 1, 1, 10, function);
-            object3D.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            pictureBox1.Invalidate();
         }
     }
 }

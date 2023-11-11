@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab7
 {
-    internal class Obgect3D
+    internal class Object3D
     {
         private List<Triangle> triangles;
 
@@ -14,7 +14,7 @@ namespace Lab7
         {
             triangles = new List<Triangle>();
         }
-        public Obgect3D(List<Triangle> tr)
+        public Object3D(List<Triangle> tr)
         {
             triangles = new List<Triangle>(tr);
         }

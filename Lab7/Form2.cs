@@ -453,7 +453,7 @@ namespace Lab7
         }
         private float CosFunction(float x, float y)
         {
-            return (float)(Math.Sign(x) * 10);
+            return (float)(Math.Cos(x)*Math.Cos(y));
         }
 
         private void GetUserFunction()
@@ -466,7 +466,7 @@ namespace Lab7
                         {
                             function = (x, y) => SinFunction(x, y); break;
                         }
-                    case "10cos(x) + 10cos(y)":
+                    case "cos(x) * cos(y)":
                         {
                             function = (x, y) => CosFunction(x, y); break;
                         }

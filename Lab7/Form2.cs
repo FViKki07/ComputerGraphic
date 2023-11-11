@@ -21,7 +21,6 @@ namespace Lab7
         List<PointZ> points;
         int steps;
         Func<float, float, float> function;
-
         public Form2()
         {
             InitializeComponent();
@@ -41,7 +40,6 @@ namespace Lab7
             points = new List<PointZ>();
 
             functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "x + y" });
-
             DrawAxis(g1, Transform.IsometricProjection());
         }
 
@@ -344,6 +342,60 @@ namespace Lab7
             }
         }
 
+        static Object3D GetFunctionFigure(int x0, int y0, int x1, int y1, int steps, Func<float, float, float> func)
+        {
+            var polygons = new List<Triangle>();
+
+            float stepX = (x1 - x0) * 1.0f / steps;
+            float stepY = (y1 - y0) * 1.0f / steps;
+            float dx = -(x1 + x0) / 2.0f;
+            float dy = -(y1 + y0) / 2.0f;
+
+            List<PointZ> points = new List<PointZ>();
+            float minZ = float.MaxValue;
+            float maxZ = float.MinValue;
+
+            for (float x = x0; x < x1; x += stepX)
+            {
+                for (float y = y0; y < y1; y += stepY)
+                {
+                    float z = func(x, y);
+                    if (z > maxZ)
+                        maxZ = z;
+                    if (z < minZ)
+                        minZ = z;
+
+                    points.Add(new PointZ(dx + x, dy + y, z));
+
+                    if (x > x0 && y > y0)
+                    {
+                        int currentIndex = points.Count - 1;
+                        int prevIndex = currentIndex - 1 - (int)steps;
+
+                        polygons.Add(new Triangle(new List<PointZ>()
+                {
+                    points[prevIndex],
+                    points[currentIndex - 1],
+                    points[currentIndex]
+                }));
+
+                        polygons.Add(new Triangle(new List<PointZ>()
+                {
+                    points[prevIndex],
+                    points[currentIndex],
+                    points[prevIndex + 1]
+                }));
+                    }
+                }
+            }
+
+            Object3D obgect = new Object3D(polygons);
+            //obgect.Translate(new PointZ(0, 0, -(maxZ - minZ) / 2.0f));
+
+            return obgect;
+            //return (obgect, new PointZ(dx, dy, minZ - (maxZ - minZ) / 2.0f));
+        }
+
         private void button7_Click(object sender, EventArgs e)
         {
             //List<PointZ> p1 = new List<PointZ>();
@@ -372,6 +424,10 @@ namespace Lab7
             //Obgect3D obgect3D = new Obgect3D(triangles);
             //obgect3D.Draw(g1,GetProjection(),pictureBox1.Width, pictureBox1.Height);
             //pictureBox1.Invalidate();
+            GetFunction();
+            Object3D object3D = GetFunctionFigure(0, 0, 1, 1, 10, function);
+            object3D.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            pictureBox1.Invalidate();
         }
     }
 }

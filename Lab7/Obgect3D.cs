@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Lab7
 {
-    internal class Obgect3D
+    class Object3D
     {
         private List<Triangle> triangles;
 
-        public Obgect3D()
+        public Object3D()
         {
             triangles = new List<Triangle>();
         }
-        public Obgect3D(List<Triangle> tr)
+
+        public Object3D(List<Triangle> tr)
         {
             triangles = new List<Triangle>(tr);
         }
@@ -31,7 +32,6 @@ namespace Lab7
                     sumX += tr.Center.X;
                     sumY += tr.Center.Y;
                     sumZ += tr.Center.Z;
-
                 }
                 return new PointZ(sumX / triangles.Count, sumY / triangles.Count, sumZ / triangles.Count);
             }
@@ -45,4 +45,5 @@ namespace Lab7
             }
         }
     }
+
 }

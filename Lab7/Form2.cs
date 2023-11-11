@@ -278,11 +278,47 @@ namespace Lab7
 
         private void button5_Click(object sender, EventArgs e)
         {
-            steps = ((int)stepsNumericUpDown.Value);
-            centerPoints();
-            rotationFigure();
+            if (points.Count >= 2)
+            { if (comboBox3.SelectedItem!= null)
+                {
+                    steps = ((int)stepsNumericUpDown.Value);
+                 //   centerPoints();
+                    rotationFigure();
+                }
+                else MessageBox.Show("Выберите ось");
+
+            }
+            else MessageBox.Show("Выберите минимум 2 точки");
         }
 
+        private PointZ chooseAxis(PointZ p, float angle)
+        {
+
+            switch (comboBox3.SelectedItem.ToString())
+            {
+                case "по X":
+                    {
+                        //return p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        return p;
+                    }
+                case "по Y":
+                    {
+                        p.Apply(Transform.RotateY(angle / 180 * Math.PI));
+                        return p;
+                    }
+                case "по Z":
+                    {
+                        p.Apply(Transform.RotateZ(angle / 180 * Math.PI));
+                        return p;
+                    }
+                default:
+                    {
+                        p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        return p;
+                    }
+            }
+        }
         public void centerPoints()
         {
             double min_x = double.MaxValue;
@@ -317,22 +353,24 @@ namespace Lab7
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
-                    newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-                    newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+                    PointZ newp = new PointZ(point.X, point.Y, point.Z);
+                    newPoints.Add(chooseAxis(newp, rotAngle));
+                    // newPoints.Add(new PointZ(point.X, point.Y, point.Z));
 
+                    //newPoints.Last().Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
                     allPoints.Add(point);
                 }
 
                 for (int j = 0; j < newPoints.Count - 1; j++)
                 {
                     polygons.Add(new List<int>()
-            {
+                    {
                 index + j, index + 1 + j, index + newPoints.Count() + j
-            });
+                    });
                     polygons.Add(new List<int>()
-            {
+                    {
                 index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
-            });
+                    });
                 }
                 points.Clear();
 
@@ -343,7 +381,7 @@ namespace Lab7
             foreach (PointZ point in points)
             {
                 newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-                newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+                newPoints.Last().Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
 
                 allPoints.Add(point);
             }
@@ -357,7 +395,7 @@ namespace Lab7
                 down.Add(i * points.Count() + points.Count() - 1);
             polygons.Add(down);
 
-            currentPolyhedron = new NoNameFigure(allPoints, polygons);
+            currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());

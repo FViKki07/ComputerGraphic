@@ -21,6 +21,7 @@ namespace Lab7
         List<PointZ> points;
         int steps;
         Func<float, float, float> function;
+        bool figure; 
 
         public Form2()
         {
@@ -37,6 +38,7 @@ namespace Lab7
             pictureBox2.Image = bmp2;
             g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
+            figure = false;
 
             points = new List<PointZ>();
             DrawAxis(g1, Transform.IsometricProjection());
@@ -84,6 +86,11 @@ namespace Lab7
 
         private void GetCurrentPolyhedron(Transform t)
         {
+            if (currentPolyhedron != null && !figure)
+            {
+                currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                return;
+            }
             if (comboBox1.SelectedItem != null)
             {
                 switch (comboBox1.SelectedItem.ToString())
@@ -123,7 +130,9 @@ namespace Lab7
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
+            figure = true;
             GetCurrentPolyhedron(GetProjection());
+            figure = false;
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }

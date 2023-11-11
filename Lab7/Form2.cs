@@ -21,6 +21,8 @@ namespace Lab7
         List<PointZ> points;
         int steps;
         Func<float, float, float> function;
+        bool figure; 
+
         public Form2()
         {
             InitializeComponent();
@@ -36,6 +38,7 @@ namespace Lab7
             pictureBox2.Image = bmp2;
             g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
+            figure = false;
 
             points = new List<PointZ>();
 
@@ -86,6 +89,11 @@ namespace Lab7
 
         private void GetCurrentPolyhedron(Transform t)
         {
+            if (currentPolyhedron != null && !figure)
+            {
+                currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                return;
+            }
             if (comboBox1.SelectedItem != null)
             {
                 switch (comboBox1.SelectedItem.ToString())
@@ -125,7 +133,9 @@ namespace Lab7
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
+            figure = true;
             GetCurrentPolyhedron(GetProjection());
+            figure = false;
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -280,11 +290,48 @@ namespace Lab7
 
         private void button5_Click(object sender, EventArgs e)
         {
-            steps = ((int)stepsNumericUpDown.Value);
-            centerPoints();
-            rotationFigure();
+            if (points.Count >= 2)
+            {
+                if (comboBox3.SelectedItem != null)
+                {
+                    steps = ((int)stepsNumericUpDown.Value);
+                    // centerPoints();
+                    rotationFigure();
+                }
+                else MessageBox.Show("Выберите ось");
+
+            }
+            else MessageBox.Show("Выберите минимум 2 точки");
         }
 
+        private PointZ chooseAxis(PointZ p, float angle)
+        {
+
+            switch (comboBox3.SelectedItem.ToString())
+            {
+                case "по X":
+                    {
+                        //return p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        return p;
+                    }
+                case "по Y":
+                    {
+                        p.Apply(Transform.RotateY(angle / 180 * Math.PI));
+                        return p;
+                    }
+                case "по Z":
+                    {
+                        p.Apply(Transform.RotateZ(angle / 180 * Math.PI));
+                        return p;
+                    }
+                default:
+                    {
+                        p.Apply(Transform.RotateX(angle / 180 * Math.PI));
+                        return p;
+                    }
+            }
+        }
         public void centerPoints()
         {
             double min_x = double.MaxValue;
@@ -313,62 +360,62 @@ namespace Lab7
             List<PointZ> newPoints = new List<PointZ>();
             List<PointZ> allPoints = new List<PointZ>();
             List<List<int>> polygons = new List<List<int>>();
-
+            int index = 0;
             for (int i = 0; i < steps; i++)
             {
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
+                    //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                    //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
 
-                    point.Apply(Transform.RotateX(rotAngle / 180 * Math.PI));
-                    newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                    //allPoints.Add(point);
+                    PointZ newp = new PointZ(point.X, point.Y, point.Z);
+                    newPoints.Add(chooseAxis(newp, rotAngle));
                     allPoints.Add(point);
                 }
 
-                for (int j = 1; j < newPoints.Count; ++j)
+                for (int j = 0; j < newPoints.Count - 1; j++)
                 {
-
-                    allPoints.Add(newPoints[j]);
                     polygons.Add(new List<int>()
-                      {
-                              (i+1)*points.Count()+(j-1),
-                              //newPoints[j - 1],
-                              i*points.Count()+(j-1),
-                              //points[j - 1],
-                              i*points.Count()+j,
-                              //points[j]
-                      });
+                {
+                index + j, index + 1 + j, index + newPoints.Count() + j
+                });
                     polygons.Add(new List<int>()
-                      {
-                              (i+1)*points.Count()+(j-1),
-                               i*points.Count()+j,
-                               (i+1)*points.Count()+j,
-                      });
-
-                    //polygons.Add(new List<PointZ>()
-                    //    {
-                    //            newPoints[j - 1],
-                    //            points[j - 1],
-                    //            points[j]
-                    //    });
-                    //polygons.Add(new List<PointZ>()
-                    //    {
-                    //            newPoints[j - 1],
-                    //            points[j],
-                    //            newPoints[j]
-                    //    });
+                {
+                index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
+                });
                 }
                 points.Clear();
 
                 foreach (PointZ point in newPoints)
                     points.Add(point);
+                index += points.Count;
             }
-            currentPolyhedron = new NoNameFigure(allPoints, polygons);
+            foreach (PointZ point in points)
+            {
+                //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
+                //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
+                //allPoints.Add(point);
+                PointZ newp = new PointZ(point.X, point.Y, point.Z);
+                newPoints.Add(chooseAxis(newp, rotAngle));
+                allPoints.Add(point);
+            }
+            List<int> up = new();
+            for (int i = 0; i < steps; i++)
+                up.Add(i * points.Count());
+            polygons.Add(up);
+
+            List<int> down = new();
+            for (int i = 0; i < steps; i++)
+                down.Add(i * points.Count() + points.Count() - 1);
+            polygons.Add(down);
+
+            currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
-
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {

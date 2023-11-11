@@ -279,10 +279,11 @@ namespace Lab7
         private void button5_Click(object sender, EventArgs e)
         {
             if (points.Count >= 2)
-            { if (comboBox3.SelectedItem!= null)
+            {
+                if (comboBox3.SelectedItem != null)
                 {
                     steps = ((int)stepsNumericUpDown.Value);
-                 //   centerPoints();
+                    centerPoints();
                     rotationFigure();
                 }
                 else MessageBox.Show("Выберите ось");

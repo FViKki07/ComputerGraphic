@@ -113,22 +113,30 @@ namespace Lab7
             foreach (var p in points)
                 p.Apply(Transform.Translate(-meanX, -meanY, -meanZ));
             */
-            var maxX = points.OrderBy(x => x.X).Last().X;
+           /* var maxX = points.OrderBy(x => x.X).Last().X;
             var maxY = points.OrderBy(x => x.Y).Last().Y;
             var maxZ = points.OrderBy(x => x.Z).Last().Z;
             
             foreach (var p in points)
             {
-                p.X = p.X / maxX;
-                p.Y = p.Y / maxY;
-                p.Z = p.Z / maxZ;
+                if (!Normal(p))
+                {
+                    p.X = p.X / maxX;
+                    p.Y = p.Y / maxY;
+                    p.Z = p.Z / maxZ;
+                }
             }
-            
+            */
             NoNameFigure nn = new NoNameFigure(points, polygons);
             return nn;
         }
 
-
+        bool Normal(PointZ p)
+        {
+            if (p.X > 1 || p.X < -1 || p.Y > 1 || p.Y < -1 || p.Z > 1 || p.Z < -1)
+                return false;
+            return true;
+        }
 
     }
 }

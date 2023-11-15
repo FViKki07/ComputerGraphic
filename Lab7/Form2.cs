@@ -43,7 +43,7 @@ namespace Lab7
 
             points = new List<PointZ>();
 
-            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
+            functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
         }
@@ -478,7 +478,7 @@ namespace Lab7
             {
                 switch (functiounComboBox.SelectedItem.ToString())
                 {
-                    case "10sin(x) + 10sin(y)":
+                    case "10 * sin(x) + 10 * sin(y)":
                         {
                             function = (x, y) => SinFunction(x, y); break;
                         }

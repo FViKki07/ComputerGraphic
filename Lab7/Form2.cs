@@ -334,6 +334,37 @@ namespace Lab7
                     }
             }
         }
+        private void reflectAxis()
+        {
+
+            switch (comboBox3.SelectedItem.ToString())
+            {
+                case "по X":
+                    {           
+                        currentPolyhedron.Apply(Transform.ReflectX());
+                       // currentPolyhedron.Apply(Transform.Translate(1, 0, 0));
+                        break;
+                    }
+                case "по Y":
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectY());
+                        currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
+                        break;
+                    }
+                case "по Z":
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectZ());
+                        //currentPolyhedron.Apply(Transform.Translate(0, 0, 1));
+                        break;
+                    }
+                default:
+                    {
+                        currentPolyhedron.Apply(Transform.ReflectY());
+                        currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
+                        break;
+                    }
+            }
+        }
         public void centerPoints()
         {
             double min_x = double.MaxValue;
@@ -416,16 +447,17 @@ namespace Lab7
             var maxX = allPoints.OrderBy(x => x.X).Last().X;
             var maxY = allPoints.OrderBy(x => x.Y).Last().Y;
             var maxZ = allPoints.OrderBy(x => x.Z).Last().Z;
-            /*
-            foreach (var p in allPoints)
-            {
-                p.X = p.X / maxX;
-                p.Y = p.Y / maxY;
-                p.Z = p.Z / maxZ;
-            }*/
+
+            //foreach (var p in allPoints)
+            //{
+            //    p.X = p.X / maxX;
+            //    p.Y = p.Y / maxY;
+            //    p.Z = p.Z / maxZ;
+            //}
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
-            currentPolyhedron.Apply(Transform.ReflectY());
-            currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
+            //currentPolyhedron.Apply(Transform.ReflectY());
+            reflectAxis();
+            //currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());

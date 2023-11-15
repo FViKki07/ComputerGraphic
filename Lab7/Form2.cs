@@ -36,13 +36,14 @@ namespace Lab7
             bmp2 = new Bitmap(pictureBox2.Width, pictureBox2.Height);
             g2 = Graphics.FromImage(bmp2);
             pictureBox2.Image = bmp2;
+
             g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
             figure = false;
 
             points = new List<PointZ>();
 
-            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "10cos(x) + 10cos(y)", "x^2 / 100" });
+            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
         }
@@ -378,13 +379,13 @@ namespace Lab7
                 for (int j = 0; j < newPoints.Count - 1; j++)
                 {
                     polygons.Add(new List<int>()
-                {
-                index + j, index + 1 + j, index + newPoints.Count() + j
-                });
+                    {
+                        index + j, index + 1 + j, index + newPoints.Count() + j
+                    });
                     polygons.Add(new List<int>()
-                {
-                index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
-                });
+                    {
+                        index + j + 1, index + newPoints.Count() + j, index + newPoints.Count() + j + 1
+                    });
                 }
                 points.Clear();
 
@@ -412,6 +413,8 @@ namespace Lab7
             polygons.Add(down);
 
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
+            currentPolyhedron.Apply(Transform.ReflectY());
+            currentPolyhedron.Apply(Transform.Translate(0, 0.5, 0));
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
@@ -453,7 +456,7 @@ namespace Lab7
         }
         private float CosFunction(float x, float y)
         {
-            return (float)(Math.Cos(x)*Math.Cos(y));
+            return (float)(10 * Math.Cos(x) * Math.Cos(y));
         }
 
         private void GetUserFunction()
@@ -466,7 +469,7 @@ namespace Lab7
                         {
                             function = (x, y) => SinFunction(x, y); break;
                         }
-                    case "cos(x) * cos(y)":
+                    case "10 * cos(x) * cos(y)":
                         {
                             function = (x, y) => CosFunction(x, y); break;
                         }
@@ -482,7 +485,7 @@ namespace Lab7
         {
             List<PointZ> newPoints = new List<PointZ>();
             List<PointZ> allPoints = new List<PointZ>();
-            List<PointZ> pointp = new List<PointZ>();
+            List<PointZ> oldPoints = new List<PointZ>();
             List<List<int>> polygons = new List<List<int>>();
             float stepX = (x1 - x0) * 1.0f / steps;
             float stepY = (y1 - y0) * 1.0f / steps;
@@ -502,16 +505,15 @@ namespace Lab7
                     allPoints.Add(new PointZ(dx + x, dy + y, z));
                 }
 
-                if (pointp.Count > 0)
+                if (oldPoints.Count > 0)
                 {
-
-                    for (int x = 0; x < pointp.Count - 1; x++)
+                    for (int x = 0; x < oldPoints.Count - 1; x++)
                     {
                         polygons.Add(new List<int>
                         {
                             index + x,
                             index + x + 1,
-                            index+newPoints.Count + x
+                            index + newPoints.Count + x
                         });
                         polygons.Add(new List<int>()
                         {
@@ -522,8 +524,8 @@ namespace Lab7
                     }
                     index += newPoints.Count();
                 }
-                pointp.Clear();
-                pointp.AddRange(newPoints);
+                oldPoints.Clear();
+                oldPoints.AddRange(newPoints);
                 newPoints.Clear();
             }
 
@@ -569,7 +571,6 @@ namespace Lab7
                 openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     try
                     {
                         g1.Clear(Color.White);
@@ -592,7 +593,6 @@ namespace Lab7
 
         private void DrawFromFile()
         {
-
             //List<Triangle> triangles = new List<Triangle>();
             //triangles.Add(t1);
             //triangles.Add(t2);
@@ -604,9 +604,16 @@ namespace Lab7
 
         private void button7_Click(object sender, EventArgs e)
         {
-
             GetUserFunction();
-            GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
+
+            if (function == null)
+            {
+                MessageBox.Show("Выберите функцию!");
+            }
+            else
+            {
+                GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
+            }
         }
     }
 }

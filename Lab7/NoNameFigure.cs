@@ -22,13 +22,13 @@ namespace Lab7
         {
             vertices = points.ToArray();
             polygons = p;
-            /*for (int i=0;i<vertices.Count();i++)
+            for (int i=0;i<vertices.Count();i++)
             {
                 vertices[i].X *= size;
                 vertices[i].Y *= size;
                 vertices[i].Z *= size;
 
-            }*/
+            }
         }
         public PointZ[] getVertice()
         {

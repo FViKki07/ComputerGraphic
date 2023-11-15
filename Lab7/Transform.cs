@@ -107,6 +107,17 @@ namespace Lab7
                 });
         }
 
+        public static Transform FlipY()
+        {
+            return new Transform(
+                new double[,] {
+            { 1, 0, 0, 0 },
+            { 0, -1, 0, 0 }, // Отражение по Y
+            { 0, 0, 1, 0 },
+            { 0, 0, 0, 1 }
+                });
+        }
+
         public static Transform Identity()
         {
             return new Transform(

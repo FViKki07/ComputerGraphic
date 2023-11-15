@@ -70,6 +70,11 @@ namespace Lab7
             g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 
-
+        public void DrawLine2(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
+        {
+            var c = this.Transform(projection);
+            var d = B.Transform(projection);
+            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+        }
     }
 }

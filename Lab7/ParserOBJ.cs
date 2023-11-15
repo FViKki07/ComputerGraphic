@@ -71,7 +71,10 @@ namespace Lab7
                                 if (line[1] == 't' || line[1] == 'n')
                                     break;
                                 var point = line.Split(' ');
-                                points.Add(new PointZ(mtdGetDouble(point[1]), mtdGetDouble(point[2]), mtdGetDouble(point[3])));
+                                if (point[1] == "")
+                                    points.Add(new PointZ(mtdGetDouble(point[2]), mtdGetDouble(point[3]), mtdGetDouble(point[4])));
+                                else
+                                    points.Add(new PointZ(mtdGetDouble(point[1]), mtdGetDouble(point[2]), mtdGetDouble(point[3])));
                                 break;
                             }
                         case 'f':
@@ -95,6 +98,33 @@ namespace Lab7
                     }
                 }
             }
+
+            var maxX = points.OrderBy(x => x.X).Last().X;
+            var minX = points.OrderBy(x => x.X).First().X;
+            var maxY = points.OrderBy(x => x.Y).Last().Y;
+            var minY = points.OrderBy(x => x.Y).First().Y;
+            var maxZ = points.OrderBy(x => x.Z).Last().Z;
+            var minZ = points.OrderBy(x => x.Z).First().Z;
+
+            double meanX = (minX + maxX) / 2;
+            double meanY = (minY + maxY) / 2;
+            double meanZ = (minZ + maxZ) / 2;
+
+            foreach (var p in points)
+                p.Apply(Transform.Translate(-meanX, -meanY, -meanZ));
+
+            maxX = points.OrderBy(x => x.X).Last().X;
+            maxY = points.OrderBy(x => x.Y).Last().Y;
+            maxZ = points.OrderBy(x => x.Z).Last().Z;
+
+            foreach (var p in points)
+            {
+                p.X = p.X / maxX;
+                p.Y = p.Y / maxY;
+                p.Z = p.Z / maxZ;
+                p.Apply(Transform.FlipY());
+            }
+
             NoNameFigure nn = new NoNameFigure(points, polygons);
             return nn;
         }

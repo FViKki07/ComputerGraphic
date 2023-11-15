@@ -12,6 +12,6 @@ namespace Lab7
         public List<List<int>> getPolygons();
         public PointZ[] getVertice();
         void Apply(Transform t);
-        //PointZ Center { get; }
+        PointZ Center { get; }
     }
 }

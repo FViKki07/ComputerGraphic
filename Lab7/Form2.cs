@@ -412,6 +412,7 @@ namespace Lab7
             polygons.Add(down);
 
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
+            currentPolyhedron.Apply(Transform.FlipY());
             g1.Clear(Color.White);
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
@@ -453,7 +454,7 @@ namespace Lab7
         }
         private float CosFunction(float x, float y)
         {
-            return (float)(Math.Cos(x)*Math.Cos(y));
+            return (float)(Math.Cos(x) * Math.Cos(y));
         }
 
         private void GetUserFunction()

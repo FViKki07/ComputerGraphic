@@ -40,27 +40,29 @@ namespace Lab7
             return polygons;
         }
 
-        public void MinAndMax()
+        public PointZ Center
         {
-            var MaxX = vertices.OrderBy(x => x.X).Last().X;
-            var MinX = vertices.OrderBy(x => x.X).First().X;
-            var MaxY = vertices.OrderBy(x => x.Y).Last().Y;
-            var MinY = vertices.OrderBy(x => x.Y).First().Y;
-            var MaxZ = vertices.OrderBy(x => x.Z).Last().Z;
-            var MinZ = vertices.OrderBy(x => x.Z).First().Z;
+            get
+            {
+                var MaxX = vertices.OrderBy(x => x.X).Last().X;
+                var MinX = vertices.OrderBy(x => x.X).First().X;
+                var MaxY = vertices.OrderBy(x => x.Y).Last().Y;
+                var MinY = vertices.OrderBy(x => x.Y).First().Y;
+                var MaxZ = vertices.OrderBy(x => x.Z).Last().Z;
+                var MinZ = vertices.OrderBy(x => x.Z).First().Z;
 
-            double scale = Math.Max(MaxX - MinX, MaxY - MinY);
-            scale = Math.Max(scale, MaxZ - MinZ);
+                double meanX = (MinX + MaxX) / 2;
+                double meanY = (MinY + MaxY) / 2;
+                double meanZ = (MinZ + MaxZ) / 2;
 
-
-
+                PointZ p = new PointZ(meanX, meanY, meanZ);
+                return p;
+            }
         }
+
         public void Draw(Graphics g, Transform projection, int width, int height)
         {
-           // double scaleX = (double)width / 2;
-           // double scaleY = (double)height / 2;
 
-          //  this.Apply(Transform.Scale(scaleX, scaleY, 0));
 
             for (int i = 0; i < polygons.Count; i++)
             {

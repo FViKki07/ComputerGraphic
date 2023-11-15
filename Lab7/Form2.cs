@@ -293,6 +293,7 @@ namespace Lab7
         {
             if (points.Count >= 2)
             {
+
                 if (comboBox3.SelectedItem != null)
                 {
                     steps = ((int)stepsNumericUpDown.Value);
@@ -412,6 +413,16 @@ namespace Lab7
                 down.Add(i * points.Count() + points.Count() - 1);
             polygons.Add(down);
 
+            var maxX = allPoints.OrderBy(x => x.X).Last().X;
+            var maxY = allPoints.OrderBy(x => x.Y).Last().Y;
+            var maxZ = allPoints.OrderBy(x => x.Z).Last().Z;
+
+            foreach (var p in allPoints)
+            {
+                p.X = p.X / maxX;
+                p.Y = p.Y / maxY;
+                p.Z = p.Z / maxZ;
+            }
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
             currentPolyhedron.Apply(Transform.ReflectY());
             currentPolyhedron.Apply(Transform.Translate(0, 0.5, 0));
@@ -420,6 +431,8 @@ namespace Lab7
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
+
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //var path = figure.Name + ".obj";

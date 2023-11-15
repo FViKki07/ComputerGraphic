@@ -98,7 +98,7 @@ namespace Lab7
                     }
                 }
             }
-
+            /*
             var maxX = points.OrderBy(x => x.X).Last().X;
             var minX = points.OrderBy(x => x.X).First().X;
             var maxY = points.OrderBy(x => x.Y).Last().Y;
@@ -112,19 +112,18 @@ namespace Lab7
 
             foreach (var p in points)
                 p.Apply(Transform.Translate(-meanX, -meanY, -meanZ));
-
-            maxX = points.OrderBy(x => x.X).Last().X;
-            maxY = points.OrderBy(x => x.Y).Last().Y;
-            maxZ = points.OrderBy(x => x.Z).Last().Z;
-
+            */
+            var maxX = points.OrderBy(x => x.X).Last().X;
+            var maxY = points.OrderBy(x => x.Y).Last().Y;
+            var maxZ = points.OrderBy(x => x.Z).Last().Z;
+            
             foreach (var p in points)
             {
                 p.X = p.X / maxX;
                 p.Y = p.Y / maxY;
                 p.Z = p.Z / maxZ;
-                p.Apply(Transform.FlipY());
             }
-
+            
             NoNameFigure nn = new NoNameFigure(points, polygons);
             return nn;
         }

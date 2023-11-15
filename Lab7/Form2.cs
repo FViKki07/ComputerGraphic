@@ -340,9 +340,9 @@ namespace Lab7
             switch (comboBox3.SelectedItem.ToString())
             {
                 case "по X":
-                    {           
+                    {
                         currentPolyhedron.Apply(Transform.ReflectX());
-                       // currentPolyhedron.Apply(Transform.Translate(1, 0, 0));
+                        // currentPolyhedron.Apply(Transform.Translate(1, 0, 0));
                         break;
                     }
                 case "по Y":

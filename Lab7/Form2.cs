@@ -42,7 +42,7 @@ namespace Lab7
 
             points = new List<PointZ>();
 
-            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "10cos(x) + 10cos(y)", "x^2 / 100" });
+            functiounComboBox.Items.AddRange(new object[] { "10sin(x) + 10sin(y)", "sign(x) * 10", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
         }
@@ -451,7 +451,7 @@ namespace Lab7
         {
             return (float)(x * x) / 100;
         }
-        private float CosFunction(float x, float y)
+        private float SignFunction(float x, float y)
         {
             return (float)(Math.Sign(x) * 10);
         }
@@ -466,9 +466,9 @@ namespace Lab7
                         {
                             function = (x, y) => SinFunction(x, y); break;
                         }
-                    case "10cos(x) + 10cos(y)":
+                    case "sign(x) * 10":
                         {
-                            function = (x, y) => CosFunction(x, y); break;
+                            function = (x, y) => SignFunction(x, y); break;
                         }
                     case "x^2 / 100":
                         {
@@ -608,6 +608,8 @@ namespace Lab7
             GetUserFunction();
             GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
         }
+
+
     }
 }
 

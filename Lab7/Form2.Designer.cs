@@ -667,6 +667,7 @@
             y1NnumericUpDown.Name = "y1NnumericUpDown";
             y1NnumericUpDown.Size = new Size(49, 23);
             y1NnumericUpDown.TabIndex = 187;
+            y1NnumericUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // x1NumericUpDown
             // 
@@ -677,6 +678,7 @@
             x1NumericUpDown.Name = "x1NumericUpDown";
             x1NumericUpDown.Size = new Size(49, 23);
             x1NumericUpDown.TabIndex = 188;
+            x1NumericUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // y0NumericUpDown
             // 
@@ -687,6 +689,7 @@
             y0NumericUpDown.Name = "y0NumericUpDown";
             y0NumericUpDown.Size = new Size(49, 23);
             y0NumericUpDown.TabIndex = 189;
+            y0NumericUpDown.Value = new decimal(new int[] { 100, 0, 0, int.MinValue });
             // 
             // x0NumericUpDown
             // 
@@ -697,6 +700,7 @@
             x0NumericUpDown.Name = "x0NumericUpDown";
             x0NumericUpDown.Size = new Size(49, 23);
             x0NumericUpDown.TabIndex = 190;
+            x0NumericUpDown.Value = new decimal(new int[] { 10, 0, 0, int.MinValue });
             // 
             // functiounComboBox
             // 

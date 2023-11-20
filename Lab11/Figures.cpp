@@ -18,12 +18,23 @@ struct Vertex {
 	GLfloat y;
 };
 
+struct VertexG {
+	GLfloat x;
+	GLfloat y;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+};
+
 // Исходный код вершинного шейдера
 const char* VertexShaderSource = R"(
 #version 330 core
 in vec2 coord;
+in vec3 color; 
+out vec3 vertexColor; 
 void main() {
-gl_Position = vec4(coord, 0.0, 1.0);
+    gl_Position = vec4(coord, 0.0, 1.0);
+    vertexColor = color; // Передача цвета во фрагментный шейдер
 }
 )";
 
@@ -46,7 +57,15 @@ void main() {
 }
 )";
 
-
+// Исходный код фрагментного шейдера для градиентного закрашивания
+const char* FragShaderSource_Gradient = R"(
+#version 330 core
+in vec3 vertexColor; // Получаем цвет от вершинного шейдера
+out vec4 color;
+void main() {
+    color = vec4(vertexColor, 1.0); // Используем цвет от вершины
+}
+)";
 
 void ShaderLog(unsigned int shader)
 {
@@ -84,6 +103,9 @@ void InitShader(int num_task) {
 	else if (num_task == 3) {
 		glShaderSource(fShader, 1, &FragShaderSource_Uniform, NULL);
 	}
+	else if (num_task == 4) {
+		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
+	}
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -96,7 +118,8 @@ void InitShader(int num_task) {
 	if (!link_ok) {
 		std::cout << "error attach shaders \n";
 		return;
-	}// Вытягиваем ID атрибута из собранной программы
+	}
+	// Вытягиваем ID атрибута из собранной программы
 	const char* attr_name = "coord"; //имя в шейдере
 	Attrib_vertex = glGetAttribLocation(Program, attr_name);
 	if (Attrib_vertex == -1) {
@@ -114,7 +137,7 @@ void InitShader(int num_task) {
 	checkOpenGLerror();
 }
 
-void InitVBO() {
+void InitVBO(int num_task) {
 	glGenBuffers(1, &VBO);
 	// Вершины нашего треугольника
 	Vertex triangle[15] = {
@@ -137,9 +160,36 @@ void InitVBO() {
 		{ 0.6f, -0.3f },
 		{ 0.365f, -1.0f },
 	};
+
+	VertexG gradient_triangle[15] = {
+		// Квадрат
+		{ -0.85f, 0.1f, 1.0f, 0.0f, 0.0f },   // Красный цвет
+		{ -0.15f, 0.1f, 0.0f, 1.0f, 0.0f },   // Зеленый цвет
+		{ -0.15f, 0.9f, 0.0f, 0.0f, 1.0f },   // Синий цвет
+		{ -0.85f, 0.9f, 1.0f, 1.0f, 0.0f },   // Желтый цвет
+
+		// Веер
+		{ 0.5f, 0.2f, 1.0f, 0.0f, 0.0f },    // Красный цвет
+		{ 0.0f, 0.65f, 0.0f, 1.0f, 0.0f },   // Зеленый цвет
+		{ 0.25f, 0.8f, 0.0f, 0.0f, 1.0f },   // Синий цвет
+		{ 0.5f, 0.85f, 1.0f, 1.0f, 0.0f },   // Желтый цвет
+		{ 0.75f, 0.8f, 0.0f, 1.0f, 1.0f },   // Бирюзовый цвет
+		{ 1.0f, 0.65f, 1.0f, 0.0f, 1.0f },   // Пурпурный цвет
+
+		// Правильный пятиугольник
+		{ -0.365f, -1.0f, 1.0f, 0.5f, 0.5f },  // Розовый цвет
+		{ -0.6f, -0.3f, 0.0f, 0.0f, 1.0f },    // Синий цвет
+		{ 0.0f, 0.1f, 1.0f, 0.0f, 1.0f },      // Пурпурный цвет
+		{ 0.6f, -0.3f,.0f, 1.0f, 0.0f },       // Зеленый цвет
+		{ 0.365f, -1.0f, 1.0f, 0.0f, 0.0f }    // Красный цвет
+	};
+
 	// Передаем вершины в буфер
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	if (num_task == 4)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gradient_triangle), gradient_triangle, GL_STATIC_DRAW);
+	else
+		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
 
@@ -147,7 +197,7 @@ void Init(int num_task) {
 	// Шейдеры
 	InitShader(num_task);
 	// Вершинный буфер
-	InitVBO();
+	InitVBO(num_task);
 }
 
 void Draw(int num_task) {
@@ -159,18 +209,29 @@ void Draw(int num_task) {
 
 	glEnableVertexAttribArray(Attrib_vertex);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// Указывая pointer 0 при подключенном буфере, мы указываем что данные в VBO
-	glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); // Отключаем VBO
-	glDrawArrays(GL_QUADS, 0, 4);
 
+	// Указывая pointer 0 при подключенном буфере, мы указываем что данные в VBO
+	if (num_task == 4)
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	else
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0); // Отключаем VBO
+	if (num_task == 4) {
+		// Включаем массив атрибутов для цвета
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+	}
+
+	// Квадрат
+	glDrawArrays(GL_QUADS, 0, 4);
 	// Веер
 	glDrawArrays(GL_TRIANGLE_FAN, 4, 6);
-
 	// Пятиугольник
 	glDrawArrays(GL_TRIANGLE_FAN, 10, 5);
 
 	glDisableVertexAttribArray(Attrib_vertex);
+	glDisableVertexAttribArray(1);
 	glUseProgram(0);
 	checkOpenGLerror();
 }

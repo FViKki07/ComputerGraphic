@@ -104,11 +104,11 @@ void InitShader(int num_task) {
 		return;
 	}
 
-
-	//UniformColor = glGetUniformLocation(Program, "objectColor");
-	//if (UniformColor == 0) {
-	//	glUniform4f(UniformColor, 0.5, 0.5, 0.1, 0.1);
-	//}
+	UniformColor = glGetUniformLocation(Program, "objectColor");
+	if (UniformColor == -1) {
+		std::cout << "could not bind uniform " << std::endl;
+		return;
+	}
 
 	checkOpenGLerror();
 }

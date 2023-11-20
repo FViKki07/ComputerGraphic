@@ -11,6 +11,8 @@ GLint Attrib_vertex;
 // ID Vertex Buffer Object
 GLuint VBO;
 
+GLint UniformColor;
+
 struct Vertex {
 	GLfloat x;
 	GLfloat y;
@@ -33,6 +35,17 @@ void main() {
 color = vec4(1, 0.643, 0.455, 1);
 }
 )";
+
+// Исходный код фрагментного шейдера
+const char* FragShaderSource_Uniform = R"(
+#version 330 core
+out vec4 color;
+uniform vec4 objectColor; // uniform-переменная для передачи цвета
+void main() {
+    color = objectColor; // Используем переданный цвет
+}
+)";
+
 
 
 void ShaderLog(unsigned int shader)
@@ -68,6 +81,9 @@ void InitShader(int num_task) {
 	if (num_task == 2) {
 		glShaderSource(fShader, 1, &FragShaderSource, NULL);
 	}
+	else if (num_task == 3) {
+		glShaderSource(fShader, 1, &FragShaderSource_Uniform, NULL);
+	}
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -87,6 +103,13 @@ void InitShader(int num_task) {
 		std::cout << "could not bind attrib " << attr_name << std::endl;
 		return;
 	}
+
+
+	//UniformColor = glGetUniformLocation(Program, "objectColor");
+	//if (UniformColor == 0) {
+	//	glUniform4f(UniformColor, 0.5, 0.5, 0.1, 0.1);
+	//}
+
 	checkOpenGLerror();
 }
 
@@ -100,12 +123,12 @@ void InitVBO() {
 		{ -0.15f, 0.9f },
 		{ -0.85f, 0.9f },
 		// Веер
-	{ 0.5f, 0.2f },
-{ 0.0f, 0.65f },
-{ 0.25f, 0.8f },
-{ 0.5f, 0.85f },
-{ 0.75f, 0.8f },
-{ 1.0f, 0.65f },
+		{ 0.5f, 0.2f },
+		{ 0.0f, 0.65f },
+		{ 0.25f, 0.8f },
+		{ 0.5f, 0.85f },
+		{ 0.75f, 0.8f },
+		{ 1.0f, 0.65f },
 		// Правильный пятиуголник
 		{ -0.365f, -1.0f },
 		{ -0.6f, -0.3f },
@@ -126,14 +149,18 @@ void Init(int num_task) {
 	InitVBO();
 }
 
-void Draw() {
+void Draw(int num_task) {
+
 	glUseProgram(Program); // Устанавливаем шейдерную программу текущей
+
+	if (num_task == 3)
+		glUniform4f(UniformColor, 0.5, 0.5, 0.75, 0.75);
 
 	glEnableVertexAttribArray(Attrib_vertex);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	// Указывая pointer 0 при подключенном буфере, мы указываем что данные в VBO
 	glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, NULL); // Отключаем VBO
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // Отключаем VBO
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	// Веер
@@ -185,7 +212,7 @@ void WindowWork(int num_task) {
 			else if (event.type == sf::Event::Resized) { glViewport(0, 0, event.size.width, event.size.height); }
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Draw();
+		Draw(num_task);
 		window.display();
 	}
 	Release();
@@ -202,4 +229,4 @@ int main() {
 			WindowWork(num_task);
 	}
 	return 0;
-} 
+}

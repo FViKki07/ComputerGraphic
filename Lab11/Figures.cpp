@@ -42,7 +42,7 @@ const char* FragShaderSource_Uniform = R"(
 out vec4 color;
 uniform vec4 objectColor; // uniform-переменная для передачи цвета
 void main() {
-    color = objectColor; // Используем переданный цвет
+    color = objectColor; // используем переданный цвет
 }
 )";
 
@@ -104,12 +104,13 @@ void InitShader(int num_task) {
 		return;
 	}
 
-	UniformColor = glGetUniformLocation(Program, "objectColor");
-	if (UniformColor == -1) {
-		std::cout << "could not bind uniform " << std::endl;
-		return;
+	if (num_task == 3) {
+		UniformColor = glGetUniformLocation(Program, "objectColor");
+		if (UniformColor == -1) {
+			std::cout << "could not bind uniform " << std::endl;
+			return;
+		}
 	}
-
 	checkOpenGLerror();
 }
 

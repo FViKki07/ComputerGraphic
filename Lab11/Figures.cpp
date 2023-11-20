@@ -30,7 +30,7 @@ const char* FragShaderSource = R"(
 #version 330 core
 out vec4 color;
 void main() {
-color = vec4(0, 1, 0, 1);
+color = vec4(1, 0.643, 0.455, 1);
 }
 )";
 
@@ -58,14 +58,16 @@ void checkOpenGLerror()
 	}
 }
 
-void InitShader() {
+void InitShader(int num_task) {
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vShader, 1, &VertexShaderSource, NULL);
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fShader, 1, &FragShaderSource, NULL);
+	if (num_task == 2) {
+		glShaderSource(fShader, 1, &FragShaderSource, NULL);
+	}
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -117,9 +119,9 @@ void InitVBO() {
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
 
-void Init() {
+void Init(int num_task) {
 	// Шейдеры
-	InitShader();
+	InitShader(num_task);
 	// Вершинный буфер
 	InitVBO();
 }
@@ -168,18 +170,18 @@ void Release() {
 	ReleaseVBO();
 }
 
-
-
-int main() {
+void WindowWork(int num_task) {
 	sf::Window window(sf::VideoMode(600, 600), "My OpenGL window", sf::Style::Default, sf::ContextSettings(24));
 	window.setVerticalSyncEnabled(true);
 	window.setActive(true);
 	glewInit();
-	Init();
-	while (window.isOpen()) {
+	Init(num_task);
+
+	bool work = true;
+	while (work) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) { window.close(); }
+			if (event.type == sf::Event::Closed) { work = false; }
 			else if (event.type == sf::Event::Resized) { glViewport(0, 0, event.size.width, event.size.height); }
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -187,5 +189,17 @@ int main() {
 		window.display();
 	}
 	Release();
+	window.close();
+
+}
+
+int main() {
+	int num_task = 0;
+	while (true) {
+		std::cout << "Enter task: ";
+		std::cin >> num_task;
+		if (num_task == 4 || num_task == 2 || num_task == 3)
+			WindowWork(num_task);
+	}
 	return 0;
 } 

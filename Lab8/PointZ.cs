@@ -24,11 +24,13 @@ namespace Lab8
         public PointZ(double x, double y, double z)
         {
             coords[0] = x; coords[1] = y; coords[2] = z;
+
         }
 
         public PointZ(double[] arr)
         {
             coords = arr;
+
         }
 
         public void Apply(Transform t)
@@ -75,12 +77,22 @@ namespace Lab8
             p.Apply(t);
             return p;
         }
-        /*
+        
         private PointZ Normalize()
         {
-            return new PointZ(X / W, Y / W, Z / W);
-        }*/
+            double normalization = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            this.X = X / normalization;
+            this.Y = Y / normalization;
+            this.Z = Z / normalization;
+            return this;
+        }
 
+        bool IsNormalize()
+        {
+            if (X < -1 || X > 1 || Y < -1 || Y > 1 || Z > 1 || Z < -1)
+                return false ;
+            return true;
+        }
         /*
  * Преобразует координаты из ([-1, 1], [-1, 1], [-1, 1]) в ([0, width), [0, height), [-1, 1]).
  */
@@ -93,13 +105,16 @@ namespace Lab8
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
         {
-            //var c = this.Transform(projection);
-            //var d = B.Transform(projection);
-
+            if(!this.IsNormalize()) 
+                this.Normalize();
+            if(!B.IsNormalize())
+                B.Normalize();
+             
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
             g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
+
         /*
         public void DrawLine2(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
         {

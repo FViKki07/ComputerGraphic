@@ -27,6 +27,7 @@ namespace Lab8
         Func<float, float, float> function;
         bool figure;
         Camera camera;
+        public static bool cameraUse;
 
         public Form1()
         {
@@ -51,8 +52,9 @@ namespace Lab8
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
-            Transform projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
-            camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
+            Transform projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
+            camera = new Camera(new PointZ(0, 0, 0), Math.PI / 4, -Math.PI / 4, projection);
+            cameraUse = false;
         }
 
         //Рисует координатные оси 
@@ -77,36 +79,46 @@ namespace Lab8
 
         private Transform GetProjection()
         {
+            var projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
             if (ProjectionComboBox.SelectedItem != null)
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
                     case "Перспективная":
                         {
-                            var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
-                            camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
-                            return camera.ViewProjection;
- 
+                            projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
+                            camera = new Camera(new PointZ(0, 0, 0), Math.PI / 4, -Math.PI / 4, projection);
+                            cameraUse = true;
+                            break;
+
+                        }
+                    case "Изометрическая":
+                        {
+                            //return Transform.OrthographicXYProjection();
+                            camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.IsometricProjection());
+                            break;
                         }
                     case "Ортогональная XY":
                         {
                             camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicXYProjection());
                             break;
+                            //return Transform.OrthographicXZProjection();
                         }
                     case "Ортогональная XZ":
                         {
                             camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicXZProjection());
                             break;
+                            //return Transform.OrthographicXZProjection();
                         }
                     case "Ортогональная YZ":
                         {
                             camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicYZProjection());
                             break;
+                            //return Transform.OrthographicYZProjection();
                         }
                     default:
                         {
-                            var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
-                            break;
+                            return Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
                         }/*
                     case "Изометрическая":
                         {
@@ -125,6 +137,44 @@ namespace Lab8
             return camera.ViewProjection;
         }
 
+        private Transform GetProjectionAxis()
+        {
+            var projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
+            if (ProjectionComboBox.SelectedItem != null)
+            {
+                switch (ProjectionComboBox.SelectedItem.ToString())
+                {
+                    case "Перспективная":
+                        {
+                            return projection;
+
+                        }
+                    case "Изометрическая":
+                        {
+                            return Transform.IsometricProjection();
+                            
+                        }
+                    case "Ортогональная XY":
+                        {
+                            return Transform.OrthographicXZProjection();
+                        }
+                    case "Ортогональная XZ":
+                        {
+
+                            return Transform.OrthographicXZProjection();
+                        }
+                    case "Ортогональная YZ":
+                        {
+                            return Transform.OrthographicYZProjection();
+                        }
+                    default:
+                        {
+                            return Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
+                        }
+                }
+            }
+            return projection;
+        }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             double delta = 0.3;
@@ -141,8 +191,8 @@ namespace Lab8
             }
             //pictureBox1.Refresh();
             g1.Clear(Color.White);
-            GetCurrentPolyhedron(GetProjection());
-            DrawAxis(g1, GetProjection());
+            GetCurrentPolyhedron(camera.ViewProjection);
+            DrawAxis(g1, camera.ViewProjection);
             pictureBox1.Invalidate();
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -196,7 +246,7 @@ namespace Lab8
             figure = true;
             GetCurrentPolyhedron(GetProjection());
             figure = false;
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
 
@@ -207,7 +257,7 @@ namespace Lab8
             double C = (double)numericUpDown10.Value;
             currentPolyhedron.Apply(Transform.Scale(C, C, C));
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
 
@@ -219,7 +269,7 @@ namespace Lab8
             Scale();
 
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
 
@@ -283,7 +333,7 @@ namespace Lab8
             g1.Clear(Color.White);
             Reflect();
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
 
@@ -291,7 +341,7 @@ namespace Lab8
         {
             g1.Clear(Color.White);
             GetCurrentPolyhedron(GetProjection());
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
         private void RotateLine()
@@ -318,7 +368,7 @@ namespace Lab8
             g1.Clear(Color.White);
             RotateLine();
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
 
         }

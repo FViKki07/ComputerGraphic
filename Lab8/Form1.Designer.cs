@@ -270,7 +270,7 @@ namespace Lab8
             // ProjectionComboBox
             // 
             ProjectionComboBox.FormattingEnabled = true;
-            ProjectionComboBox.Items.AddRange(new object[] { "Перcпективная", "Ортогональная XY", "Ортогональная XZ", "Ортогональная YZ" });
+            ProjectionComboBox.Items.AddRange(new object[] { "Перспективная", "Изометрическая", "Ортогональная XY", "Ортогональная XZ", "Ортогональная YZ" });
             ProjectionComboBox.Location = new Point(222, 75);
             ProjectionComboBox.Name = "ProjectionComboBox";
             ProjectionComboBox.Size = new Size(135, 23);

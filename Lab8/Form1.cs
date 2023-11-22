@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -24,6 +26,7 @@ namespace Lab8
         int steps;
         Func<float, float, float> function;
         bool figure;
+        Camera camera;
 
         public Form1()
         {
@@ -48,6 +51,8 @@ namespace Lab8
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
             DrawAxis(g1, Transform.IsometricProjection());
+            Transform projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
+            camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
         }
 
         //Рисует координатные оси 
@@ -76,6 +81,33 @@ namespace Lab8
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
+                    case "Перспективная":
+                        {
+                            var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
+                            camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
+                            return camera.ViewProjection;
+ 
+                        }
+                    case "Ортогональная XY":
+                        {
+                            camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicXYProjection());
+                            break;
+                        }
+                    case "Ортогональная XZ":
+                        {
+                            camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicXZProjection());
+                            break;
+                        }
+                    case "Ортогональная YZ":
+                        {
+                            camera = new Camera(new PointZ(0, 0, 0), 0, 0, Transform.OrthographicYZProjection());
+                            break;
+                        }
+                    default:
+                        {
+                            var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
+                            break;
+                        }/*
                     case "Изометрическая":
                         {
                             return Transform.IsometricProjection();
@@ -83,11 +115,36 @@ namespace Lab8
 
                     case "Перcпективная":
                         {
-                            return Transform.PerspectiveProjection(3);
-                        }
+                            var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
+                            camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
+                            return camera.ViewProjection;
+                            //return Transform.PerspectiveProjection(2,camera);
+                        }*/
                 }
             }
-            return Transform.IsometricProjection();
+            return camera.ViewProjection;
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            double delta = 0.3;
+            switch (keyData)
+            {
+                case Keys.W: camera.Position.Apply(Transform.Translate(0.1 * camera.Forward)); break;
+                case Keys.A: camera.Position.Apply(Transform.Translate(0.1 * camera.Left)); break;
+                case Keys.S: camera.Position.Apply(Transform.Translate(0.1 * camera.Backward)); break;
+                case Keys.D: camera.Position.Apply(Transform.Translate(0.1 * camera.Right)); break;
+                case Keys.Left: camera.Fi += delta; break;
+                case Keys.Right: camera.Fi -= delta; break;
+                case Keys.Up: camera.Theta += delta; break;
+                case Keys.Down: camera.Theta -= delta; break;
+            }
+            //pictureBox1.Refresh();
+            g1.Clear(Color.White);
+            GetCurrentPolyhedron(GetProjection());
+            DrawAxis(g1, GetProjection());
+            pictureBox1.Invalidate();
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void GetCurrentPolyhedron(Transform t)

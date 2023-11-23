@@ -54,8 +54,7 @@ namespace Lab8
 
 
             DrawAxis(g1, Transform.IsometricProjection());
-            camera = new Camera(new PointZ(0, 0, -2),
-                new PointZ(0, 0, 0), new PointZ(0, 0, 1), pictureBox1.Width, pictureBox1.Height);
+            camera = new Camera(new PointZ(0, 0, -1), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
         }
 

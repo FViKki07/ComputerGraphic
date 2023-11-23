@@ -198,16 +198,24 @@ namespace Lab8
         public static Transform PerspectiveProjection(float k, Camera camera)
         {
             float aspectRatio = camera.AspectRatio;
-            float n = 10;
-            float f = 20;
+            float n = -0.9f;
+            float f = 0.9f;
+
 
             return new Transform(
                 new double[,] {
             { (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
             { 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
-            { 0, 0, (f + n) / (f - n), 1 },
-            { 0, 0, 2.0 * f * n / (f - n), 0 }
+            { 0, 0, -(f + n) / (f - n), 1 },
+            { 0, 0, -2.0 * f * n / (f - n), 0 }
                 });
+            //return new Transform(
+            //    new double[,] {
+            //{ (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
+            //{ 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
+            //{ 0, 0, (f + n) / (f - n), 1 },
+            //{ 0, 0, 2.0 * f * n / (f - n), 0 }
+            //    });
             return new Transform(
                 new double[,] {
                     { 1, 0, 0, 0 },
@@ -216,30 +224,6 @@ namespace Lab8
                     { 0, 0, 0, 1 }
                 });
     }
-        /*
-        public Transform CalculateViewMatrix(Camera camera)
-        {
-            // Положение камеры
-            Point cameraPosition = -camera.Position;
-
-            // Направление камеры
-            Vector3 forward = camera.Forward;
-            Vector3 up = camera.Up;
-            Vector3 right = camera.Right;
-
-            // Построение матрицы вида
-            Matrix viewMatrix = new Matrix(
-                right.X, up.X, -forward.X, 0,
-                right.Y, up.Y, -forward.Y, 0,
-                right.Z, up.Z, -forward.Z, 0,
-                -Vector3.Dot(right, cameraPosition),
-                -Vector3.Dot(up, cameraPosition),
-                Vector3.Dot(forward, cameraPosition),
-                1
-            );
-
-            return viewMatrix;
-        }*/
 
         public static Transform operator *(Transform t1, Transform t2)
         {

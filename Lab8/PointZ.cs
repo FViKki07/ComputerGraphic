@@ -81,7 +81,7 @@ namespace Lab8
         {
             var p = new PointZ(X, Y, Z);
             p.Apply(t);
-           
+            
             return p;
         }
         
@@ -120,16 +120,11 @@ namespace Lab8
         }
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
-        {/*
-            if(!this.IsNormalize()) 
-                this.Normalize();
-            if(!B.IsNormalize())
-                B.Normalize();*/
+        {
              
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            if(d.X != null || d.Y != null)
-                g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+             g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 
     }

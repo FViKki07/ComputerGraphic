@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lab8
 {
+    /*
     internal class Camera
     {
 
@@ -41,7 +42,41 @@ namespace Lab8
             Theta = angleX;
             Projection = projection;
         }
+    }*/
+
+    internal class Camera
+    {
+
+        public PointZ Position { get; set; }
+        public PointZ Rotation { get; set; }
+        public PointZ forward { get; set; }
+  
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public float alpha;
+        public float AspectRatio;
 
 
+        public Camera(PointZ Position, PointZ Rotation, PointZ forward, int width, int height)
+        { 
+            this.Position = Position;
+            this.Rotation = Rotation;
+            this.forward = forward;
+
+            this.Width = width;
+            this.Height = height;
+            this.AspectRatio = Width / (float)Height;
+            this.alpha = 90;
+        }
+
+        public void Translate(PointZ vec)
+        {
+            Position += vec;
+        }
+
+        public void Rotate(PointZ vec)
+        {
+            Rotation += vec;
+        }
     }
 }

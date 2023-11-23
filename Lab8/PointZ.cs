@@ -17,20 +17,21 @@ namespace Lab8
         public double Z { get { return coords[2]; } set { coords[2] = value; } }
         public double W
         {
-            get;
+            get { return coords[3];  }
+            set { coords[3] = value; }
         }
-        public PointZ() { }
+        public PointZ() { coords[3] = 1; }
 
         public PointZ(double x, double y, double z)
         {
             coords[0] = x; coords[1] = y; coords[2] = z;
-
+            coords[3] = 1;
         }
 
         public PointZ(double[] arr)
         {
             coords = arr;
-
+            coords[3] = 1;
         }
 
         public void Apply(Transform t)
@@ -71,10 +72,16 @@ namespace Lab8
             return -1 * v;
         }
 
+        public static PointZ operator +(PointZ ths, PointZ other)
+        {
+            return new PointZ(ths.X + other.X, ths.Y + other.Y, ths.Z + other.Z);
+        }
+
         public PointZ Transform(Transform t)
         {
             var p = new PointZ(X, Y, Z);
             p.Apply(t);
+           
             return p;
         }
         
@@ -84,12 +91,13 @@ namespace Lab8
             this.X = X / normalization;
             this.Y = Y / normalization;
             this.Z = Z / normalization;
+            this.W = 1; //xs
             return this;
         }
 
         bool IsNormalize()
         {
-            if (X < -1 || X > 1 || Y < -1 || Y > 1 || Z > 1 || Z < -1)
+            if (X < -1 || X > 1 || Y < -1 || Y > 1 || Z > 1 || Z < -1 || W != 1)
                 return false ;
             return true;
         }
@@ -104,21 +112,23 @@ namespace Lab8
  */
         public PointZ NormalizedToDisplay(int width, int height)
         {
+            //if(!this.IsNormalize())
+             // this.Normalize();
             var x = (X / coords[3] + 1) / 2 * width;
             var y = (-Y / coords[3] + 1 ) / 2 * height;
             return new PointZ(x, y, Z/ coords[3]);
         }
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
-        {
+        {/*
             if(!this.IsNormalize()) 
                 this.Normalize();
             if(!B.IsNormalize())
-                B.Normalize();
+                B.Normalize();*/
              
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            if(c.Check(width, height))
+            if(d.X != null || d.Y != null)
                 g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 

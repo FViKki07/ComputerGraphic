@@ -172,7 +172,7 @@ namespace Lab8
             return Identity() * RotateY(Math.PI / 4) * RotateX(-Math.PI / 4);
         }
 
-        public static Transform PerspectiveProjection(double left, double right, double bottom, double top, double near, double far)
+        /*public static Transform PerspectiveProjection(double left, double right, double bottom, double top, double near, double far)
         {
             var a = 2 * near / (right - left);
             var b = (right + left) / (right - left);
@@ -180,13 +180,13 @@ namespace Lab8
             var d = (top + bottom) / (top - bottom);
             var e = -(far + near) / (far - near);
             var f = -2 * far * near / (far - near);
-            /*return new Transform(
+            return new Transform(
                 new double[4, 4] {
                     { a, 0, 0, 0 },
                     { 0, c, 0, 0 },
                     { b, d, e, -1 },
                     { 0, 0, f, 0 }
-                });*/
+                });
             return new Transform(
                 new double[4, 4] {
                     { a, 0, b, 0 },
@@ -194,19 +194,19 @@ namespace Lab8
                     { 0, 0, e, f },
                     { 0, 0, -1, 0 }
                      });
-        }
-       /* public static Transform PerspectiveProjection(float k, Camera camera)
+        }*/
+        public static Transform PerspectiveProjection(float k, Camera camera)
         {
             float aspectRatio = camera.AspectRatio;
-            float n = camera.NearPlane;
-            float f = camera.FarPlane;
+            float n = 10;
+            float f = 20;
 
             return new Transform(
                 new double[,] {
             { (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
             { 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
-            { 0, 0, (f + n) / (f - n), 2.0 * f * n / (f - n) },
-            { 0, 0, 1, 0 }
+            { 0, 0, (f + n) / (f - n), 1 },
+            { 0, 0, 2.0 * f * n / (f - n), 0 }
                 });
             return new Transform(
                 new double[,] {
@@ -215,7 +215,7 @@ namespace Lab8
                     { 0, 0, 0, -1/k },
                     { 0, 0, 0, 1 }
                 });
-    }*/
+    }
         /*
         public Transform CalculateViewMatrix(Camera camera)
         {

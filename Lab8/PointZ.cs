@@ -9,6 +9,7 @@ namespace Lab8
 {
     internal class PointZ
     {
+
         private double[] coords = new double[] { 0, 0, 0, 1 };
 
         public double X { get { return coords[0]; } set { coords[0] = value; } }

@@ -17,6 +17,9 @@ namespace Lab8
 {
     public partial class Form1 : Form
     {
+        private ZBufferRenderer renderer;
+        float[,] zBuffer;
+        Color[,] colorBuffer;
         Graphics g1, g2;
         Bitmap bmp1, bmp2;
         Polyhedron currentPolyhedron;
@@ -662,5 +665,161 @@ namespace Lab8
                 GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
             }
         }
+
+        private float getDistance(PointZ camera, PointZ point)
+        {
+            return (float)Math.Sqrt(Math.Pow(camera.X + point.X, 2) + Math.Pow(camera.Y + point.Y, 2) + Math.Pow(camera.Z + point.Z, 2));
+
+        }
+
+        //private Color[,] bufferZ(List<Polyhedron> listFigure)
+        //{
+        //    // Создание Z-буфера
+        //    float[,] zBuffer = new float[pictureBox1.Width, pictureBox1.Height];
+        //    Color[,] colorBuffer = new Color[pictureBox1.Width, pictureBox1.Height];
+        //    //List<List<int>> polygons = currentPolyhedron.getPolygons();
+
+        //    float distance;
+
+        //    for (int i = 0; i < pictureBox1.Width; i++)
+        //        for (int j = 0; j < pictureBox1.Height; j++)
+        //        {
+        //            zBuffer[i, j] = float.MaxValue;
+        //            colorBuffer[i, j] = Color.White;
+        //        }
+
+        //    foreach (var figure in listFigure)
+        //    {
+        //        List<List<int>> polygons = figure.getPolygons();
+        //        foreach (var polygon in polygons)
+        //        {
+        //            // Генерация уникального цвета для грани
+        //            Color randomColor = Color.FromArgb(new Random().Next(256), new Random().Next(256), new Random().Next(256));
+
+
+        //            foreach (var vertexIndex in polygon)
+        //            {
+        //                PointZ vertex = currentPolyhedron.getVertice()[vertexIndex];
+        //                int x = (int)vertex.X;
+        //                int y = (int)vertex.Y;
+
+        //                // Получение глубины вершины
+        //                distance = getDistance(new PointZ(1, 1, 1), vertex);
+
+        //                // Если глубина вершины меньше, чем текущая глубина в Z-буфере
+        //                if (distance < zBuffer[x, y])
+        //                {
+        //                    // Обновляем Z-буфер
+        //                    zBuffer[x, y] = distance;
+        //                    // Устанавливаем цвет для пикселя
+        //                    colorBuffer[x, y] = randomColor;
+        //                }
+
+        //            }
+
+        //        }
+        //    }
+
+            //for (int i = 0; i < pictureBox1.Width; i++)
+            //{
+            //    for (int j = 0; j < pictureBox1.Height; j++)
+            //    {
+            //        g1.DrawEllipse(new Pen(colorBuffer[i, j]), i, j,3,3);
+            //    }
+            //}
+            //pictureBox1.Invalidate();
+           // return colorBuffer;
+        //}
+
+        private void drawFigure(Color[,] colors)
+        {
+            for (int i = 0; i < pictureBox1.Width; i++)
+                for (int j = 0; j < pictureBox1.Height; j++)
+                {
+                    g1.FillRectangle(new SolidBrush(colors[i, j]), i, j, 5, 5);
+                    //colors[i,j] = Color.White;
+                }
+            pictureBox1.Invalidate();
+        }
+        //private void bufferZ(List<Polyhedron> listFigure)
+        //{
+        //    // Создание Z-буфера
+        //    zBuffer = new float[pictureBox1.Width, pictureBox1.Height];
+        //    colorBuffer = new Color[pictureBox1.Width, pictureBox1.Height];
+        //    //List<List<int>> polygons = currentPolyhedron.getPolygons();
+
+
+        //    for (int i = 0; i < pictureBox1.Width; i++)
+        //        for (int j = 0; j < pictureBox1.Height; j++)
+        //        {
+        //            zBuffer[i, j] = float.MaxValue;
+        //            colorBuffer[i, j] = Color.White;
+        //        }
+
+
+
+        //}
+
+
+        ////private PointZ Interpolate(PointZ start, PointZ end, float t)
+        ////{
+        ////    return new PointZ
+        ////    {
+        ////        X = InterpolateZ((float)start.X, (float)end.X, t),
+        ////        Y = InterpolateZ((float)start.Y, (float)end.Y, t),
+        ////        Z = InterpolateZ((float)start.Z, (float)end.Z, t),
+        ////        Color = InterpolateColor(start.Color, end.Color, t)
+        ////    };
+        ////}
+        //private void DrawScanline(int y, PointZ left, PointZ right)
+        //{
+        //    int startX = (int)Math.Max(0, left.X);
+        //    int endX = (int)Math.Min(zBuffer.GetLength(0) - 1, right.X);
+
+        //    for (int x = startX; x <= endX; x++)
+        //    {
+        //        float t = (float)((x - left.X) / (right.X - left.X));
+        //        float z = InterpolateZ((float)left.Z, (float)right.Z, t);
+
+        //        {
+        //            zBuffer[x, y] = z;
+        //            colorBuffer[x, y] = left.Color;
+        //        }
+        //    }
+        //}
+        //private Color InterpolateColor(Color start, Color end, float t)
+        //{
+        //    int r = (int)InterpolateZ(start.R, end.R, t);
+        //    int g = (int)InterpolateZ(start.G, end.G, t);
+        //    int b = (int)InterpolateZ(start.B, end.B, t);
+
+        //    return Color.FromArgb(r, g, b);
+        //}
+
+        //private float InterpolateZ(float start, float end, float t)
+        //{
+        //    return start + (end - start) * t;
+        //}
+
+        //private Color Interpolate(Color a, Color b, double f)
+        //{
+        //    return Color.FromArgb((byte)Interpolate(a.R, b.R, f),
+        //        (byte)Interpolate(a.G, b.G, f), (byte)Interpolate(a.B, b.B, f));
+        //}
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            renderer = new ZBufferRenderer(pictureBox1.Width, pictureBox1.Height);
+            renderer.Render(g1, currentPolyhedron, ClientSize.Width, ClientSize.Height);
+            pictureBox1.Invalidate();
+
+            // List<Polyhedron> listFigure = new List<Polyhedron> { currentPolyhedron };
+            // Color[,] c=bufferZ(listFigure);
+            // drawFigure(c);
+
+            // DrawImageOnPictureBox();
+        }
+
+
     }
 }

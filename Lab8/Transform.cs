@@ -180,13 +180,20 @@ namespace Lab8
             var d = (top + bottom) / (top - bottom);
             var e = -(far + near) / (far - near);
             var f = -2 * far * near / (far - near);
-            return new Transform(
+            /*return new Transform(
                 new double[4, 4] {
                     { a, 0, 0, 0 },
                     { 0, c, 0, 0 },
                     { b, d, e, -1 },
                     { 0, 0, f, 0 }
-                });
+                });*/
+            return new Transform(
+                new double[4, 4] {
+                    { a, 0, b, 0 },
+                    { 0, c, d, 0 },
+                    { 0, 0, e, f },
+                    { 0, 0, -1, 0 }
+                     });
         }
        /* public static Transform PerspectiveProjection(float k, Camera camera)
         {

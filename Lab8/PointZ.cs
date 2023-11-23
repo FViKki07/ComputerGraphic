@@ -93,13 +93,19 @@ namespace Lab8
                 return false ;
             return true;
         }
+        private bool Check(int width, int height)
+        {
+            return ((X >= 0 && X < width) &&
+                   (Y >= 0 && Y < height) &&
+                   (Z < 1) && (Z > -1));
+        }
         /*
  * Преобразует координаты из ([-1, 1], [-1, 1], [-1, 1]) в ([0, width), [0, height), [-1, 1]).
  */
         public PointZ NormalizedToDisplay(int width, int height)
         {
             var x = (X / coords[3] + 1) / 2 * width;
-            var y = (-Y / coords[3] + 1) / 2 * height;
+            var y = (-Y / coords[3] + 1 ) / 2 * height;
             return new PointZ(x, y, Z/ coords[3]);
         }
 
@@ -112,15 +118,9 @@ namespace Lab8
              
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+            if(c.Check(width, height))
+                g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 
-        /*
-        public void DrawLine2(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
-        {
-            var c = this.Transform(projection);
-            var d = B.Transform(projection);
-            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
-        }*/
     }
 }

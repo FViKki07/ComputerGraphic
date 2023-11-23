@@ -51,9 +51,10 @@ namespace Lab8
 
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
+
             DrawAxis(g1, Transform.IsometricProjection());
-            Transform projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
-            camera = new Camera(new PointZ(0, 0, 0), Math.PI / 4, -Math.PI / 4, projection);
+            Transform projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 1);
+            camera = new Camera(new PointZ(0, 0, 5), Math.PI / 4, -Math.PI / 4, projection);
             cameraUse = false;
         }
 
@@ -79,15 +80,15 @@ namespace Lab8
 
         private Transform GetProjection()
         {
-            var projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
+            var projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 1);
             if (ProjectionComboBox.SelectedItem != null)
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
                     case "Перспективная":
                         {
-                            projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
-                            camera = new Camera(new PointZ(0, 0, 0), Math.PI / 4, -Math.PI / 4, projection);
+                            projection = Transform.PerspectiveProjection(-1, 1, -1,1, 0.1, 1);
+                            camera = new Camera(new PointZ(0, 0, 1), Math.PI / 4, -Math.PI / 4, projection);
                             cameraUse = true;
                             break;
 
@@ -118,7 +119,7 @@ namespace Lab8
                         }
                     default:
                         {
-                            return Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
+                            return Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 1);
                         }/*
                     case "Изометрическая":
                         {
@@ -140,7 +141,7 @@ namespace Lab8
         private Transform GetProjectionAxis()
         {
             var projection = Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
-            if (ProjectionComboBox.SelectedItem != null)
+            /*if (ProjectionComboBox.SelectedItem != null)
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
@@ -152,7 +153,7 @@ namespace Lab8
                     case "Изометрическая":
                         {
                             return Transform.IsometricProjection();
-                            
+
                         }
                     case "Ортогональная XY":
                         {
@@ -172,8 +173,8 @@ namespace Lab8
                             return Transform.PerspectiveProjection(-1, 1, -1, 1, 0.1, 2);
                         }
                 }
-            }
-            return projection;
+            }*/
+            return camera.ViewProjection;
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {

@@ -54,7 +54,7 @@ namespace Lab8
 
 
             DrawAxis(g1, Transform.IsometricProjection());
-            camera = new Camera(new PointZ(0, 0, -1), pictureBox1.Width, pictureBox1.Height);
+            camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 1), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
         }
 
@@ -294,6 +294,71 @@ namespace Lab8
                         break;
                     }
             }
+        }
+
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.W:
+                    camera.Position += new PointZ(0, 0.5f, 0);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, -0.5f, 0)));
+                    break;
+                case Keys.A:
+                    camera.Position += new PointZ(-0.5f, 0, 0);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0.5f, 0, 0)));
+                    break;
+                case Keys.S:
+                    camera.Position += new PointZ(0, -0.5f, 0);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0.5f, 0)));
+                    break;
+                case Keys.D:
+                    camera.Position += new PointZ(0.5f, 0, 0);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(-0.5f, 0, 0)));
+                    break;
+                case Keys.Q:
+                    camera.Position += new PointZ(0, 0, -0.5f);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, 0.5f)));
+                    break;
+                case Keys.E:
+                    camera.Position += new PointZ(0, 0, 0.5f);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
+                    break;
+                case Keys.Left:
+                    if (Math.Abs(camera.Rotation) <= 90)
+                    {
+                        camera.Rotation += 10;
+                        currentPolyhedron.Apply(Transform.RotateY(-10));
+                    }
+                    break;
+                case Keys.Right:
+                    if (Math.Abs(camera.Rotation) <= 90)
+                    {
+                        camera.Rotation += -10;
+                        currentPolyhedron.Apply(Transform.RotateY(10));
+                    }
+                    break;
+                case Keys.Up:
+                    if (Math.Abs(camera.Rotation) < 90)
+                    {
+                        camera.Rotation += 10;
+                        currentPolyhedron.Apply(Transform.RotateX(-10));
+                    }
+                    break;
+                case Keys.Down:
+                    if (Math.Abs(camera.Rotation) <= 90)
+                    {
+                        camera.Rotation += -10;
+                        currentPolyhedron.Apply(Transform.RotateX(10));
+                    }
+                    break;
+            }
+            g1.Clear(Color.White);
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawAxis(g1, GetProjectionAxis());
+            pictureBox1.Invalidate();
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void button3_Click(object sender, EventArgs e)

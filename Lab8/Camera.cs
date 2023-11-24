@@ -48,8 +48,8 @@ namespace Lab8
     {
 
         public PointZ Position { get; set; }
-      //  public PointZ Rotation { get; set; }
-      //  public PointZ forward { get; set; }
+        public double Rotation { get; set; }
+        public PointZ forward { get; set; }
   
         public int Width { get; set; }
         public int Height { get; set; }
@@ -57,27 +57,18 @@ namespace Lab8
         public float AspectRatio;
 
 
-        // public Camera(PointZ Position, PointZ Rotation, PointZ forward, int width, int height)
-        public Camera(PointZ Position, int width, int height)
+        public Camera(PointZ Position, double Rotation, PointZ forward, int width, int height)
         { 
+            
             this.Position = Position;
-          //  this.Rotation = Rotation;
-           // this.forward = forward;
+            if(Math.Abs(Rotation) < 90)
+                this.Rotation = Rotation;
+            this.forward = forward;
 
             this.Width = width;
             this.Height = height;
             this.AspectRatio = Width / (float)Height;
             this.alpha = 90;
         }
-/*
-        public void Translate(PointZ vec)
-        {
-            Position += vec;
-        }
-
-        public void Rotate(PointZ vec)
-        {
-            Rotation += vec;
-        }*/
     }
 }

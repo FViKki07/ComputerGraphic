@@ -103,9 +103,11 @@ namespace Lab8
         }
         private bool Check(int width, int height)
         {
-            return ((X >= 0 && X < width) &&
-                   (Y >= 0 && Y < height) &&
-                   (Z < 1) && (Z > -1));
+
+            return 
+                   !Double.IsInfinity(X) &&
+                   !Double.IsInfinity(Y) &&
+                   !Double.IsInfinity(Z);
         }
         /*
  * Преобразует координаты из ([-1, 1], [-1, 1], [-1, 1]) в ([0, width), [0, height), [-1, 1]).
@@ -124,6 +126,7 @@ namespace Lab8
              
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
+            if(c.Check(width, height) && d.Check(width, height)) 
              g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 

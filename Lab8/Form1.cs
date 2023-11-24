@@ -30,6 +30,7 @@ namespace Lab8
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
+            ProjectionComboBox.SelectedItem = ProjectionComboBox.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
             bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g1 = Graphics.FromImage(bmp1);
@@ -42,7 +43,7 @@ namespace Lab8
             g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
             figure = false;
-            non_face = true;
+            non_face = false;
             points = new List<PointZ>();
 
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
@@ -94,16 +95,8 @@ namespace Lab8
         {
             if (currentPolyhedron != null && !figure)
             {
-                if (non_face)
-                {
-                    currentPolyhedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
-                    return;
-                }
-                else
-                {
-                    currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                    return;
-                }
+                currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                return;
             }
             if (comboBox1.SelectedItem != null)
             {
@@ -111,56 +104,28 @@ namespace Lab8
                 {
                     case "Тетраэдр":
                         {
-                            Tetrahedron tetrahedron = new Tetrahedron(1);
-                            //tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            currentPolyhedron = tetrahedron;
+                            currentPolyhedron = new Tetrahedron(1);
                             break;
                         }
                     case "Гексаэдр":
                         {
-                            Hexahedron hexahedron = new Hexahedron(0.5);
-                            //if (non_face)
-                            //{
-                            //    hexahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            //}
-                            //else
-                            //{
-                            //    hexahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            //}
-                            currentPolyhedron = hexahedron;
+                            currentPolyhedron = new Hexahedron(0.5);
                             break;
                         }
                     case "Октаэдр":
                         {
-                            Octahedron octahedron = new Octahedron(1);
-                            //octahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            currentPolyhedron = octahedron;
-                            //DrawWithoutNonFace1(g1, t, pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
+                            currentPolyhedron = new Octahedron(1);
                             break;
                         }
                     default:
                         {
-                            Tetrahedron tetrahedron = new Tetrahedron(0.5);
-                            tetrahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            //currentPolyhedron = new Tetrahedron(0.5);
+                            currentPolyhedron = new Tetrahedron(0.5);
                             break;
                         }
                 }
             }
-            if (currentPolyhedron != null)
-            {
-                if (non_face)
-                {
-                    DrawWithoutNonFace1(g1, t, pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
-                }
-                else
-                {
-                    currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                }
-            }
-            
         }
-         void DrawWithoutNonFace1(Graphics g, Transform projection, int width, int height, Polyhedron cur)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur)
         {
             PointZ fakeCameraPosition = new PointZ(0, 0, 1);
 
@@ -201,14 +166,33 @@ namespace Lab8
                 }
             }
         }
+
+        private void DrawingSelection(Polyhedron cur)
+        {
+            if (currentPolyhedron != null)
+            {
+                if (non_face)
+                {
+                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
+                }
+                else
+                {
+                    currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                }
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
             figure = true;
             GetCurrentPolyhedron(GetProjection());
+            DrawingSelection(currentPolyhedron);
             figure = false;
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
+
+
+
         }
 
         //масштаб относительно центра
@@ -217,7 +201,7 @@ namespace Lab8
             g1.Clear(Color.White);
             double C = (double)numericUpDown10.Value;
             currentPolyhedron.Apply(Transform.Scale(C, C, C));
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawingSelection(currentPolyhedron);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -229,8 +213,8 @@ namespace Lab8
             Rotate();
             Scale();
 
-            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            currentPolyhedron.DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawingSelection(currentPolyhedron);
+
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -295,14 +279,14 @@ namespace Lab8
             g1.Clear(Color.White);
             Reflect();
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawAxis(g1, GetProjection());
+            DrawAxis(g1, GetProjection()); DrawingSelection(currentPolyhedron);
             pictureBox1.Invalidate();
         }
-
         private void ApplyProjection_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
             GetCurrentPolyhedron(GetProjection());
+            DrawingSelection(currentPolyhedron);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -329,7 +313,7 @@ namespace Lab8
         {
             g1.Clear(Color.White);
             RotateLine();
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawingSelection(currentPolyhedron);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
 
@@ -364,7 +348,6 @@ namespace Lab8
         {
             if (points.Count >= 2)
             {
-
                 if (comboBox3.SelectedItem != null)
                 {
                     steps = ((int)stepsNumericUpDown.Value);
@@ -379,12 +362,10 @@ namespace Lab8
 
         private PointZ chooseAxis(PointZ p, float angle)
         {
-
             switch (comboBox3.SelectedItem.ToString())
             {
                 case "по X":
                     {
-                        //return p.Apply(Transform.RotateX(angle / 180 * Math.PI));
                         p.Apply(Transform.RotateX(angle / 180 * Math.PI));
                         return p;
                     }
@@ -407,13 +388,11 @@ namespace Lab8
         }
         private void reflectAxis()
         {
-
             switch (comboBox3.SelectedItem.ToString())
             {
                 case "по X":
                     {
                         currentPolyhedron.Apply(Transform.ReflectX());
-                        // currentPolyhedron.Apply(Transform.Translate(1, 0, 0));
                         break;
                     }
                 case "по Y":
@@ -425,7 +404,6 @@ namespace Lab8
                 case "по Z":
                     {
                         currentPolyhedron.Apply(Transform.ReflectZ());
-                        //currentPolyhedron.Apply(Transform.Translate(0, 0, 1));
                         break;
                     }
                 default:
@@ -470,10 +448,6 @@ namespace Lab8
                 newPoints.Clear();
                 foreach (PointZ point in points)
                 {
-                    //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-                    //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
-
-                    //allPoints.Add(point);
                     PointZ newp = new PointZ(point.X, point.Y, point.Z);
                     newPoints.Add(chooseAxis(newp, rotAngle));
                     allPoints.Add(point);
@@ -498,9 +472,6 @@ namespace Lab8
             }
             foreach (PointZ point in points)
             {
-                //newPoints.Add(new PointZ(point.X, point.Y, point.Z));
-                //newPoints.Last().Apply(Transform.RotateY(rotAngle / 180 * Math.PI));
-                //allPoints.Add(point);
                 PointZ newp = new PointZ(point.X, point.Y, point.Z);
                 newPoints.Add(chooseAxis(newp, rotAngle));
                 allPoints.Add(point);
@@ -519,16 +490,8 @@ namespace Lab8
             var maxY = allPoints.OrderBy(x => x.Y).Last().Y;
             var maxZ = allPoints.OrderBy(x => x.Z).Last().Z;
 
-            //foreach (var p in allPoints)
-            //{
-            //    p.X = p.X / maxX;
-            //    p.Y = p.Y / maxY;
-            //    p.Z = p.Z / maxZ;
-            //}
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.005);
-            //currentPolyhedron.Apply(Transform.ReflectY());
             reflectAxis();
-            //currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
             g1.Clear(Color.White);
 
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
@@ -737,8 +700,13 @@ namespace Lab8
         private void buttonNonFace_Click(object sender, EventArgs e)
         {
             non_face = true;
-            //pictureBox1.Invalidate();
-            DrawWithoutNonFace1(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
+            g1.Clear(Color.White);
+            figure = true;
+            GetCurrentPolyhedron(GetProjection());
+            DrawingSelection(currentPolyhedron);
+            figure = false;
+            DrawAxis(g1, GetProjection());
+            pictureBox1.Invalidate();
         }
     }
 }

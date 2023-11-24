@@ -68,7 +68,6 @@ namespace Lab8
             numericUpDown2 = new NumericUpDown();
             numericUpDown1 = new NumericUpDown();
             PerspectiveLabel = new Label();
-            ApplyProjection = new Button();
             button1 = new Button();
             label1 = new Label();
             comboBox1 = new ComboBox();
@@ -278,7 +277,7 @@ namespace Lab8
             // 
             ProjectionComboBox.FormattingEnabled = true;
             ProjectionComboBox.Items.AddRange(new object[] { "Перcпективная", "Изометрическая" });
-            ProjectionComboBox.Location = new Point(254, 70);
+            ProjectionComboBox.Location = new Point(254, 60);
             ProjectionComboBox.Margin = new Padding(3, 4, 3, 4);
             ProjectionComboBox.Name = "ProjectionComboBox";
             ProjectionComboBox.Size = new Size(154, 28);
@@ -491,29 +490,18 @@ namespace Lab8
             // PerspectiveLabel
             // 
             PerspectiveLabel.AutoSize = true;
-            PerspectiveLabel.Location = new Point(254, 46);
+            PerspectiveLabel.Location = new Point(254, 36);
             PerspectiveLabel.Name = "PerspectiveLabel";
             PerspectiveLabel.Size = new Size(157, 20);
             PerspectiveLabel.TabIndex = 137;
             PerspectiveLabel.Text = "Выберите проекцию:";
             // 
-            // ApplyProjection
-            // 
-            ApplyProjection.Location = new Point(254, 106);
-            ApplyProjection.Margin = new Padding(3, 4, 3, 4);
-            ApplyProjection.Name = "ApplyProjection";
-            ApplyProjection.Size = new Size(154, 31);
-            ApplyProjection.TabIndex = 136;
-            ApplyProjection.Text = "Применить";
-            ApplyProjection.UseVisualStyleBackColor = true;
-            ApplyProjection.Click += ApplyProjection_Click;
-            // 
             // button1
             // 
-            button1.Location = new Point(38, 106);
+            button1.Location = new Point(151, 96);
             button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(155, 31);
+            button1.Size = new Size(155, 41);
             button1.TabIndex = 135;
             button1.Text = "Применить ";
             button1.UseVisualStyleBackColor = true;
@@ -522,7 +510,7 @@ namespace Lab8
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(38, 46);
+            label1.Location = new Point(38, 36);
             label1.Name = "label1";
             label1.Size = new Size(133, 20);
             label1.TabIndex = 134;
@@ -532,7 +520,7 @@ namespace Lab8
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Тетраэдр", "Гексаэдр", "Октаэдр" });
-            comboBox1.Location = new Point(39, 70);
+            comboBox1.Location = new Point(39, 60);
             comboBox1.Margin = new Padding(3, 4, 3, 4);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(154, 28);
@@ -837,7 +825,6 @@ namespace Lab8
             Controls.Add(numericUpDown2);
             Controls.Add(numericUpDown1);
             Controls.Add(PerspectiveLabel);
-            Controls.Add(ApplyProjection);
             Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(comboBox1);
@@ -915,7 +902,6 @@ namespace Lab8
         private NumericUpDown numericUpDown2;
         private NumericUpDown numericUpDown1;
         private Label PerspectiveLabel;
-        private Button ApplyProjection;
         private Button button1;
         private Label label1;
         private ComboBox comboBox1;

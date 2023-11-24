@@ -166,7 +166,7 @@ namespace Lab8
             }
             return Transform.IsometricProjection();
         }
-     
+
 
         private void GetCurrentPolyhedron(Transform t)
         {
@@ -295,7 +295,7 @@ namespace Lab8
 
             DrawingSelection(currentPolyhedron);
 
-           DrawAxis(g1, GetProjectionAxis());
+            DrawAxis(g1, GetProjectionAxis());
 
             pictureBox1.Invalidate();
         }
@@ -465,7 +465,7 @@ namespace Lab8
             RotateLine();
 
             DrawingSelection(currentPolyhedron);
-             DrawAxis(g1, GetProjectionAxis());
+            DrawAxis(g1, GetProjectionAxis());
 
             pictureBox1.Invalidate();
 

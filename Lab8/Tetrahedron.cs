@@ -48,6 +48,8 @@ namespace Lab8
             }
         }
 
+
+
         public PointZ[] getVertice()
         {
             return vertices;

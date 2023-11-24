@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,10 @@ namespace Lab8
         public double X { get { return coords[0]; } set { coords[0] = value; } }
         public double Y { get { return coords[1]; } set { coords[1] = value; } }
         public double Z { get { return coords[2]; } set { coords[2] = value; } }
-
+        public double W
+        {
+            get;
+        }
         public PointZ() { }
 
         public PointZ(double x, double y, double z)
@@ -25,6 +29,7 @@ namespace Lab8
         public PointZ(double[] arr)
         {
             coords = arr;
+
         }
 
         public void Apply(Transform t)
@@ -45,6 +50,34 @@ namespace Lab8
             return pt;
         }
 
+        // Скалярное произведение векторов
+        public static double DotProduct(PointZ u, PointZ v)
+        {
+            double result = 0;
+            result += u.X * v.X;
+            result += u.Y * v.Y;
+            result += u.Z * v.Z;
+            return result;
+        }
+        // Векторное произведение векторов
+        public static PointZ CrossProduct(PointZ u, PointZ v)
+        {
+            return new PointZ(
+                u.Y * v.Z - u.Z * v.Y,
+                u.Z * v.X - u.X * v.Z,
+                u.X * v.Y - u.Y * v.X);
+        }
+
+        public static PointZ operator *(double x, PointZ v)
+        {
+            v.X *= x; v.Y *= x; v.Z *= x;
+            return v;
+        }
+
+        public static PointZ operator -(PointZ v)
+        {
+            return -1 * v;
+        }
 
         public PointZ Transform(Transform t)
         {
@@ -53,6 +86,27 @@ namespace Lab8
             return p;
         }
 
+        private PointZ Normalize()
+        {
+            double normalization = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            this.X = X / normalization;
+            this.Y = Y / normalization;
+            this.Z = Z / normalization;
+            return this;
+        }
+
+        bool IsNormalize()
+        {
+            if (X < -1 || X > 1 || Y < -1 || Y > 1 || Z > 1 || Z < -1)
+                return false;
+            return true;
+        }
+        private bool Check(int width, int height)
+        {
+            return ((X >= 0 && X < width) &&
+                   (Y >= 0 && Y < height) &&
+                   (Z < 1) && (Z > -1));
+        }
         /*
  * Преобразует координаты из ([-1, 1], [-1, 1], [-1, 1]) в ([0, width), [0, height), [-1, 1]).
  */
@@ -60,21 +114,21 @@ namespace Lab8
         {
             var x = (X / coords[3] + 1) / 2 * width;
             var y = (-Y / coords[3] + 1) / 2 * height;
-            return new PointZ(x, y, Z);
+            return new PointZ(x, y, Z / coords[3]);
         }
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
         {
+            if (!this.IsNormalize())
+                this.Normalize();
+            if (!B.IsNormalize())
+                B.Normalize();
+
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+            if (c.Check(width, height))
+                g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
         }
 
-        public void DrawLine2(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
-        {
-            var c = this.Transform(projection);
-            var d = B.Transform(projection);
-            g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
-        }
     }
 }

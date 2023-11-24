@@ -24,7 +24,7 @@ namespace Lab8
         int steps;
         Func<float, float, float> function;
         bool figure;
-
+        bool non_face;
         public Form1()
         {
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace Lab8
             g2.Clear(Color.White);
             comboBox1.SelectedItem = 0;
             figure = false;
-
+            non_face = true;
             points = new List<PointZ>();
 
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
@@ -94,8 +94,16 @@ namespace Lab8
         {
             if (currentPolyhedron != null && !figure)
             {
-                currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                return;
+                if (non_face)
+                {
+                    currentPolyhedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
+                    return;
+                }
+                else
+                {
+                    currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                    return;
+                }
             }
             if (comboBox1.SelectedItem != null)
             {
@@ -104,35 +112,95 @@ namespace Lab8
                     case "Тетраэдр":
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(1);
-                            tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = tetrahedron;
                             break;
                         }
                     case "Гексаэдр":
                         {
                             Hexahedron hexahedron = new Hexahedron(0.5);
-                            hexahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //if (non_face)
+                            //{
+                            //    hexahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //}
+                            //else
+                            //{
+                            //    hexahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //}
                             currentPolyhedron = hexahedron;
                             break;
                         }
                     case "Октаэдр":
                         {
                             Octahedron octahedron = new Octahedron(1);
-                            octahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //octahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = octahedron;
+                            //DrawWithoutNonFace1(g1, t, pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
                             break;
                         }
                     default:
                         {
                             Tetrahedron tetrahedron = new Tetrahedron(0.5);
-                            tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
-                            currentPolyhedron = new Tetrahedron(0.5);
+                            tetrahedron.DrawWithoutNonFace(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            //currentPolyhedron = new Tetrahedron(0.5);
                             break;
                         }
                 }
             }
+            if (currentPolyhedron != null)
+            {
+                if (non_face)
+                {
+                    DrawWithoutNonFace1(g1, t, pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
+                }
+                else
+                {
+                    currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                }
+            }
+            
         }
+         void DrawWithoutNonFace1(Graphics g, Transform projection, int width, int height, Polyhedron cur)
+        {
+            PointZ fakeCameraPosition = new PointZ(0, 0, 1);
 
+            foreach (var v in cur.getPolygons())
+            {
+                var vertices = cur.getVertice();
+                PointZ p1 = vertices[v[0]];
+                PointZ p2 = vertices[v[1]];
+                PointZ p3 = vertices[v[2]];
+
+                PointZ v1 = new PointZ(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+                PointZ v2 = new PointZ(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
+
+                PointZ normal = PointZ.CrossProduct(v1, v2);
+
+                double d = -(normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z);
+
+                var Center = cur.Center;
+                PointZ pp = new PointZ(p1.X + normal.X, p1.Y + normal.Y, p1.Z + normal.Z);
+                double val1 = normal.X * pp.X + normal.Y * pp.Y + normal.Z * pp.Z + d;
+                double val2 = normal.X * Center.X + normal.Y * Center.Y + normal.Z * Center.Z + d;
+
+                if (val1 * val2 > 0)
+                {
+                    normal.X = -normal.X;
+                    normal.Y = -normal.Y;
+                    normal.Z = -normal.Z;
+                }
+
+                if (normal.X * (-fakeCameraPosition.X) + normal.Y * (-fakeCameraPosition.Y) + normal.Z * (-fakeCameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                {
+                    for (int i = 0; i < v.Count(); i++)
+                    {
+                        int vertex1 = v[i];
+                        int vertex2 = v[(i + 1) % v.Count()];
+                        vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
+                    }
+                }
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
@@ -161,7 +229,8 @@ namespace Lab8
             Rotate();
             Scale();
 
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            currentPolyhedron.DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -461,7 +530,9 @@ namespace Lab8
             reflectAxis();
             //currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
             g1.Clear(Color.White);
+
             currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -661,6 +732,13 @@ namespace Lab8
             {
                 GetFunctionFigure((int)x0NumericUpDown.Value, (int)y0NumericUpDown.Value, (int)x1NumericUpDown.Value, (int)y1NnumericUpDown.Value, (int)stepsNumericUpDown.Value, function);
             }
+        }
+
+        private void buttonNonFace_Click(object sender, EventArgs e)
+        {
+            non_face = true;
+            //pictureBox1.Invalidate();
+            DrawWithoutNonFace1(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron);
         }
     }
 }

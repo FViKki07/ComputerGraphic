@@ -52,6 +52,16 @@ namespace Lab8
             return pt;
         }
 
+        // Скалярное произведение векторов
+        public static double DotProduct(PointZ u, PointZ v)
+        {
+            double result = 0;
+            result += u.X * v.X;
+            result += u.Y * v.Y;
+            result += u.Z * v.Z;
+            return result;
+        }
+
         // Векторное произведение векторов
         public static PointZ CrossProduct(PointZ u, PointZ v)
         {
@@ -76,7 +86,6 @@ namespace Lab8
         {
             return new PointZ(ths.X + other.X, ths.Y + other.Y, ths.Z + other.Z);
         }
-
         public PointZ Transform(Transform t)
         {
             var p = new PointZ(X, Y, Z);
@@ -98,7 +107,7 @@ namespace Lab8
         bool IsNormalize()
         {
             if (X < -1 || X > 1 || Y < -1 || Y > 1 || Z > 1 || Z < -1 || W != 1)
-                return false ;
+                return false;
             return true;
         }
         private bool Check(int width, int height)
@@ -108,6 +117,9 @@ namespace Lab8
                    !Double.IsInfinity(X) &&
                    !Double.IsInfinity(Y) &&
                    !Double.IsInfinity(Z);
+            return ((X >= 0 && X < width) &&
+                   (Y >= 0 && Y < height) &&
+                   (Z < 1) && (Z > -1));
         }
         /*
  * Преобразует координаты из ([-1, 1], [-1, 1], [-1, 1]) в ([0, width), [0, height), [-1, 1]).
@@ -119,6 +131,7 @@ namespace Lab8
             var x = (X / coords[3] + 1) / 2 * width;
             var y = (-Y / coords[3] + 1 ) / 2 * height;
             return new PointZ(x, y, Z/ coords[3]);
+
         }
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
@@ -128,6 +141,7 @@ namespace Lab8
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
             if(c.Check(width, height) && d.Check(width, height)) 
              g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+
         }
 
     }

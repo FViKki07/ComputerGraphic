@@ -185,14 +185,12 @@ namespace Lab8
         {
             g1.Clear(Color.White);
             figure = true;
+            non_face = false;
             GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
-
-
-
         }
 
         //масштаб относительно центра

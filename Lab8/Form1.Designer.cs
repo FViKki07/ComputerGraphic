@@ -96,6 +96,7 @@ namespace Lab8
             label20 = new Label();
             buttonNonFace = new Button();
             button8 = new Button();
+            button9 = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown15).BeginInit();
@@ -125,7 +126,7 @@ namespace Lab8
             // 
             // button4
             // 
-            button4.Location = new Point(134, 505);
+            button4.Location = new Point(133, 568);
             button4.Name = "button4";
             button4.Size = new Size(153, 31);
             button4.TabIndex = 172;
@@ -136,7 +137,7 @@ namespace Lab8
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(71, 476);
+            label13.Location = new Point(70, 539);
             label13.Name = "label13";
             label13.Size = new Size(39, 20);
             label13.TabIndex = 171;
@@ -145,7 +146,7 @@ namespace Lab8
             // numericUpDown17
             // 
             numericUpDown17.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown17.Location = new Point(178, 470);
+            numericUpDown17.Location = new Point(177, 533);
             numericUpDown17.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown17.Name = "numericUpDown17";
             numericUpDown17.Size = new Size(54, 27);
@@ -154,7 +155,7 @@ namespace Lab8
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(65, 450);
+            label11.Location = new Point(64, 513);
             label11.Name = "label11";
             label11.Size = new Size(59, 20);
             label11.TabIndex = 169;
@@ -163,7 +164,7 @@ namespace Lab8
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(65, 413);
+            label12.Location = new Point(64, 476);
             label12.Name = "label12";
             label12.Size = new Size(59, 20);
             label12.TabIndex = 168;
@@ -173,7 +174,7 @@ namespace Lab8
             // 
             numericUpDown14.DecimalPlaces = 2;
             numericUpDown14.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown14.Location = new Point(239, 444);
+            numericUpDown14.Location = new Point(238, 507);
             numericUpDown14.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown14.Name = "numericUpDown14";
             numericUpDown14.Size = new Size(54, 27);
@@ -183,7 +184,7 @@ namespace Lab8
             // 
             numericUpDown15.DecimalPlaces = 2;
             numericUpDown15.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown15.Location = new Point(181, 444);
+            numericUpDown15.Location = new Point(180, 507);
             numericUpDown15.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown15.Name = "numericUpDown15";
             numericUpDown15.Size = new Size(56, 27);
@@ -193,7 +194,7 @@ namespace Lab8
             // 
             numericUpDown16.DecimalPlaces = 2;
             numericUpDown16.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown16.Location = new Point(121, 444);
+            numericUpDown16.Location = new Point(120, 507);
             numericUpDown16.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown16.Name = "numericUpDown16";
             numericUpDown16.Size = new Size(56, 27);
@@ -203,7 +204,7 @@ namespace Lab8
             // 
             numericUpDown11.DecimalPlaces = 2;
             numericUpDown11.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown11.Location = new Point(240, 411);
+            numericUpDown11.Location = new Point(239, 474);
             numericUpDown11.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown11.Name = "numericUpDown11";
             numericUpDown11.Size = new Size(54, 27);
@@ -213,7 +214,7 @@ namespace Lab8
             // 
             numericUpDown12.DecimalPlaces = 2;
             numericUpDown12.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown12.Location = new Point(181, 411);
+            numericUpDown12.Location = new Point(180, 474);
             numericUpDown12.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown12.Name = "numericUpDown12";
             numericUpDown12.Size = new Size(56, 27);
@@ -223,7 +224,7 @@ namespace Lab8
             // 
             numericUpDown13.DecimalPlaces = 2;
             numericUpDown13.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown13.Location = new Point(121, 411);
+            numericUpDown13.Location = new Point(120, 474);
             numericUpDown13.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown13.Name = "numericUpDown13";
             numericUpDown13.Size = new Size(56, 27);
@@ -232,7 +233,7 @@ namespace Lab8
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(71, 383);
+            label10.Location = new Point(70, 446);
             label10.Name = "label10";
             label10.Size = new Size(286, 20);
             label10.TabIndex = 161;
@@ -240,7 +241,7 @@ namespace Lab8
             // 
             // button3
             // 
-            button3.Location = new Point(222, 159);
+            button3.Location = new Point(221, 222);
             button3.Margin = new Padding(3, 2, 3, 2);
             button3.Name = "button3";
             button3.Size = new Size(154, 29);
@@ -253,7 +254,7 @@ namespace Lab8
             // 
             comboBox2.FormattingEnabled = true;
             comboBox2.Items.AddRange(new object[] { "Отражение по X", "Отражение по Y", "Отражение по Z" });
-            comboBox2.Location = new Point(222, 131);
+            comboBox2.Location = new Point(221, 194);
             comboBox2.Margin = new Padding(3, 2, 3, 2);
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(154, 28);
@@ -262,7 +263,7 @@ namespace Lab8
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(222, 113);
+            label9.Location = new Point(221, 176);
             label9.Name = "label9";
             label9.Size = new Size(91, 20);
             label9.TabIndex = 158;
@@ -272,14 +273,14 @@ namespace Lab8
             // 
             ProjectionComboBox.FormattingEnabled = true;
             ProjectionComboBox.Items.AddRange(new object[] { "Перспективная", "Изометрическая", "Ортогональная XY", "Ортогональная XZ", "Ортогональная YZ" });
-            ProjectionComboBox.Location = new Point(222, 45);
+            ProjectionComboBox.Location = new Point(213, 77);
             ProjectionComboBox.Name = "ProjectionComboBox";
             ProjectionComboBox.Size = new Size(154, 28);
             ProjectionComboBox.TabIndex = 157;
             // 
             // button2
             // 
-            button2.Location = new Point(139, 344);
+            button2.Location = new Point(138, 407);
             button2.Name = "button2";
             button2.Size = new Size(153, 31);
             button2.TabIndex = 156;
@@ -290,7 +291,7 @@ namespace Lab8
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(33, 113);
+            label8.Location = new Point(32, 176);
             label8.Name = "label8";
             label8.Size = new Size(180, 20);
             label8.TabIndex = 155;
@@ -298,7 +299,7 @@ namespace Lab8
             // 
             // ApplyScaleCenter
             // 
-            ApplyScaleCenter.Location = new Point(34, 157);
+            ApplyScaleCenter.Location = new Point(33, 220);
             ApplyScaleCenter.Name = "ApplyScaleCenter";
             ApplyScaleCenter.Size = new Size(154, 31);
             ApplyScaleCenter.TabIndex = 154;
@@ -310,7 +311,7 @@ namespace Lab8
             // 
             numericUpDown10.DecimalPlaces = 1;
             numericUpDown10.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown10.Location = new Point(33, 131);
+            numericUpDown10.Location = new Point(32, 194);
             numericUpDown10.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown10.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown10.Name = "numericUpDown10";
@@ -321,7 +322,7 @@ namespace Lab8
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(58, 302);
+            label6.Location = new Point(57, 365);
             label6.Name = "label6";
             label6.Size = new Size(72, 20);
             label6.TabIndex = 152;
@@ -330,7 +331,7 @@ namespace Lab8
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(60, 265);
+            label5.Location = new Point(59, 328);
             label5.Name = "label5";
             label5.Size = new Size(70, 20);
             label5.TabIndex = 151;
@@ -340,7 +341,7 @@ namespace Lab8
             // 
             numericUpDown7.DecimalPlaces = 1;
             numericUpDown7.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown7.Location = new Point(126, 299);
+            numericUpDown7.Location = new Point(125, 362);
             numericUpDown7.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown7.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown7.Name = "numericUpDown7";
@@ -352,7 +353,7 @@ namespace Lab8
             // 
             numericUpDown8.DecimalPlaces = 1;
             numericUpDown8.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown8.Location = new Point(184, 299);
+            numericUpDown8.Location = new Point(183, 362);
             numericUpDown8.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown8.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown8.Name = "numericUpDown8";
@@ -364,7 +365,7 @@ namespace Lab8
             // 
             numericUpDown9.DecimalPlaces = 1;
             numericUpDown9.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown9.Location = new Point(242, 299);
+            numericUpDown9.Location = new Point(241, 362);
             numericUpDown9.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown9.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown9.Name = "numericUpDown9";
@@ -375,7 +376,7 @@ namespace Lab8
             // numericUpDown4
             // 
             numericUpDown4.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown4.Location = new Point(126, 262);
+            numericUpDown4.Location = new Point(125, 325);
             numericUpDown4.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown4.Name = "numericUpDown4";
             numericUpDown4.Size = new Size(54, 27);
@@ -384,7 +385,7 @@ namespace Lab8
             // numericUpDown5
             // 
             numericUpDown5.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown5.Location = new Point(184, 262);
+            numericUpDown5.Location = new Point(183, 325);
             numericUpDown5.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown5.Name = "numericUpDown5";
             numericUpDown5.Size = new Size(56, 27);
@@ -393,7 +394,7 @@ namespace Lab8
             // numericUpDown6
             // 
             numericUpDown6.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown6.Location = new Point(242, 262);
+            numericUpDown6.Location = new Point(241, 325);
             numericUpDown6.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown6.Name = "numericUpDown6";
             numericUpDown6.Size = new Size(56, 27);
@@ -402,7 +403,7 @@ namespace Lab8
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(52, 224);
+            label4.Location = new Point(51, 287);
             label4.Name = "label4";
             label4.Size = new Size(83, 20);
             label4.TabIndex = 144;
@@ -412,7 +413,7 @@ namespace Lab8
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(259, 194);
+            label3.Location = new Point(258, 257);
             label3.Name = "label3";
             label3.Size = new Size(18, 20);
             label3.TabIndex = 143;
@@ -422,7 +423,7 @@ namespace Lab8
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(200, 194);
+            label2.Location = new Point(199, 257);
             label2.Name = "label2";
             label2.Size = new Size(17, 20);
             label2.TabIndex = 142;
@@ -432,7 +433,7 @@ namespace Lab8
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(141, 194);
+            label7.Location = new Point(140, 257);
             label7.Name = "label7";
             label7.Size = new Size(18, 20);
             label7.TabIndex = 141;
@@ -443,7 +444,7 @@ namespace Lab8
             // 
             numericUpDown3.DecimalPlaces = 2;
             numericUpDown3.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown3.Location = new Point(245, 223);
+            numericUpDown3.Location = new Point(244, 286);
             numericUpDown3.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown3.Name = "numericUpDown3";
             numericUpDown3.Size = new Size(54, 27);
@@ -453,7 +454,7 @@ namespace Lab8
             // 
             numericUpDown2.DecimalPlaces = 2;
             numericUpDown2.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown2.Location = new Point(186, 223);
+            numericUpDown2.Location = new Point(185, 286);
             numericUpDown2.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown2.Name = "numericUpDown2";
             numericUpDown2.Size = new Size(56, 27);
@@ -463,7 +464,7 @@ namespace Lab8
             // 
             numericUpDown1.DecimalPlaces = 2;
             numericUpDown1.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown1.Location = new Point(126, 223);
+            numericUpDown1.Location = new Point(125, 286);
             numericUpDown1.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(56, 27);
@@ -472,7 +473,7 @@ namespace Lab8
             // PerspectiveLabel
             // 
             PerspectiveLabel.AutoSize = true;
-            PerspectiveLabel.Location = new Point(222, 27);
+            PerspectiveLabel.Location = new Point(210, 41);
             PerspectiveLabel.Name = "PerspectiveLabel";
             PerspectiveLabel.Size = new Size(157, 20);
             PerspectiveLabel.TabIndex = 137;
@@ -480,7 +481,7 @@ namespace Lab8
             // 
             // button1
             // 
-            button1.Location = new Point(33, 74);
+            button1.Location = new Point(24, 106);
             button1.Name = "button1";
             button1.Size = new Size(136, 31);
             button1.TabIndex = 135;
@@ -491,7 +492,7 @@ namespace Lab8
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(33, 27);
+            label1.Location = new Point(35, 41);
             label1.Name = "label1";
             label1.Size = new Size(133, 20);
             label1.TabIndex = 134;
@@ -501,7 +502,7 @@ namespace Lab8
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Тетраэдр", "Гексаэдр", "Октаэдр" });
-            comboBox1.Location = new Point(34, 45);
+            comboBox1.Location = new Point(25, 77);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(154, 28);
             comboBox1.TabIndex = 133;
@@ -522,7 +523,7 @@ namespace Lab8
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 3, 0, 3);
-            menuStrip1.Size = new Size(1823, 30);
+            menuStrip1.Size = new Size(1862, 30);
             menuStrip1.TabIndex = 175;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -732,7 +733,7 @@ namespace Lab8
             // 
             // buttonNonFace
             // 
-            buttonNonFace.Location = new Point(23, 539);
+            buttonNonFace.Location = new Point(22, 684);
             buttonNonFace.Margin = new Padding(3, 2, 3, 2);
             buttonNonFace.Name = "buttonNonFace";
             buttonNonFace.Size = new Size(146, 47);
@@ -743,7 +744,7 @@ namespace Lab8
             // 
             // button8
             // 
-            button8.Location = new Point(222, 74);
+            button8.Location = new Point(213, 106);
             button8.Name = "button8";
             button8.Size = new Size(136, 31);
             button8.TabIndex = 196;
@@ -751,11 +752,22 @@ namespace Lab8
             button8.UseVisualStyleBackColor = true;
             button8.Click += ApplyProjection_Click;
             // 
+            // button9
+            // 
+            button9.Location = new Point(228, 688);
+            button9.Name = "button9";
+            button9.Size = new Size(94, 29);
+            button9.TabIndex = 197;
+            button9.Text = "button9";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1595, 602);
+            ClientSize = new Size(1862, 813);
+            Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(buttonNonFace);
             Controls.Add(label20);
@@ -916,5 +928,6 @@ namespace Lab8
         private Label label20;
         private Button buttonNonFace;
         private Button button8;
+        private Button button9;
     }
 }

@@ -854,126 +854,117 @@ namespace Lab8
             }
         }
 
-        private float getDistance(PointZ camera, PointZ point)
+        //BUF Z
+        private void Interpolate(Vertex a, Vertex b, double f, ref Vertex v)
         {
-            return (float)Math.Sqrt(Math.Pow(camera.X + point.X, 2) + Math.Pow(camera.Y + point.Y, 2) + Math.Pow(camera.Z + point.Z, 2));
-
+            v.Coordinate = Interpolate(a.Coordinate, b.Coordinate, f);
+            v.Normal = Interpolate(a.Normal, b.Normal, f);
+            v.Color = Interpolate(a.Color, b.Color, f);
         }
 
-        private void bufferZ()
+        private double Interpolate(double x0, double x1, double f)
         {
-            float[,] zBuffer = new float[pictureBox1.Width, pictureBox1.Height];
-
-            // Color[,] colorBuffer = new Color[pictureBox1.Width, pictureBox1.Height];
-
-
-            for (int i = 0; i < pictureBox1.Width; i++)
-                for (int j = 0; j < pictureBox1.Height; j++)
-                {
-                    zBuffer[i, j] = float.MaxValue;
-                    // colorBuffer[i, j] = Color.White;
-                }
-
-            var indpolygons = currentPolyhedron.getPolygons();
-
-            var pointZ = currentPolyhedron.getVertice();
-            List<List<PointZ>> points = new List<List<PointZ>>();
-
-            for (int i = 0; i < indpolygons.Count; i++)
-            {
-                if (indpolygons[i].Count() == 4)
-                {
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]] });
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]] });
-                    //indpolygons.Add(new List<int> { indpolygons[i][0], indpolygons[i][1], indpolygons[i][2] });
-                    // indpolygons.Add(new List<int> { indpolygons[i][0], indpolygons[i][2], indpolygons[i][3] });
-
-                }
-                else
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]] });
-            }
-
-            //преобразуем точки в координаты экрана
-            for (int i = 0; i < points.Count; i++)
-            {
-                points[i][1] = points[i][1].NormalizedToDisplay(pictureBox1.Width, pictureBox1.Height);
-                points[i][2] = points[i][2].NormalizedToDisplay(pictureBox1.Width, pictureBox1.Height);
-                points[i][0] = points[i][0].NormalizedToDisplay(pictureBox1.Width, pictureBox1.Height);
-
-            }
-
-            foreach (var triangle in points)
-            {
-                // Рисуем линии между точками треугольника
-                triangle[0].DrawLine(g1, GetProjection(), triangle[1], pictureBox1.Width, pictureBox1.Height, Pens.Blue);
-                triangle[1].DrawLine(g1, GetProjection(), triangle[2], pictureBox1.Width, pictureBox1.Height, Pens.Blue);
-                triangle[2].DrawLine(g1, GetProjection(), triangle[0], pictureBox1.Width, pictureBox1.Height, Pens.Blue);
-            }
-            pictureBox1.Invalidate();
-
-            //отсортировали по убыванию
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (points[i][1].Y < points[i][0].Y)
-                    (points[i][1].Y, points[i][0].Y) = (points[i][0].Y, points[i][1].Y);
-
-                if (points[i][2].Y < points[i][0].Y)
-                    (points[i][2].Y, points[i][0].Y) = (points[i][0].Y, points[i][2].Y);
-
-
-                if (points[i][2].Y < points[i][1].Y)
-                    (points[i][2].Y, points[i][1].Y) = (points[i][1].Y, points[i][2].Y);
-
-
-                //sortByY(ref points[i][0],ref points[i][1],ref points[i][2]);
-
-            }
-            for (int i = 0; i < points.Count; i++)
-            {
-                Color randomColor = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
-
-                //  RasterizeTriangle(points[i][0], points[i][1], points[i][2], ref zBuffer, randomColor);
-            }
-
+            return x0 + (x1 - x0) * f;
         }
-        private void RasterizeTriangle(PointZ v1, PointZ v2, PointZ v3, ref float[,] zBuffer, Color randomColor)
+        private Color Interpolate(Color a, Color b, double f)
+        {
+            return Color.FromArgb((byte)Interpolate(a.R, b.R, f),
+                (byte)Interpolate(a.G, b.G, f), (byte)Interpolate(a.B, b.B, f));
+        }
+
+        private PointZ Interpolate(PointZ a, PointZ b, double f)
+        {
+            return new PointZ(
+                Interpolate(a.X, b.X, f),
+                Interpolate(a.Y, b.Y, f),
+                Interpolate(a.Z, b.Z, f));
+        }
+        private long Interpolate(long x0, long x1, double f)
+        {
+            return x0 + (long)((x1 - x0) * f);
+        }
+        private static void Swap<T>(ref T a, ref T b)
+        {
+            T t = a;
+            a = b;
+            b = t;
+        }
+        private Vertex GetScene(Vertex vertex)
+        {
+            return new Vertex(vertex.Coordinate.NormalizedToDisplay(Width, Height), vertex.Normal, vertex.Color);
+        }
+        void DrawBufferZ(Graphics g, Transform projection, int width, int height, Vertex first, Vertex second, Vertex third, PointZ pos)
         {
 
-            float x01 = Interpolate(v1.Y, v1.X, v2.Y, v2.X, v3.Y);
-            float x02 = Interpolate(v1.Y, v1.X, v3.Y, v3.X, v2.Y);
-            float x12 = Interpolate(v2.Y, v2.X, v3.Y, v3.X, v1.Y);
+           double[,] ZBuffer = new double[width, height];
 
-            float yMin = Math.Max(0, Math.Min((int)v1.Y, Math.Min((int)v2.Y, (int)v3.Y)));
-            float yMax = Math.Min(pictureBox1.Height - 1, Math.Max((int)v1.Y, Math.Max((int)v2.Y, (int)v3.Y)));
+            for (int j = 0; j < height; ++j)
+                for (int i = 0; i < width; ++i)
+                    ZBuffer[i, j] = double.MaxValue;
 
-            for (int y = (int)yMin; y <= yMax; y++)
+            // Преобразуем вершины из трехмерного пространства в пространство экрана
+            first = GetScene(first);
+            second = GetScene(second);
+            third = GetScene(third);
+
+            // Сортировка вершин по их координатам Y
+            if (first.Coordinate.Y > second.Coordinate.Y)
+                Swap(ref first, ref second);
+            if (first.Coordinate.Y > third.Coordinate.Y)
+                Swap(ref first, ref third);
+            if (second.Coordinate.Y > third.Coordinate.Y)
+                Swap(ref second, ref third);
+
+            Vertex l = new Vertex();
+            Vertex r = new Vertex();
+            Vertex p = new Vertex();
+
+            for (double y = first.Coordinate.Y; y < third.Coordinate.Y; ++y)
             {
-                float xLeft = Interpolate(v1.Y, x01, v3.Y, x02, y);
-                float xRight = Interpolate(v1.Y, x01, v2.Y, x12, y);
+                // Пропускаем рисование, если текущая координата Y находится за пределами экрана
+                if (y < 0 || y > (Height - 1))
+                    continue;
 
-                int xStart = Math.Max(0, (int)xLeft);
-                int xEnd = Math.Min(pictureBox1.Width - 1, (int)xRight);
+                bool topHalf = y < second.Coordinate.Y;
 
-                for (int x = xStart; x <= xEnd; x++)
+                var f0 = first;
+                var f1 = third;
+                Interpolate(f0, f1, (y - f0.Coordinate.Y) / (f1.Coordinate.Y - f0.Coordinate.Y), ref l);
+
+                var ff0 = topHalf ? first : second;
+                var ff1 = topHalf ? second : third;
+                Interpolate(ff0, ff1, (y - ff0.Coordinate.Y) / (ff1.Coordinate.Y - ff0.Coordinate.Y), ref r);
+
+                if (l.Coordinate.X > r.Coordinate.X)
+                    Swap(ref l, ref r);
+
+                for (double x = l.Coordinate.X; x < r.Coordinate.X; ++x)
                 {
-                    float zInterpolated = Interpolate(xLeft, v1.Z, xRight, v3.Z, x);
+                    // Пропускаем рисование, если текущая координата X находится за пределами экрана
+                    if (x < 0 || x > (width - 1))
+                        continue;
 
-                    if (zInterpolated < zBuffer[x, y])
+                    Interpolate(l, r, (x - l.Coordinate.X) / (r.Coordinate.X - l.Coordinate.X), ref p);
+
+                    // Пропускаем рисование, если текущая глубина вершины находится за пределами диапазона
+                    if (p.Coordinate.Z > 1 || p.Coordinate.Z < -1)
+                        continue;
+
+                    // Обновление буфера глубины и буфера цвета
+                    if (p.Coordinate.Z < ZBuffer[(int)x, (int)y])
                     {
-                        zBuffer[x, y] = zInterpolated;
-                        g1.FillRectangle(new SolidBrush(randomColor), x, y, 1, 1);
+                        ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
+
+                         g.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                       // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
             }
         }
 
 
-        private float Interpolate(double x0, double y0, double x1, double y1, double i)
-        {
-            if (Math.Abs(x0 - x1) < 1e-8)
-                return (float)((y0 + y1) / 2);
-            return (float)(y0 + ((y1 - y0) * (i - x0)) / (x1 - x0));
-        }
+
+
 
         private void zBuf()
         {
@@ -1009,21 +1000,10 @@ namespace Lab8
                     var b = new Vertex(verge[1], new PointZ(), Color.FromArgb(k2, k, k3));
                     var c = new Vertex(verge[2], new PointZ(), Color.FromArgb(k2, k, k3));
                     // g1.DrawTriangle(a, b, c);
-                    Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
-                    ggg.DrawTriangle(a, b, c,g1);
+                    //Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
+                    DrawBufferZ(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, a, b, c, camera.Position);
                 }
             }
-
-
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            //bufferZ();
-            zBuf();
-            pictureBox1.Refresh();
-           // pictureBox1.Invalidate();
-        }
 
 
         }
@@ -1038,6 +1018,13 @@ namespace Lab8
             figure = false;
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            //bufferZ();
+            zBuf();
+            pictureBox1.Refresh();
         }
     }
 }

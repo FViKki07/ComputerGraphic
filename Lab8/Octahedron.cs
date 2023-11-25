@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lab8
 {
-    internal class Octahedron: Polyhedron
+    internal class Octahedron : Polyhedron
     {
         private PointZ[] vertices; // 6 вершин, 8 граней
+        private List<List<int>> polygons;
 
         public Octahedron(double size)
         {
@@ -20,35 +21,70 @@ namespace Lab8
             vertices[3] = new PointZ(size / 2, 0, 0);
             vertices[4] = new PointZ(0, size / 2, 0);
             vertices[5] = new PointZ(0, 0, size / 2);
+            polygons = new List<List<int>>();
+
+            polygons.Add(new List<int>() { 0, 2, 4 });
+            polygons.Add(new List<int>() { 2, 4, 3 });
+            polygons.Add(new List<int>() { 4, 5, 3 });
+            polygons.Add(new List<int>() { 0, 5, 4 });
+            polygons.Add(new List<int>() { 0, 5, 1 });
+            polygons.Add(new List<int>() { 5, 3, 1 });
+            polygons.Add(new List<int>() { 0, 2, 1 });
+            polygons.Add(new List<int>() { 2, 1, 3 });
         }
 
         public void Draw(Graphics g, Transform projection, int width, int height)
         {
-            int[][] edges = new int[8][];
-
-            edges[0] = new int[] { 0, 2, 4 };
-            edges[1] = new int[] { 2, 4, 3 };
-            edges[2] = new int[] { 4, 5, 3 };
-            edges[3] = new int[] { 0, 5, 4 };
-            edges[4] = new int[] { 0, 5, 1 };
-            edges[5] = new int[] { 5, 3, 1 };
-            edges[6] = new int[] { 0, 2, 1 };
-            edges[7] = new int[] { 2, 1, 3 };
-
-            //Pen[] pens = { Pens.Red, Pens.Green, Pens.Yellow, Pens.Orange, Pens.Purple, Pens.Blue };
-
-            for (int i = 0; i < edges.Length; i++)
+            for (int i = 0; i < polygons.Count(); i++)
             {
-                for (int j = 0; j < edges[i].Length; j++)
+                for (int j = 0; j < polygons[i].Count(); j++)
                 {
-                    int vertex1 = edges[i][j];
-                    int vertex2 = edges[i][(j + 1) % 3];
+                    int vertex1 = polygons[i][j];
+                    int vertex2 = polygons[i][(j + 1) % 3];
                     vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
                 }
             }
         }
 
+        public void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height)
+        {
+            PointZ fakeCameraPosition = new PointZ(0, 0, 1);
 
+            foreach (var v in polygons)
+            {
+                PointZ p1 = vertices[v[0]];
+                PointZ p2 = vertices[v[1]];
+                PointZ p3 = vertices[v[2]];
+
+                PointZ v1 = new PointZ(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+                PointZ v2 = new PointZ(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
+
+                PointZ normal = PointZ.CrossProduct(v1, v2);
+
+                double d = -(normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z);
+
+                PointZ pp = new PointZ(p1.X + normal.X, p1.Y + normal.Y, p1.Z + normal.Z);
+                double val1 = normal.X * pp.X + normal.Y * pp.Y + normal.Z * pp.Z + d;
+                double val2 = normal.X * Center.X + normal.Y * Center.Y + normal.Z * Center.Z + d;
+
+                if (val1 * val2 > 0)
+                {
+                    normal.X = -normal.X;
+                    normal.Y = -normal.Y;
+                    normal.Z = -normal.Z;
+                }
+
+                if (normal.X * (-fakeCameraPosition.X) + normal.Y * (-fakeCameraPosition.Y) + normal.Z * (-fakeCameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                {
+                    for (int i = 0; i < v.Count(); i++)
+                    {
+                        int vertex1 = v[i];
+                        int vertex2 = v[(i + 1) % 3];
+                        vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
+                    }
+                }
+            }
+        }
         public PointZ[] getVertice()
         {
             return vertices;
@@ -56,8 +92,7 @@ namespace Lab8
 
         public List<List<int>> getPolygons()
         {
-            return null;
-            //return polygons;
+            return polygons;
         }
         public void Apply(Transform t)
         {

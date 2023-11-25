@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +22,11 @@ namespace Lab8
         public Transform(double[,] matrix)
         {
             this.matrix = matrix;
+        }
+
+        public static Transform Translate(PointZ v)
+        {
+            return Translate(v.X, v.Y, v.Z);
         }
 
         public static Transform RotateX(double angle)
@@ -165,8 +172,50 @@ namespace Lab8
             return Identity() * RotateY(Math.PI / 4) * RotateX(-Math.PI / 4);
         }
 
-        public static Transform PerspectiveProjection(float k)
+        /*public static Transform PerspectiveProjection(double left, double right, double bottom, double top, double near, double far)
         {
+            var a = 2 * near / (right - left);
+            var b = (right + left) / (right - left);
+            var c = 2 * near / (top - bottom);
+            var d = (top + bottom) / (top - bottom);
+            var e = -(far + near) / (far - near);
+            var f = -2 * far * near / (far - near);
+            return new Transform(
+                new double[4, 4] {
+                    { a, 0, 0, 0 },
+                    { 0, c, 0, 0 },
+                    { b, d, e, -1 },
+                    { 0, 0, f, 0 }
+                });
+            return new Transform(
+                new double[4, 4] {
+                    { a, 0, b, 0 },
+                    { 0, c, d, 0 },
+                    { 0, 0, e, f },
+                    { 0, 0, -1, 0 }
+                     });
+        }*/
+        public static Transform PerspectiveProjection(float k, Camera camera)
+        {
+            float aspectRatio = camera.AspectRatio;
+            float n = -0.9f;
+            float f = 0.9f;
+
+
+            return new Transform(
+                new double[,] {
+            { (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
+            { 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
+            { 0, 0, -(f + n) / (f - n), 1 },
+            { 0, 0, -2.0 * f * n / (f - n), 0 }
+                });
+            //return new Transform(
+            //    new double[,] {
+            //{ (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
+            //{ 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
+            //{ 0, 0, (f + n) / (f - n), 1 },
+            //{ 0, 0, 2.0 * f * n / (f - n), 0 }
+            //    });
             return new Transform(
                 new double[,] {
                     { 1, 0, 0, 0 },
@@ -174,7 +223,7 @@ namespace Lab8
                     { 0, 0, 0, -1/k },
                     { 0, 0, 0, 1 }
                 });
-        }
+    }
 
         public static Transform operator *(Transform t1, Transform t2)
         {

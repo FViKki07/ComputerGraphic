@@ -893,7 +893,7 @@ namespace Lab8
         {
             return new Vertex(vertex.Coordinate.NormalizedToDisplay(Width, Height), vertex.Normal, vertex.Color);
         }
-        void DrawBufferZ(Graphics g, Transform projection, int width, int height, Vertex first, Vertex second, Vertex third, PointZ pos)
+        void DrawBufferZ(Graphics g, int width, int height, Vertex first, Vertex second, Vertex third)
         {
 
            double[,] ZBuffer = new double[width, height];
@@ -956,6 +956,7 @@ namespace Lab8
                         ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
 
                          g.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                        pictureBox1.Invalidate();
                        // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
@@ -1001,7 +1002,7 @@ namespace Lab8
                     var c = new Vertex(verge[2], new PointZ(), Color.FromArgb(k2, k, k3));
                     // g1.DrawTriangle(a, b, c);
                     //Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
-                    DrawBufferZ(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, a, b, c, camera.Position);
+                    DrawBufferZ(g1, pictureBox1.Width, pictureBox1.Height, a, b, c);
                 }
             }
 
@@ -1024,7 +1025,7 @@ namespace Lab8
         {
             //bufferZ();
             zBuf();
-            pictureBox1.Refresh();
+            pictureBox1.Invalidate();
         }
     }
 }

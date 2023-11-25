@@ -205,8 +205,7 @@ namespace Lab8
                 }
             }
         }
-
-        private void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
            // PointZ fakeCameraPosition = new PointZ(0, 0, 1);
 
@@ -217,15 +216,15 @@ namespace Lab8
                 PointZ p2 = vertices[v[1]];
                 PointZ p3 = vertices[v[2]];
 
-                PointZ v1 = new (p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
-                PointZ v2 = new (p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
+                PointZ v1 = new PointZ(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+                PointZ v2 = new PointZ(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
 
                 PointZ normal = PointZ.CrossProduct(v1, v2);
 
                 double d = -(normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z);
 
                 var Center = cur.Center;
-                PointZ pp = new(p1.X + normal.X, p1.Y + normal.Y, p1.Z + normal.Z);
+                PointZ pp = new PointZ(p1.X + normal.X, p1.Y + normal.Y, p1.Z + normal.Z);
                 double val1 = normal.X * pp.X + normal.Y * pp.Y + normal.Z * pp.Z + d;
                 double val2 = normal.X * Center.X + normal.Y * Center.Y + normal.Z * Center.Z + d;
 
@@ -238,10 +237,10 @@ namespace Lab8
 
                 if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
                 {
-                    for (int i = 0; i < v.Count; i++)
+                    for (int i = 0; i < v.Count(); i++)
                     {
                         int vertex1 = v[i];
-                        int vertex2 = v[(i + 1) % v.Count];
+                        int vertex2 = v[(i + 1) % v.Count()];
                         vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
                     }
                 }
@@ -415,8 +414,7 @@ namespace Lab8
                     break;
             }
             g1.Clear(Color.White);
-            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-            DrawingSelection(currentPolyhedron);
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
             return base.ProcessCmdKey(ref msg, keyData);
@@ -426,7 +424,7 @@ namespace Lab8
         {
             g1.Clear(Color.White);
             Reflect();
-            DrawingSelection(currentPolyhedron);
+            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
 
             DrawAxis(g1, GetProjectionAxis()); DrawingSelection(currentPolyhedron);
 

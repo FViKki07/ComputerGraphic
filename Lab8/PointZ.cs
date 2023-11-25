@@ -17,7 +17,7 @@ namespace Lab8
         public double Z { get { return coords[2]; } set { coords[2] = value; } }
         public double W
         {
-            get { return coords[3]; }
+            get { return coords[3];  }
             set { coords[3] = value; }
         }
         public PointZ() { coords[3] = 1; }
@@ -90,10 +90,10 @@ namespace Lab8
         {
             var p = new PointZ(X, Y, Z);
             p.Apply(t);
-
+            
             return p;
         }
-
+        
         private PointZ Normalize()
         {
             double normalization = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
@@ -113,7 +113,7 @@ namespace Lab8
         private bool Check(int width, int height)
         {
 
-            return
+            return 
                    !Double.IsInfinity(X) &&
                    !Double.IsInfinity(Y) &&
                    !Double.IsInfinity(Z);
@@ -127,20 +127,21 @@ namespace Lab8
         public PointZ NormalizedToDisplay(int width, int height)
         {
             //if(!this.IsNormalize())
-            // this.Normalize();
+             // this.Normalize();
             var x = (X / coords[3] + 1) / 2 * width;
-            var y = (-Y / coords[3] + 1) / 2 * height;
-            return new PointZ(x, y, Z / coords[3]);
+            var y = (-Y / coords[3] + 1 ) / 2 * height;
+            return new PointZ(x, y, Z/ coords[3]);
 
         }
 
         public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
         {
-
+             
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
-            if (c.Check(width, height) && d.Check(width, height))
-                g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+            if(c.Check(width, height) && d.Check(width, height)) 
+             g.DrawLine(p, (float)c.X, (float)c.Y, (float)d.X, (float)d.Y);
+
         }
 
     }

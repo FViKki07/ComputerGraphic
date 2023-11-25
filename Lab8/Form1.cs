@@ -235,7 +235,8 @@ namespace Lab8
                     normal.Z = -normal.Z;
                 }
 
-                if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                //if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                if (PointZ.DotProduct(normal, CameraPosition - p1) > 0)
                 {
                     for (int i = 0; i < v.Count(); i++)
                     {

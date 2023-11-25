@@ -86,6 +86,10 @@ namespace Lab8
         {
             return new PointZ(ths.X + other.X, ths.Y + other.Y, ths.Z + other.Z);
         }
+        public static PointZ operator -(PointZ ths, PointZ other)
+        {
+            return new PointZ(ths.X - other.X, ths.Y - other.Y, ths.Z - other.Z);
+        }
         public PointZ Transform(Transform t)
         {
             var p = new PointZ(X, Y, Z);

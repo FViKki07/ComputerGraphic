@@ -214,8 +214,6 @@ namespace Lab8
         }
         void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
-            // PointZ fakeCameraPosition = new PointZ(0, 0, 1);
-
             foreach (var v in cur.getPolygons())
             {
                 var vertices = cur.getVertice();

@@ -276,7 +276,7 @@ namespace Lab8
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
-            zB=false;
+            zB = false;
             figure = true;
             non_face = false;
             GetCurrentPolyhedron(GetProjection());
@@ -957,10 +957,10 @@ namespace Lab8
                     {
                         ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
 
-                        g1.DrawEllipse(new Pen(p.Color), (int)x, (int)y,1,1);
-                         g1.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                        g1.DrawEllipse(new Pen(p.Color), (int)x, (int)y, 1, 1);
+                        g1.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
                         //pictureBox1.Invalidate();
-                       // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
+                        // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
             }
@@ -986,7 +986,7 @@ namespace Lab8
             {
                 if (indpolygons[i].Count() == 4)
                 {
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]]});              
+                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]] });
 
                 }
                 else
@@ -1006,7 +1006,7 @@ namespace Lab8
 
                     var a = new Vertex(verge[0], new PointZ(), Color.FromArgb(k2, k, k3));
                     var b = new Vertex(verge[i], new PointZ(), Color.FromArgb(k2, k, k3));
-                    var c = new Vertex(verge[i+1], new PointZ(), Color.FromArgb(k2, k, k3));
+                    var c = new Vertex(verge[i + 1], new PointZ(), Color.FromArgb(k2, k, k3));
                     // g1.DrawTriangle(a, b, c);
                     //Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
                     DrawBufferZ(ref ZBuffer, pictureBox1.Width, pictureBox1.Height, a, b, c);

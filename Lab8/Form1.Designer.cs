@@ -754,11 +754,11 @@ namespace Lab8
             // 
             // button9
             // 
-            button9.Location = new Point(228, 688);
+            button9.Location = new Point(221, 684);
             button9.Name = "button9";
-            button9.Size = new Size(94, 29);
+            button9.Size = new Size(119, 47);
             button9.TabIndex = 197;
-            button9.Text = "button9";
+            button9.Text = "Z Buffer";
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 

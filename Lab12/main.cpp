@@ -152,32 +152,6 @@ void ShaderLog(unsigned int shader)
     }
 }
 
-const int circleVertexCount = 360;
-
-float bytify(float color)
-{
-    return (1 / 100.0) * color;
-}
-
-std::array<float, 4> HSVtoRGB(float hue, float saturation = 100.0, float value = 100.0)
-{
-    int sw = (int)floor(hue / 60) % 6;
-    float vmin = ((100.0f - saturation) * value) / 100.0;
-    float a = (value - vmin) * (((int)hue % 60) / 60.0);
-    float vinc = vmin + a;
-    float vdec = value - a;
-    switch (sw)
-    {
-    case 0: return { bytify(value), bytify(vinc), bytify(vmin), 1.0 };
-    case 1: return { bytify(vdec), bytify(value), bytify(vmin), 1.0 };
-    case 2: return { bytify(vmin), bytify(value), bytify(vinc), 1.0 };
-    case 3: return { bytify(vmin), bytify(vdec), bytify(value), 1.0 };
-    case 4: return { bytify(vinc), bytify(vmin), bytify(value), 1.0 };
-    case 5: return { bytify(value), bytify(vmin), bytify(vdec), 1.0 };
-    }
-    return { 0, 0, 0 , 0 };
-}
-
 void InitVBO()
 {
     glGenBuffers(1, &VBO_position);
@@ -245,14 +219,6 @@ void InitShader() {
     if (Attrib_vertex == -1)
     {
         std::cout << "could not bind attrib coord" << std::endl;
-        return;
-    }
-
-    // Вытягиваем ID атрибута цвета
-    Attrib_color = glGetAttribLocation(Program, "color");
-    if (Attrib_color == -1)
-    {
-        std::cout << "could not bind attrib color" << std::endl;
         return;
     }
 

@@ -1033,7 +1033,7 @@ namespace Lab8
             zB = true;
             g1.Clear(Color.White);
             figure = true;
-            GetCurrentPolyhedron(GetProjection());
+            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
             DrawAxis(g1, GetProjection());

@@ -438,7 +438,7 @@ namespace Lab8
             Reflect();
             //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawingSelection(currentPolyhedron);
-            DrawAxis(g1, GetProjectionAxis()); DrawingSelection(currentPolyhedron);
+            DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
         private void ApplyProjection_Click(object sender, EventArgs e)
@@ -1020,7 +1020,7 @@ namespace Lab8
             zB = false;
             g1.Clear(Color.White);
             figure = true;
-            GetCurrentPolyhedron(GetProjection());
+            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
             DrawAxis(g1, GetProjection());

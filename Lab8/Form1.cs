@@ -207,7 +207,7 @@ namespace Lab8
         }
         void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
-           // PointZ fakeCameraPosition = new PointZ(0, 0, 1);
+            // PointZ fakeCameraPosition = new PointZ(0, 0, 1);
 
             foreach (var v in cur.getPolygons())
             {
@@ -235,7 +235,8 @@ namespace Lab8
                     normal.Z = -normal.Z;
                 }
 
-                if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                //if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
+                if (PointZ.DotProduct(normal, CameraPosition - p1) > 0)
                 {
                     for (int i = 0; i < v.Count(); i++)
                     {
@@ -414,7 +415,8 @@ namespace Lab8
                     break;
             }
             g1.Clear(Color.White);
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawingSelection(currentPolyhedron);
             DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
             return base.ProcessCmdKey(ref msg, keyData);
@@ -424,10 +426,9 @@ namespace Lab8
         {
             g1.Clear(Color.White);
             Reflect();
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
-
+            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            DrawingSelection(currentPolyhedron);
             DrawAxis(g1, GetProjectionAxis()); DrawingSelection(currentPolyhedron);
-
             pictureBox1.Invalidate();
         }
         private void ApplyProjection_Click(object sender, EventArgs e)

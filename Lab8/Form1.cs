@@ -20,6 +20,7 @@ namespace Lab8
 {
     public partial class Form1 : Form
     {
+        bool zB;
         Random random = new Random();
         // private ZBufferRenderer renderer;
         // float[,] zBuffer;
@@ -56,6 +57,7 @@ namespace Lab8
             comboBox1.SelectedItem = 0;
             figure = false;
             non_face = false;
+            zB = false;
             points = new List<PointZ>();
 
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
@@ -260,6 +262,10 @@ namespace Lab8
                 {
                     DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.Position);
                 }
+                else if (zB)
+                {
+                    zBuf();
+                }
                 else
                 {
                     currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
@@ -269,6 +275,7 @@ namespace Lab8
         private void button1_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
+            zB=false;
             figure = true;
             non_face = false;
             GetCurrentPolyhedron(GetProjection());
@@ -891,16 +898,10 @@ namespace Lab8
         }
         private Vertex GetScene(Vertex vertex)
         {
-            return new Vertex(vertex.Coordinate.NormalizedToDisplay(Width, Height), vertex.Normal, vertex.Color);
+            return new Vertex(vertex.Coordinate.NormalizedToDisplay(pictureBox1.Width, pictureBox1.Height), vertex.Normal, vertex.Color);
         }
-        void DrawBufferZ(Graphics g, int width, int height, Vertex first, Vertex second, Vertex third)
+        void DrawBufferZ(ref double[,] ZBuffer, int width, int height, Vertex first, Vertex second, Vertex third)
         {
-
-           double[,] ZBuffer = new double[width, height];
-
-            for (int j = 0; j < height; ++j)
-                for (int i = 0; i < width; ++i)
-                    ZBuffer[i, j] = double.MaxValue;
 
             // Преобразуем вершины из трехмерного пространства в пространство экрана
             first = GetScene(first);
@@ -955,8 +956,9 @@ namespace Lab8
                     {
                         ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
 
-                         g.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
-                        pictureBox1.Invalidate();
+                        g1.DrawEllipse(new Pen(p.Color), (int)x, (int)y,1,1);
+                         g1.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                        //pictureBox1.Invalidate();
                        // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
@@ -969,6 +971,11 @@ namespace Lab8
 
         private void zBuf()
         {
+            double[,] ZBuffer = new double[pictureBox1.Width, pictureBox1.Height];
+
+            for (int j = 0; j < pictureBox1.Height; ++j)
+                for (int i = 0; i < pictureBox1.Width; ++i)
+                    ZBuffer[i, j] = double.MaxValue;
             var indpolygons = currentPolyhedron.getPolygons();
 
             var pointZ = currentPolyhedron.getVertice();
@@ -978,8 +985,7 @@ namespace Lab8
             {
                 if (indpolygons[i].Count() == 4)
                 {
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]] });
-                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]] });
+                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]]});              
 
                 }
                 else
@@ -998,11 +1004,11 @@ namespace Lab8
                 {
 
                     var a = new Vertex(verge[0], new PointZ(), Color.FromArgb(k2, k, k3));
-                    var b = new Vertex(verge[1], new PointZ(), Color.FromArgb(k2, k, k3));
-                    var c = new Vertex(verge[2], new PointZ(), Color.FromArgb(k2, k, k3));
+                    var b = new Vertex(verge[i], new PointZ(), Color.FromArgb(k2, k, k3));
+                    var c = new Vertex(verge[i+1], new PointZ(), Color.FromArgb(k2, k, k3));
                     // g1.DrawTriangle(a, b, c);
                     //Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
-                    DrawBufferZ(g1, pictureBox1.Width, pictureBox1.Height, a, b, c);
+                    DrawBufferZ(ref ZBuffer, pictureBox1.Width, pictureBox1.Height, a, b, c);
                 }
             }
 
@@ -1012,6 +1018,7 @@ namespace Lab8
         private void buttonNonFace_Click(object sender, EventArgs e)
         {
             non_face = true;
+            zB = false;
             g1.Clear(Color.White);
             figure = true;
             GetCurrentPolyhedron(GetProjection());
@@ -1023,8 +1030,14 @@ namespace Lab8
 
         private void button9_Click(object sender, EventArgs e)
         {
-            //bufferZ();
-            zBuf();
+            non_face = false;
+            zB = true;
+            g1.Clear(Color.White);
+            figure = true;
+            GetCurrentPolyhedron(GetProjection());
+            DrawingSelection(currentPolyhedron);
+            figure = false;
+            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
     }

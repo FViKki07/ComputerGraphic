@@ -64,7 +64,7 @@ namespace Lab8
 
 
             DrawAxis(g1, Transform.IsometricProjection());
-            camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 1), pictureBox1.Width, pictureBox1.Height);
+            camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
         }
 
@@ -212,7 +212,7 @@ namespace Lab8
                 }
             }
         }
-        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraForward)
         {
             foreach (var v in cur.getPolygons())
             {
@@ -240,8 +240,7 @@ namespace Lab8
                     normal.Z = -normal.Z;
                 }
 
-                //if (normal.X * (-CameraPosition.X) + normal.Y * (-CameraPosition.Y) + normal.Z * (-CameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
-                if (PointZ.DotProduct(normal, CameraPosition - p1) > 0)
+                if (PointZ.DotProduct(normal, CameraForward - p1) > 0)
                 {
                     for (int i = 0; i < v.Count(); i++)
                     {
@@ -259,7 +258,7 @@ namespace Lab8
             {
                 if (non_face)
                 {
-                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.Position);
+                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.forward);
                 }
                 else if (zB)
                 {
@@ -922,7 +921,7 @@ namespace Lab8
             for (double y = first.Coordinate.Y; y < third.Coordinate.Y; ++y)
             {
                 // ѕропускаем рисование, если текуща€ координата Y находитс€ за пределами экрана
-                if (y < 0 || y > (Height - 1))
+                if (y < 0 || y > (height - 1))
                     continue;
 
                 bool topHalf = y < second.Coordinate.Y;

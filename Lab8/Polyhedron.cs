@@ -9,8 +9,6 @@ namespace Lab8
     interface Polyhedron
     {
         void Draw(Graphics g, Transform projection, int width, int height);
-         void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height);
-
         public List<List<int>> getPolygons();
         public PointZ[] getVertice();
         void Apply(Transform t);

@@ -179,7 +179,7 @@ namespace Lab8
         {
             if (currentPolyhedron != null && !figure)
             {
-                currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                //currentPolyhedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
                 return;
             }
             if (comboBox1.SelectedItem != null)
@@ -242,10 +242,10 @@ namespace Lab8
 
                 if (PointZ.DotProduct(normal, CameraForward - p1) > 0)
                 {
-                    for (int i = 0; i < v.Count(); i++)
+                    for (int i = 0; i < v.Count; i++)
                     {
                         int vertex1 = v[i];
-                        int vertex2 = v[(i + 1) % v.Count()];
+                        int vertex2 = v[(i + 1) % v.Count];
                         vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
                     }
                 }

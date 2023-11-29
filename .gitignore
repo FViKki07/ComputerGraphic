@@ -15,7 +15,7 @@ obj
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
+
 x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
@@ -58,4 +58,4 @@ bld/
 *.pidb
 *.svclog
 *.scc
-*.bin
+

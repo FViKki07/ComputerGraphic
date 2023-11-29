@@ -19,12 +19,4 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="C:\Users\Виктория\Downloads\compGraphics-main\compGraphics-main\Lab12\texture1.png">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="C:\Users\Виктория\Downloads\compGraphics-main\compGraphics-main\Lab12\texture2.png">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-  </ItemGroup>
 </Project>

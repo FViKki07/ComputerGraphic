@@ -117,6 +117,15 @@ void moveShape(float moveXinc, float moveYinc, float moveZinc) {
 	moveZ += moveZinc;
 }
 
+float reg = 0.05;
+// регулирование текстур
+void changeTexture(float r) {
+	if (reg + r > 1 || reg + r < 0)
+		return;
+	reg += r;
+
+}
+
 void ShaderLog(unsigned int shader)
 {
 	int infologLen = 0;
@@ -148,12 +157,13 @@ void InitShader(int num_task) {
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
+
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
-
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
+
 	Program = glCreateProgram();
 	glAttachShader(Program, vShader);
 	glAttachShader(Program, fShader);
@@ -249,12 +259,42 @@ void InitVBO(int num_task) {
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
+/*
+void InitTextures() {
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	const char* filename = "tex1.png";
+	// Загружаем текстуру из файла
+	if (!ourTexture1.loadFromFile(filename))
+	{
+		// Не вышло загрузить картинку
+		return;
+	}
+	// Теперь получаем openGL дескриптор текстуры
+	textureHandle1 = ourTexture1.getNativeHandle();
+
+	filename = "tex2.png";
+	if (!ourTexture2.loadFromFile(filename))
+	{
+		// Не вышло загрузить картинку
+		return;
+	}
+	// Теперь получаем openGL дескриптор текстуры
+	textureHandle2 = ourTexture2.getNativeHandle();
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+}
+*/
 
 void Init(int num_task) {
 	// Шейдеры
 	InitShader(num_task);
 	// Вершинный буфер
 	InitVBO(num_task);
+	//InitTextures();
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -352,6 +392,8 @@ void WindowWork(int num_task) {
 				case (sf::Keyboard::D): moveShape(0.1, 0, 0); break;
 				case (sf::Keyboard::Q): moveShape(0, 0, -0.2); break;
 				case (sf::Keyboard::E): moveShape(0, 0, 0.2); break;
+				case (sf::Keyboard::Z): changeTexture(-0.05); break;
+				case (sf::Keyboard::X): changeTexture(0.05); break;
 				default: break;
 				}
 			}

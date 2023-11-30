@@ -35,7 +35,7 @@ namespace Lab8
         }
 
 
-        public void Draw(Graphics g, Transform projection, int width, int height)
+        public void Draw(Graphics g, Camera camera, Transform projection, int width, int height)
         {
             for (int i = 0; i < polygons.Count; i++)
             {
@@ -43,51 +43,11 @@ namespace Lab8
                 {
                     int vertex1 = polygons[i][j];
                     int vertex2 = polygons[i][(j + 1) % 4];
-                    vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
+                    vertices[vertex1].DrawLine(g, camera, projection, vertices[vertex2], width, height, Pens.Black);
                 }
             }
         }
 
-
-        public void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height)
-        {
-            PointZ fakeCameraPosition = new PointZ(0, 0, 1);
-
-            foreach (var v in polygons)
-            {
-                PointZ p1 = vertices[v[0]];
-                PointZ p2 = vertices[v[1]];
-                PointZ p3 = vertices[v[2]];
-
-                PointZ v1 = new PointZ(p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
-                PointZ v2 = new PointZ(p3.X - p1.X, p3.Y - p1.Y, p3.Z - p1.Z);
-
-                PointZ normal = PointZ.CrossProduct(v1, v2);
-              
-                double d = -(normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z);
-
-                PointZ pp = new PointZ(p1.X + normal.X, p1.Y + normal.Y, p1.Z + normal.Z);
-                double val1 = normal.X * pp.X + normal.Y * pp.Y + normal.Z * pp.Z + d;
-                double val2 = normal.X * Center.X + normal.Y * Center.Y + normal.Z * Center.Z + d;
-
-                if (val1 * val2 > 0)
-                {
-                    normal.X = -normal.X;
-                    normal.Y = -normal.Y;
-                    normal.Z = -normal.Z;
-                }
-
-                if (normal.X * (-fakeCameraPosition.X) + normal.Y * (-fakeCameraPosition.Y) + normal.Z * (-fakeCameraPosition.Z) + normal.X * p1.X + normal.Y * p1.Y + normal.Z * p1.Z < 0)
-                {
-                    for (int i = 0; i < v.Count(); i++)
-                    {
-                        int vertex1 = v[i];
-                        int vertex2 = v[(i + 1) % 4];
-                        vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
-                    }
-                }
-            }
-        }
         public List<List<int>> getPolygons()
         {
             return polygons;

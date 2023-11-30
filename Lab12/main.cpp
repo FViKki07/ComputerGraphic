@@ -2,322 +2,376 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-
-#define _USE_MATH_DEFINES
-#include "math.h"
-
 #include <iostream>
-#include <array>
-#include <initializer_list>
 
-// Переменные с индентификаторами ID
 // ID шейдерной программы
 GLuint Program;
-// ID атрибута вершин
+// ID атрибута
 GLint Attrib_vertex;
-// ID атрибута цвета
-GLint Attrib_color;
-// ID юниформ переменной цвета
+// ID Vertex Buffer Object
+GLuint VBO;
 GLint Unif_xmove;
 GLint Unif_zmove;
 GLint Unif_ymove;
-// ID VBO вершин
-GLuint VBO_position;
-// ID VBO цвета
-GLuint VBO_color;
-// Вершина
-struct Vertex
-{
-    GLfloat x;
-    GLfloat y;
-    GLfloat z;
+
+GLuint texture;
+GLint UniformColor;
+
+struct Vertex {
+	GLfloat x;
+	GLfloat y;
 };
 
+struct VertexG {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+};
+
+struct VertexT {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+	GLfloat S;
+	GLfloat T;
+};
 
 // Исходный код вершинного шейдера
 const char* VertexShaderSource = R"(
-    #version 330 core
-    in vec3 coord;
-    in vec4 color;
+#version 330 core
+layout (location = 0) in vec3 coord;
+layout (location = 1) in vec3 color; 
 
-    uniform float x_move;
-    uniform float y_move;
-    uniform float z_move;
+uniform float x_move;
+uniform float y_move;
+uniform float z_move;
 
-    out vec4 vert_color;
+out vec3 vertexColor; 
 
-    void main() {
-        vec3 position = vec3(coord) + vec3(x_move, y_move, z_move);
-        gl_Position = vec4(position, 1.0);
-        vert_color = color;
-    }
+void main() {
+	vec3 position = vec3(coord) + vec3(x_move, y_move, z_move);
+    gl_Position = vec4(position, 1.0);
+    vertexColor = color; // Передача цвета во фрагментный шейдер
+}
 )";
 
-// Исходный код фрагментного шейдера
-const char* FragShaderSource = R"(
-    #version 330 core
-    in vec4 vert_color;
+const char* VertexShaderSource_WithTex = R"(
+#version 330 core
+layout (location = 0) in vec3 coord;
+layout (location = 1) in vec3 color; 
+layout (location = 2) in vec2 texCoord;
 
-    out vec4 color;
-    void main() {
-        color = vert_color;
-    }
+uniform float x_move;
+uniform float y_move;
+uniform float z_move;
+
+out vec3 vertexColor; 
+out vec2 TexCoord;
+
+void main() {
+	vec3 position = vec3(coord) + vec3(x_move, y_move, z_move);
+    gl_Position = vec4(position, 1.0);
+    vertexColor = color; // Передача цвета во фрагментный шейдер
+	TexCoord = texCoord;
+}
 )";
 
 
-void Init();
-void Draw();
-void Release();
+// Исходный код фрагментного шейдера для градиентного закрашивания
+const char* FragShaderSource_Gradient = R"(
+#version 330 core
+in vec3 vertexColor; // Получаем цвет от вершинного шейдера
+out vec4 color;
+void main() {
+    color = vec4(vertexColor, 1.0); // Используем цвет от вершины
+}
+)";
+
+// Исходный код фрагментного шейдера для градиентного закрашивания
+const char* FragShaderSource_WithTex = R"(
+#version 330 core
+in vec3 ourColor;
+in vec2 TexCoord;
+
+out vec4 color;
+
+uniform sampler2D ourTexture;
+void main() {
+ Color=texture(ourTexture,TexCoord)* vec4(ourColor,1.0f)
+}
+
+)";
 
 float moveX = 0;
 float moveY = 0;
 float moveZ = 0;
 void moveShape(float moveXinc, float moveYinc, float moveZinc) {
-    moveX += moveXinc;
-    moveY += moveYinc;
-    moveZ += moveZinc;
+	moveX += moveXinc;
+	moveY += moveYinc;
+	moveZ += moveZinc;
 }
 
-
-// Проверка ошибок OpenGL, если есть то вывод в консоль тип ошибки
-void checkOpenGLerror() {
-    GLenum errCode;
-    // Коды ошибок можно смотреть тут
-    // https://www.khronos.org/opengl/wiki/OpenGL_Error
-    if ((errCode = glGetError()) != GL_NO_ERROR)
-        std::cout << "OpenGl error!: " << errCode << std::endl;
-}
-
-// Функция печати лога шейдера
 void ShaderLog(unsigned int shader)
 {
-    int infologLen = 0;
-    int charsWritten = 0;
-    char* infoLog;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLen);
-    if (infologLen > 1)
-    {
-        infoLog = new char[infologLen];
-        if (infoLog == NULL)
-        {
-            std::cout << "ERROR: Could not allocate InfoLog buffer" << std::endl;
-            exit(1);
-        }
-        glGetShaderInfoLog(shader, infologLen, &charsWritten, infoLog);
-        std::cout << "InfoLog: " << infoLog << "\n\n\n";
-        delete[] infoLog;
-    }
+	int infologLen = 0;
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLen);
+	if (infologLen > 1)
+	{
+		int charsWritten = 0;
+		std::vector<char> infoLog(infologLen);
+		glGetShaderInfoLog(shader, infologLen, &charsWritten, infoLog.data());
+		std::cout << "InfoLog: " << infoLog.data() << std::endl;
+	}
 }
 
-void InitVBO()
+void checkOpenGLerror()
 {
-    glGenBuffers(1, &VBO_position);
-    glGenBuffers(1, &VBO_color);
+	GLenum err;
+	while ((err = glGetError()) != GL_NO_ERROR)
+	{
+		// Process/log the error.
+		std::cout << err << std::endl;
+	}
+}
 
-    // Вершины тетраэдра
-    Vertex triangle[] = {
-       { 0.2, 0.45, -0.5 }, { -0.6, 0, -0.5 }, { 0, 0, 0.5 },
-       { -0.6, 0, -0.5 }, { 0, 0, 0.5 }, { 0.2, -0.45, -0.5 },
-       { 0, 0, 0.5 }, { 0.2, 0.45, -0.5 }, { 0.2, -0.45, -0.5 },
+void InitShader(int num_task) {
 
-    };
-    float colors[9][4] = {
-        { 0.0, 0.0, 1.0, 1.0 }, { 1.0, 0.0, 0.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 },
-        { 1.0, 0.0, 0.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 },
-        { 1.0, 1.0, 1.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 },
-    };
 
-    // Передаем вершины в буфер
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-    checkOpenGLerror();
+	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vShader, 1, &VertexShaderSource, NULL);
+	glCompileShader(vShader);
+	std::cout << "vertex shader \n";
+	ShaderLog(vShader);
+	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
+
+	glCompileShader(fShader);
+	std::cout << "fragment shader \n";
+	ShaderLog(fShader);
+	Program = glCreateProgram();
+	glAttachShader(Program, vShader);
+	glAttachShader(Program, fShader);
+	glLinkProgram(Program);
+	int link_ok;
+	glGetProgramiv(Program, GL_LINK_STATUS, &link_ok);
+	if (!link_ok) {
+		std::cout << "error attach shaders \n";
+		return;
+	}
+	// Вытягиваем ID атрибута из собранной программы
+	const char* attr_name = "coord"; //имя в шейдере
+	Attrib_vertex = glGetAttribLocation(Program, attr_name);
+	if (Attrib_vertex == -1) {
+		std::cout << "could not bind attrib " << attr_name << std::endl;
+		return;
+	}
+
+	// Вытягиваем ID юниформ
+	const char* unif_name = "x_move";
+	Unif_xmove = glGetUniformLocation(Program, unif_name);
+	if (Unif_xmove == -1)
+	{
+		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
+	unif_name = "y_move";
+	Unif_ymove = glGetUniformLocation(Program, unif_name);
+	if (Unif_ymove == -1)
+	{
+		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
+	unif_name = "z_move";
+	Unif_zmove = glGetUniformLocation(Program, unif_name);
+	if (Unif_zmove == -1)
+	{
+		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+	checkOpenGLerror();
+}
+
+void InitVBO(int num_task) {
+	glGenBuffers(1, &VBO);
+	//тетраэдр
+	VertexG triangle[] = {
+		{ 0.2f, 0.45f, -0.5f,0.0f, 0.0f, 1.0f },
+		{ -0.6f, 0.f, -0.5f ,1.0f, 0.0f , 0.0f },
+		{ 0.f, 0.f, 0.5f ,1.0f, 1.0f, 1.0f },
+
+		{ -0.6f, 0.f, -0.5f,1.0f, 0.0f, 0.0f },
+		{ 0.f, 0.f, 0.5f , 1.0f, 1.0f, 1.0f},
+		{ 0.2f, -0.45f, -0.5f , 0.0f, 1.0f, 0.0f},
+
+		{ 0.f, 0, 0.5f ,1.0f, 1.0f, 1.0f},
+		{ 0.2f, 0.45f, -0.5f,0.0f, 0.0f, 1.0f },
+		{ 0.2f, -0.45f, -0.5f,0.0f, 1.0f, 0.0f },
+	};
+
+	// куб
+	VertexT cube[] = {
+		// Передняя грань
+	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // левая низ
+	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // правая низ
+	  { 0.25f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f }, // правая вверх
+	  { -0.5f, 0.25f, 0.5f, 0.0f, 0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
+
+	  // Правая грань
+	  { 0.5f, -0.25f, -0.5f, 1.0f, 1.0f, 0.0f,0.0f, 0.0f  }, // левая низ
+	  { 0.25f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,0.0f, 1.0f  }, // левая вверх
+	  { 0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.4f, 1.0f, 1.0f }, // правая вверх
+	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 0.0f }, // правая низ
+
+	  // Нижняя грань
+	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // левая низ 
+	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f,0.0f, 1.0f }, // левая вверх
+	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 1.0f }, // правая вверх
+	  { 0.0f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // правая низ
+
+	};
+
+
+
+	// Передаем вершины в буфер
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	if (num_task == 1)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	else if (num_task == 2)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+
+	checkOpenGLerror(); //Пример функции есть в лабораторной
+}
+
+void Init(int num_task) {
+	// Шейдеры
+	InitShader(num_task);
+	// Вершинный буфер
+	InitVBO(num_task);
+
+	glEnable(GL_DEPTH_TEST);
+}
+
+void Draw(int num_task) {
+
+	glUseProgram(Program); // Устанавливаем шейдерную программу текущей
+
+	glUniform1f(Unif_xmove, moveX);
+	glUniform1f(Unif_ymove, moveY);
+	glUniform1f(Unif_zmove, moveZ);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	if (num_task == 1) {
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	}
+	else if (num_task == 2) {
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+		// Атрибут с цветом
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		// Атрибут с текстурными координатами
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+
+	}
+
+	if (num_task == 1) {
+		glDrawArrays(GL_TRIANGLES, 0, 9);
+	}
+	else if (num_task == 2) {
+
+		glDrawArrays(GL_QUADS, 0, 12);
+	}
+
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glUseProgram(0);
+	checkOpenGLerror();
 }
 
 
-void InitShader() {
-    // Создаем вершинный шейдер
-    GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
-    // Передаем исходный код
-    glShaderSource(vShader, 1, &VertexShaderSource, NULL);
-    // Компилируем шейдер
-    glCompileShader(vShader);
-    std::cout << "vertex shader \n";
-    ShaderLog(vShader);
-
-    // Создаем фрагментный шейдер
-    GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-    // Передаем исходный код
-    glShaderSource(fShader, 1, &FragShaderSource, NULL);
-    // Компилируем шейдер
-    glCompileShader(fShader);
-    std::cout << "fragment shader \n";
-    ShaderLog(fShader);
-
-    // Создаем программу и прикрепляем шейдеры к ней
-    Program = glCreateProgram();
-    glAttachShader(Program, vShader);
-    glAttachShader(Program, fShader);
-
-    // Линкуем шейдерную программу
-    glLinkProgram(Program);
-    // Проверяем статус сборки
-    int link_ok;
-    glGetProgramiv(Program, GL_LINK_STATUS, &link_ok);
-    if (!link_ok)
-    {
-        std::cout << "error attach shaders \n";
-        return;
-    }
-
-    // Вытягиваем ID атрибута вершин из собранной программы
-    Attrib_vertex = glGetAttribLocation(Program, "coord");
-    if (Attrib_vertex == -1)
-    {
-        std::cout << "could not bind attrib coord" << std::endl;
-        return;
-    }
-
-    // Вытягиваем ID юниформ
-    const char* unif_name = "x_move";
-    Unif_xmove = glGetUniformLocation(Program, unif_name);
-    if (Unif_xmove == -1)
-    {
-        std::cout << "could not bind uniform " << unif_name << std::endl;
-        return;
-    }
-
-    unif_name = "y_move";
-    Unif_ymove = glGetUniformLocation(Program, unif_name);
-    if (Unif_ymove == -1)
-    {
-        std::cout << "could not bind uniform " << unif_name << std::endl;
-        return;
-    }
-
-    unif_name = "z_move";
-    Unif_zmove = glGetUniformLocation(Program, unif_name);
-    if (Unif_zmove == -1)
-    {
-        std::cout << "could not bind uniform " << unif_name << std::endl;
-        return;
-    }
-    checkOpenGLerror();
+// Освобождение буфера
+void ReleaseVBO() {
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDeleteBuffers(1, &VBO);
 }
-
-void Init() {
-    InitShader();
-    InitVBO();
-}
-
-
-void Draw() {
-    // Устанавливаем шейдерную программу текущей
-    glUseProgram(Program);
-
-    glUniform1f(Unif_xmove, moveX);
-    glUniform1f(Unif_ymove, moveY);
-    glUniform1f(Unif_zmove, moveZ);
-
-    // Включаем массивы атрибутов
-    glEnableVertexAttribArray(Attrib_vertex);
-    glEnableVertexAttribArray(Attrib_color);
-
-    // Подключаем VBO_position
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
-    glVertexAttribPointer(Attrib_vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    // Подключаем VBO_color
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_color);
-    glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
-    // Отключаем VBO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Передаем данные на видеокарту(рисуем)
-    glDrawArrays(GL_TRIANGLES, 0, 9);
-
-    // Отключаем массивы атрибутов
-    glDisableVertexAttribArray(Attrib_vertex);
-    glDisableVertexAttribArray(Attrib_color);
-
-    glUseProgram(0);
-    checkOpenGLerror();
-}
-
 
 // Освобождение шейдеров
 void ReleaseShader() {
-    // Передавая ноль, мы отключаем шейдрную программу
-    glUseProgram(0);
-    // Удаляем шейдерную программу
-    glDeleteProgram(Program);
+	// Передавая ноль, мы отключаем шейдерную программу
+	glUseProgram(0);
+	// Удаляем шейдерную программу
+	glDeleteProgram(Program);
 }
 
-// Освобождение буфера
-void ReleaseVBO()
-{
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDeleteBuffers(1, &VBO_position);
-    glDeleteBuffers(1, &VBO_color);
-}
 
 void Release() {
-    ReleaseShader();
-    ReleaseVBO();
+	// Шейдеры
+	ReleaseShader();
+	// Вершинный буфер
+	ReleaseVBO();
 }
 
 void WindowWork(int num_task) {
-    sf::Window window(sf::VideoMode(600, 600), "My OpenGL window", sf::Style::Default, sf::ContextSettings(24));
-    window.setVerticalSyncEnabled(true);
+	sf::Window window(sf::VideoMode(600, 600), "My OpenGL window", sf::Style::Default, sf::ContextSettings(24));
+	window.setVerticalSyncEnabled(true);
+	window.setActive(true);
+	glewInit();
+	Init(num_task);
 
-    window.setActive(true);
+	bool work = true;
+	while (work) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) { work = false; }
+			else if (event.type == sf::Event::Resized)
+			{
+				glViewport(0, 0, event.size.width, event.size.height);
+			}
+			else if (event.type == sf::Event::KeyPressed) {
+				switch (event.key.code) {
+				case (sf::Keyboard::W): moveShape(0, 0.1, 0); break;
+				case (sf::Keyboard::S): moveShape(0, -0.1, 0); break;
+				case (sf::Keyboard::A): moveShape(-0.1, 0, 0); break;
+				case (sf::Keyboard::D): moveShape(0.1, 0, 0); break;
+				case (sf::Keyboard::Q): moveShape(0, 0, -0.2); break;
+				case (sf::Keyboard::E): moveShape(0, 0, 0.2); break;
+				default: break;
+				}
+			}
+		}
 
-    // Инициализация glew
-    glewInit();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Draw(num_task);
+		window.display();
+	}
+	Release();
 
-    Init();
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-            else if (event.type == sf::Event::Resized) {
-                glViewport(0, 0, event.size.width, event.size.height);
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                case (sf::Keyboard::W): moveShape(0, 0.1, 0); break;
-                case (sf::Keyboard::S): moveShape(0, -0.1, 0); break;
-                case (sf::Keyboard::A): moveShape(-0.1, 0, 0); break;
-                case (sf::Keyboard::D): moveShape(0.1, 0, 0); break;
-                case (sf::Keyboard::Q): moveShape(0, 0, -0.2); break;
-                case (sf::Keyboard::E): moveShape(0, 0, 0.2); break;
-                default: break;
-                }
-            }
-        }
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        Draw();
-
-        window.display();
-    }
-
-    Release();
 }
 
 int main() {
-    int num_task = 0;
-    while (true) {
-        std::cout << "Enter task: ";
-        std::cin >> num_task;
-        if (num_task == 4 || num_task == 2 || num_task == 3 || num_task == 1)
-            WindowWork(num_task);
-    }
-    return 0;
+	int num_task = 0;
+	while (true) {
+		std::cout << "Enter task: ";
+		std::cin >> num_task;
+		if (num_task == 4 || num_task == 2 || num_task == 3 || num_task == 1)
+			WindowWork(num_task);
+	}
+	return 0;
 }

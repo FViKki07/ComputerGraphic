@@ -394,32 +394,32 @@ namespace Lab8
                     camera.Position += new PointZ(0, 0, 0.5f);
                     currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
                     break;
-                case Keys.Left:
+                case Keys.F:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
                         camera.Rotation += 10;
-                        currentPolyhedron.Apply(Transform.RotateY(-10));
+                        currentPolyhedron.Apply(Transform.RotateY(-10.0 / 180 * Math.PI));
                     }
                     break;
-                case Keys.Right:
+                case Keys.H:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
                         camera.Rotation += -10;
-                        currentPolyhedron.Apply(Transform.RotateY(10));
+                        currentPolyhedron.Apply(Transform.RotateY(10.0 / 180 * Math.PI));
                     }
                     break;
-                case Keys.Up:
+                case Keys.T:
                     if (Math.Abs(camera.Rotation) < 90)
                     {
                         camera.Rotation += 10;
-                        currentPolyhedron.Apply(Transform.RotateX(-10));
+                        currentPolyhedron.Apply(Transform.RotateX(-10.0 / (180 * Math.PI)));
                     }
                     break;
-                case Keys.Down:
+                case Keys.G:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
                         camera.Rotation += -10;
-                        currentPolyhedron.Apply(Transform.RotateX(10));
+                        currentPolyhedron.Apply(Transform.RotateX(10.0 / 180 * Math.PI));
                     }
                     break;
             }
@@ -1028,6 +1028,7 @@ namespace Lab8
 
         private void button9_Click(object sender, EventArgs e)
         {
+            camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             non_face = false;
             zB = true;
             g1.Clear(Color.White);

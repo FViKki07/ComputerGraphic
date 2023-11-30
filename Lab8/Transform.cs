@@ -198,15 +198,15 @@ namespace Lab8
         public static Transform PerspectiveProjection(float k, Camera camera)
         {
             float aspectRatio = camera.AspectRatio;
-            float n = -0.9f;
-            float f = 0.9f;
+            float n = 0.1f;
+            float f = 100.0f;
 
 
-            return new Transform(
+            return camera.LookAt() *  new Transform(
                 new double[,] {
             { (1.0 / (Math.Tan(camera.alpha / 2) * aspectRatio)), 0, 0, 0 },
             { 0, (1.0 / Math.Tan(camera.alpha / 2)), 0, 0 },
-            { 0, 0, -(f + n) / (f - n), 1 },
+            { 0, 0, -(f + n) / (f - n), -1 },
             { 0, 0, -2.0 * f * n / (f - n), 0 }
                 });
             //return new Transform(

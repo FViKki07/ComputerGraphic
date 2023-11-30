@@ -64,7 +64,7 @@ namespace Lab8
 
 
             DrawAxis(g1, Transform.IsometricProjection());
-            camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
+            camera = new Camera(new PointZ(0, 0, 2), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
         }
 
@@ -84,7 +84,7 @@ namespace Lab8
 
             for (int i = 1; i < p.Count(); i++)
             {
-                p[0].DrawLine(g, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
+                p[0].DrawLine(g, camera, t, p[i], pictureBox1.Width, pictureBox1.Height, Pens.Black);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Lab8
                         {
 
                             Tetrahedron tetrahedron = new Tetrahedron(1);
-                            tetrahedron.Draw(g1, t, pictureBox1.Width, pictureBox1.Height);
+                            tetrahedron.Draw(g1, camera, t, pictureBox1.Width, pictureBox1.Height);
                             currentPolyhedron = new Tetrahedron(1);
                             break;
                         }
@@ -246,7 +246,7 @@ namespace Lab8
                     {
                         int vertex1 = v[i];
                         int vertex2 = v[(i + 1) % v.Count];
-                        vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
+                        vertices[vertex1].DrawLine(g, camera, projection, vertices[vertex2], width, height, Pens.Black);
                     }
                 }
             }
@@ -266,7 +266,7 @@ namespace Lab8
                 }
                 else
                 {
-                    currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                    currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
                 }
             }
         }
@@ -371,55 +371,63 @@ namespace Lab8
             switch (keyData)
             {
                 case Keys.W:
-                    camera.Position += new PointZ(0, 0.5f, 0);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, -0.5f, 0)));
+                    if (camera.Position.Y < 2)
+                    {
+                        //camera.move(new PointZ(0, 0.5f, 0));
+                        currentPolyhedron.Apply(Transform.Translate(new PointZ(0, -0.5f, 0)));
+                    }
                     break;
                 case Keys.A:
-                    camera.Position += new PointZ(-0.5f, 0, 0);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0.5f, 0, 0)));
+                    if (camera.Position.X > -2)
+                    {
+                        //camera.move(new PointZ(-0.5f, 0, 0));
+                        currentPolyhedron.Apply(Transform.Translate(new PointZ(0.5f, 0, 0)));
+                    }
                     break;
                 case Keys.S:
-                    camera.Position += new PointZ(0, -0.5f, 0);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0.5f, 0)));
+                    if (camera.Position.Y > -2)
+                    {
+                        //camera.move(new PointZ(0, -0.5f, 0));
+                        currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0.5f, 0)));
+                    }
                     break;
                 case Keys.D:
-                    camera.Position += new PointZ(0.5f, 0, 0);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(-0.5f, 0, 0)));
+                    if (camera.Position.X < 2)
+                    {
+                        //camera.move(new PointZ(0.5f, 0, 0));
+                        currentPolyhedron.Apply(Transform.Translate(new PointZ(-0.5f, 0, 0)));
+                    }
                     break;
                 case Keys.Q:
                     camera.Position += new PointZ(0, 0, -0.5f);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, 0.5f)));
+                    //currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, 0.5f)));
                     break;
                 case Keys.E:
                     camera.Position += new PointZ(0, 0, 0.5f);
-                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
+                    //currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
                     break;
                 case Keys.F:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.Rotation += 10;
-                        currentPolyhedron.Apply(Transform.RotateY(-10.0 / 180 * Math.PI));
+                        camera.move(new PointZ(-0.5f, 0, 0));
                     }
                     break;
                 case Keys.H:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.Rotation += -10;
-                        currentPolyhedron.Apply(Transform.RotateY(10.0 / 180 * Math.PI));
+                        camera.move(new PointZ(0.5f, 0, 0));
                     }
                     break;
                 case Keys.T:
                     if (Math.Abs(camera.Rotation) < 90)
                     {
-                        camera.Rotation += 10;
-                        currentPolyhedron.Apply(Transform.RotateX(-10.0 / (180 * Math.PI)));
+                        camera.move(new PointZ(0, 0.5f, 0));
                     }
                     break;
                 case Keys.G:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.Rotation += -10;
-                        currentPolyhedron.Apply(Transform.RotateX(10.0 / 180 * Math.PI));
+                        camera.move(new PointZ(0, -0.5f, 0));
                     }
                     break;
             }
@@ -656,7 +664,7 @@ namespace Lab8
             reflectAxis();
             g1.Clear(Color.White);
 
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
 
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
@@ -774,7 +782,7 @@ namespace Lab8
 
             currentPolyhedron = new NoNameFigure(allPoints, polygons, 0.008);
             g1.Clear(Color.White);
-            currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+            currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
@@ -794,7 +802,7 @@ namespace Lab8
                         ParserOBJ parser = new ParserOBJ(filename);
                         currentPolyhedron = parser.LoadFromFile();
                         StringBuilder figureName = new StringBuilder();
-                        currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                        currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
                         DrawAxis(g1, GetProjection());
                         pictureBox1.Invalidate();
                     }
@@ -821,7 +829,7 @@ namespace Lab8
                         ParserOBJ parser = new ParserOBJ(filename);
                         currentPolyhedron = parser.LoadFromFile();
                         StringBuilder figureName = new StringBuilder();
-                        currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
+                        currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
                         DrawAxis(g1, GetProjection());
                         pictureBox1.Invalidate();
                     }

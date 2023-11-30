@@ -99,7 +99,7 @@ namespace Lab8
             return p;
         }
 
-        private PointZ Normalize()
+        public PointZ Normalize()
         {
             double normalization = Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
             this.X = X / normalization;
@@ -139,9 +139,8 @@ namespace Lab8
 
         }
 
-        public void DrawLine(Graphics g, Transform projection, PointZ B, int width, int height, Pen p)
+        public void DrawLine(Graphics g,Camera camera, Transform projection, PointZ B, int width, int height, Pen p)
         {
-
             var c = this.Transform(projection).NormalizedToDisplay(width, height);
             var d = B.Transform(projection).NormalizedToDisplay(width, height);
             if (c.Check(width, height) && d.Check(width, height))

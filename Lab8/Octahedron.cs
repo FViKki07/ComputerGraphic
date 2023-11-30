@@ -33,7 +33,7 @@ namespace Lab8
             polygons.Add(new List<int>() { 2, 1, 3 });
         }
 
-        public void Draw(Graphics g, Transform projection, int width, int height)
+        public void Draw(Graphics g, Camera camera, Transform projection, int width, int height)
         {
             for (int i = 0; i < polygons.Count(); i++)
             {
@@ -41,7 +41,7 @@ namespace Lab8
                 {
                     int vertex1 = polygons[i][j];
                     int vertex2 = polygons[i][(j + 1) % 3];
-                    vertices[vertex1].DrawLine(g, projection, vertices[vertex2], width, height, Pens.Black);
+                    vertices[vertex1].DrawLine(g, camera, projection, vertices[vertex2], width, height, Pens.Black);
                 }
             }
         }

@@ -103,11 +103,11 @@ in vec2 TexCoord;
 
 out vec4 ColorMix;
 
-uniform float reg;
 uniform sampler2D texture1;
+uniform float reg;
 
 void main() {
-	ColorMix = mix(texture(texture1, TexCoord), vec4(ourColor, 1.0), reg); 
+	ColorMix = mix(vec4(ourColor, 1.0), texture(texture1, TexCoord), reg); 
 }
 
 )";

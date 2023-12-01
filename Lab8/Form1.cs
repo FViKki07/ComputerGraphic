@@ -42,6 +42,8 @@ namespace Lab8
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
+            comboBox3.SelectedItem = comboBox3.Items[1];
+
             ProjectionComboBox.SelectedItem = ProjectionComboBox.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
             bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);

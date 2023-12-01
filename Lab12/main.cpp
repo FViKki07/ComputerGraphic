@@ -23,6 +23,7 @@ GLuint Unif_texture2;
 GLuint Unif_reg;
 
 GLint UniformColor;
+GLboolean two_text;
 
 struct Vertex {
 	GLfloat x;
@@ -79,72 +80,44 @@ void main() {
 }
 )";
 
-//cube with color and texture
-const char* VertexShaderSource_WithTex = R"(
+//cube with texture
+const char* VertexShaderSource_WithTex2 = R"(
 #version 330 core
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
 layout (location = 2) in vec2 texCoord;
 
+out vec2 TexCoord;
 out vec3 ourColor;
-out vec2 TexCoord;
-
-void main() {
-	gl_Position = vec4(position, 1.0f);
-	ourColor = color;
-	TexCoord = texCoord;
-}
-)";
-
-
-//cube with color and texture
-const char* FragShaderSource_WithTex = R"(
-#version 330 core
-in vec3 ourColor;
-in vec2 TexCoord;
-
-out vec4 ColorMix;
-
-uniform sampler2D texture1;
-uniform float reg;
-
-void main() {
-	ColorMix = mix(vec4(ourColor, 1.0), texture(texture1, TexCoord), reg); 
-}
-
-)";
-
-//cube with 2 texture
-const char* VertexShaderSource_WithTex2 = R"(
-#version 330 core
-layout (location = 0) in vec3 position;
-layout (location = 2) in vec2 texCoord;
-
-out vec2 TexCoord;
 
 void main() {
 	gl_Position = vec4(position, 1.0f);
 	 TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
+	ourColor = color;
 }
 )";
 
-//cube with  2texture
+//cube with texture
 const char* FragShaderSource_WithTex2 = R"(
 #version 330 core
 in vec2 TexCoord;
+in vec3 ourColor;
 
 out vec4 ColorMix;
 
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 uniform float reg;
+uniform bool two_text;
 
 void main() {
 
 	vec4 texColor1 = texture(texture1, TexCoord); // Цвет из первой текстуры
     vec4 texColor2 = texture(texture2, TexCoord); // Цвет из второй текстуры
     // Смешиваем цвета из двух текстур
-    ColorMix = mix(texColor1, texColor2, reg);
+	if(two_text)
+		ColorMix = mix(texColor1, texColor2, reg);
+	else ColorMix = mix(vec4(ourColor, 1.0), texColor1, reg); 
 }
 
 )";
@@ -198,9 +171,7 @@ void InitShader(int num_task) {
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	if(num_task == 1)
 		glShaderSource(vShader, 1, &VertexShaderSource, NULL);
-	else if(num_task == 2) 
-		glShaderSource(vShader, 1, &VertexShaderSource_WithTex, NULL);
-	else if(num_task == 3)
+	else if(num_task == 3 || num_task == 2)
 		glShaderSource(vShader, 1, &VertexShaderSource_WithTex2, NULL);
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
@@ -209,9 +180,7 @@ void InitShader(int num_task) {
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (num_task == 1)
 		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
-	else if(num_task==2)
-		glShaderSource(fShader, 1, &FragShaderSource_WithTex, NULL);
-	else if(num_task==3)
+	else if(num_task==3 || num_task == 2)
 		glShaderSource(fShader, 1, &FragShaderSource_WithTex2, NULL);
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
@@ -346,6 +315,7 @@ void InitTextures() {
 		std::cout << "could not bind uniform ourTexture2" << std::endl;
 		return;
 	}
+
 }
 
 
@@ -356,7 +326,9 @@ void Init(int num_task) {
 	InitVBO(num_task);
 	if(num_task == 2 || num_task == 3)
 		InitTextures();
-
+	if (num_task == 2)
+		two_text = false;
+	else two_text = true;
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -380,22 +352,10 @@ void Draw(int num_task) {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	}
-	else if (num_task == 2) {
 
+	else if (num_task == 3 || num_task == 2) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-		// Атрибут с цветом
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		// Атрибут с текстурными координатами
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-
-		glActiveTexture(GL_TEXTURE0);
-		sf::Texture::bind(&texture1);
-		glUniform1i(Unif_texture1, 0);
-
-		glUniform1f(Unif_reg, reg);
-	}
-	else if (num_task == 3) {
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 		// Атрибут с текстурными координатами
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 		//glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
@@ -409,6 +369,9 @@ void Draw(int num_task) {
 		glUniform1i(Unif_texture2, 1);
 
 		glUniform1f(Unif_reg, reg);
+
+		glUniform1i(glGetUniformLocation(Program, "two_text"), two_text);
+
 	}
 
 

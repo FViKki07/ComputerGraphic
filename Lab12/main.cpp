@@ -118,24 +118,20 @@ void main() {
 const char* VertexShaderSource_WithTex2 = R"(
 #version 330 core
 layout (location = 0) in vec3 position;
-layout (location = 2) in vec2 texCoord1;
-layout (location = 3) in vec2 texCoord2;
+layout (location = 2) in vec2 texCoord;
 
-out vec2 TexCoord1;
-out vec2 TexCoord2;
+out vec2 TexCoord;
 
 void main() {
 	gl_Position = vec4(position, 1.0f);
-	 TexCoord1 = vec2(texCoord1.x, 1.0 - texCoord1.y);
-     TexCoord2 = vec2(texCoord2.x, 1.0 - texCoord2.y);
+	 TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
 }
 )";
 
 //cube with  2texture
 const char* FragShaderSource_WithTex2 = R"(
 #version 330 core
-in vec2 TexCoord1;
-in vec2 TexCoord2;
+in vec2 TexCoord;
 
 out vec4 ColorMix;
 
@@ -145,8 +141,8 @@ uniform float reg;
 
 void main() {
 
-	vec4 texColor1 = texture(texture1, TexCoord1); // ÷вет из первой текстуры
-    vec4 texColor2 = texture(texture2, TexCoord2); // ÷вет из второй текстуры
+	vec4 texColor1 = texture(texture1, TexCoord); // ÷вет из первой текстуры
+    vec4 texColor2 = texture(texture2, TexCoord); // ÷вет из второй текстуры
     // —мешиваем цвета из двух текстур
     ColorMix = mix(texColor1, texColor2, reg);
 }
@@ -402,7 +398,7 @@ void Draw(int num_task) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 		// јтрибут с текстурными координатами
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		//glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 
 		glActiveTexture(GL_TEXTURE0);
 		sf::Texture::bind(&texture1);

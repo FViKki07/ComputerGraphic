@@ -14,7 +14,13 @@ GLint Unif_xmove;
 GLint Unif_zmove;
 GLint Unif_ymove;
 
-GLuint texture;
+//GLuint texture1;
+GLuint texture2;
+sf::Texture texture1;
+GLuint Unif_texture1;
+GLuint Unif_texture2;
+GLuint Unif_reg;
+
 GLint UniformColor;
 
 struct Vertex {
@@ -61,28 +67,6 @@ void main() {
 }
 )";
 
-const char* VertexShaderSource_WithTex = R"(
-#version 330 core
-layout (location = 0) in vec3 coord;
-layout (location = 1) in vec3 color; 
-layout (location = 2) in vec2 texCoord;
-
-uniform float x_move;
-uniform float y_move;
-uniform float z_move;
-
-out vec3 vertexColor; 
-out vec2 TexCoord;
-
-void main() {
-	vec3 position = vec3(coord) + vec3(x_move, y_move, z_move);
-    gl_Position = vec4(position, 1.0);
-    vertexColor = color; // Передача цвета во фрагментный шейдер
-	TexCoord = texCoord;
-}
-)";
-
-
 // Исходный код фрагментного шейдера для градиентного закрашивания
 const char* FragShaderSource_Gradient = R"(
 #version 330 core
@@ -93,17 +77,37 @@ void main() {
 }
 )";
 
-// Исходный код фрагментного шейдера для градиентного закрашивания
+//cube with color and texture
+const char* VertexShaderSource_WithTex = R"(
+#version 330 core
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 color;
+layout (location = 2) in vec2 texCoord;
+
+out vec3 ourColor;
+out vec2 TexCoord;
+
+void main() {
+	gl_Position = vec4(position, 1.0f);
+	ourColor = color;
+	TexCoord = texCoord;
+}
+)";
+
+
+//cube with color and texture
 const char* FragShaderSource_WithTex = R"(
 #version 330 core
 in vec3 ourColor;
 in vec2 TexCoord;
 
-out vec4 color;
+out vec4 ColorMix;
 
-uniform sampler2D ourTexture;
+uniform float reg;
+uniform sampler2D texture1;
+
 void main() {
- Color=texture(ourTexture,TexCoord)* vec4(ourColor,1.0f)
+	ColorMix = mix(texture(texture1, TexCoord), vec4(ourColor, 1.0), reg); 
 }
 
 )";
@@ -153,13 +157,18 @@ void InitShader(int num_task) {
 
 
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vShader, 1, &VertexShaderSource, NULL);
+	if(num_task == 1)
+		glShaderSource(vShader, 1, &VertexShaderSource, NULL);
+	else if(num_task == 2) 
+		glShaderSource(vShader, 1, &VertexShaderSource_WithTex, NULL);
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
 
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
+	if (num_task == 1)
+		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
+	else glShaderSource(fShader, 1, &FragShaderSource_WithTex, NULL);
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -174,10 +183,11 @@ void InitShader(int num_task) {
 		std::cout << "error attach shaders \n";
 		return;
 	}
+
 	// Вытягиваем ID атрибута из собранной программы
 	const char* attr_name = "coord"; //имя в шейдере
 	Attrib_vertex = glGetAttribLocation(Program, attr_name);
-	if (Attrib_vertex == -1) {
+	if (Attrib_vertex == -1 && num_task == 1) {
 		std::cout << "could not bind attrib " << attr_name << std::endl;
 		return;
 	}
@@ -185,7 +195,7 @@ void InitShader(int num_task) {
 	// Вытягиваем ID юниформ
 	const char* unif_name = "x_move";
 	Unif_xmove = glGetUniformLocation(Program, unif_name);
-	if (Unif_xmove == -1)
+	if (Unif_xmove == -1 && num_task == 1 )
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -193,7 +203,7 @@ void InitShader(int num_task) {
 
 	unif_name = "y_move";
 	Unif_ymove = glGetUniformLocation(Program, unif_name);
-	if (Unif_ymove == -1)
+	if (Unif_ymove == -1 && num_task == 1)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -201,9 +211,16 @@ void InitShader(int num_task) {
 
 	unif_name = "z_move";
 	Unif_zmove = glGetUniformLocation(Program, unif_name);
-	if (Unif_zmove == -1)
+	if (Unif_zmove == -1 && num_task == 1)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
+	Unif_reg = glGetUniformLocation(Program, "reg");
+	if (Unif_reg == -1 && num_task != 1)
+	{
+		std::cout << "could not bind uniform " << "reg" << std::endl;
 		return;
 	}
 	checkOpenGLerror();
@@ -259,42 +276,36 @@ void InitVBO(int num_task) {
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
-/*
+
 void InitTextures() {
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
 
-	const char* filename = "tex1.png";
-	// Загружаем текстуру из файла
-	if (!ourTexture1.loadFromFile(filename))
+
+	if (!texture1.loadFromFile("tex2.png")) {
+		std::cout << "could not find texture " << std::endl;
+		return; // Ошибка загрузки текстуры
+	}
+
+	sf::Texture texture2;
+	if (!texture2.loadFromFile("tex2.png")) {
+		return; // Ошибка загрузки текстуры
+	}
+
+	Unif_texture1 = glGetUniformLocation(Program, "texture1");
+	if (Unif_texture1 == -1)
 	{
-		// Не вышло загрузить картинку
+		std::cout << "could not bind uniform ourTexture1" << std::endl;
 		return;
 	}
-	// Теперь получаем openGL дескриптор текстуры
-	textureHandle1 = ourTexture1.getNativeHandle();
-
-	filename = "tex2.png";
-	if (!ourTexture2.loadFromFile(filename))
-	{
-		// Не вышло загрузить картинку
-		return;
-	}
-	// Теперь получаем openGL дескриптор текстуры
-	textureHandle2 = ourTexture2.getNativeHandle();
-
-	int width, height;
-	unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 }
-*/
+
 
 void Init(int num_task) {
 	// Шейдеры
 	InitShader(num_task);
 	// Вершинный буфер
 	InitVBO(num_task);
-	//InitTextures();
+	if(num_task == 2)
+		InitTextures();
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -320,14 +331,19 @@ void Draw(int num_task) {
 	}
 	else if (num_task == 2) {
 
-
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 		// Атрибут с цветом
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		// Атрибут с текстурными координатами
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 
+		glActiveTexture(GL_TEXTURE0);
+		sf::Texture::bind(&texture1);
+		glUniform1i(Unif_texture1, 0);
+
+		glUniform1f(Unif_reg, reg);
 	}
+
 
 	if (num_task == 1) {
 		glDrawArrays(GL_TRIANGLES, 0, 9);
@@ -335,6 +351,7 @@ void Draw(int num_task) {
 	else if (num_task == 2) {
 
 		glDrawArrays(GL_QUADS, 0, 12);
+		sf::Texture::bind(NULL);
 	}
 
 

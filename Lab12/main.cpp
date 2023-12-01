@@ -130,26 +130,22 @@ void main() {
 const char* VertexShaderSource_WithTex2 = R"(
 #version 330 core
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 color;
 layout (location = 2) in vec2 texCoord1;
 layout (location = 3) in vec2 texCoord2;
 
-out vec3 ourColor;
 out vec2 TexCoord1;
 out vec2 TexCoord2;
 
 void main() {
 	gl_Position = vec4(position, 1.0f);
-	ourColor = color;
-	TexCoord1 = texCoord1;
-    TexCoord2 = texCoord2;
+	 TexCoord1 = vec2(texCoord1.x, 1.0 - texCoord1.y);
+     TexCoord2 = vec2(texCoord2.x, 1.0 - texCoord2.y);
 }
 )";
 
 //cube with  2texture
 const char* FragShaderSource_WithTex2 = R"(
 #version 330 core
-in vec3 ourColor;
 in vec2 TexCoord1;
 in vec2 TexCoord2;
 
@@ -164,7 +160,7 @@ void main() {
 	vec4 texColor1 = texture(texture1, TexCoord1); // Цвет из первой текстуры
     vec4 texColor2 = texture(texture2, TexCoord2); // Цвет из второй текстуры
     // Смешиваем цвета из двух текстур
-    ColorMix = mix(texture(texture1, TexCoord1), texture(texture2, TexCoord2), reg);
+    ColorMix = mix(texColor1, texColor2, reg);
 }
 
 )";
@@ -373,7 +369,7 @@ void InitTextures() {
 		return; // Ошибка загрузки текстуры
 	}
 
-	if (!texture2.loadFromFile("texture1.png")) {
+	if (!texture2.loadFromFile("tex1.png")) {
 		std::cout << "could not find texture " << std::endl;
 		return; // Ошибка загрузки текстуры
 	}
@@ -416,6 +412,7 @@ void Draw(int num_task) {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -440,8 +437,6 @@ void Draw(int num_task) {
 	}
 	else if (num_task == 3) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
-		// Атрибут с цветом
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		// Атрибут с текстурными координатами
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
@@ -449,6 +444,7 @@ void Draw(int num_task) {
 		glActiveTexture(GL_TEXTURE0);
 		sf::Texture::bind(&texture1);
 		glUniform1i(Unif_texture1, 0);
+
 		glActiveTexture(GL_TEXTURE1);
 		sf::Texture::bind(&texture2);
 		glUniform1i(Unif_texture2, 1);
@@ -470,6 +466,7 @@ void Draw(int num_task) {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 	glUseProgram(0);
 	checkOpenGLerror();
 }

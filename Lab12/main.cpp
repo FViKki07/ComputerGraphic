@@ -49,18 +49,6 @@ struct VertexT {
 	GLfloat T;
 };
 
-struct VertexT2 {
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-	GLfloat r;
-	GLfloat g;
-	GLfloat b;
-	GLfloat S1;
-	GLfloat T1;
-	GLfloat S2;
-	GLfloat T2;
-};
 
 // Исходный код вершинного шейдера
 const char* VertexShaderSource = R"(
@@ -325,38 +313,13 @@ void InitVBO(int num_task) {
 
 	};
 
-	// куб с 2 текстурами и цветом
-	VertexT2 cube2[] = {
-		// Передняя грань
-	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f ,0.0f,0.0f}, // левая низ
-	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,1.0f, 0.0f }, // правая низ
-	  { 0.25f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }, // правая вверх
-	  { -0.5f, 0.25f, 0.5f, 0.0f, 0.0f, 1.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
-
-	  // Правая грань
-	  { 0.5f, -0.25f, -0.5f, 1.0f, 1.0f, 0.0f,0.0f, 0.0f,0.0f, 0.0f  }, // левая низ
-	  { 0.25f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
-	  { 0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.4f, 1.0f, 1.0f,1.0f, 1.0f }, // правая вверх
-	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 0.0f ,1.0f, 0.0f}, // правая низ
-
-	  // Нижняя грань
-	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f }, // левая низ 
-	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
-	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 1.0f,1.0f, 1.0f }, // правая вверх
-	  { 0.0f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,1.0f, 0.0f }, // правая низ
-
-	};
-
-
 
 	// Передаем вершины в буфер
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	if (num_task == 1)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	else if (num_task == 2)
+	else if (num_task == 2 || num_task ==3)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
-	else if(num_task == 3)
-		glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
@@ -436,10 +399,10 @@ void Draw(int num_task) {
 		glUniform1f(Unif_reg, reg);
 	}
 	else if (num_task == 3) {
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 		// Атрибут с текстурными координатами
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
-		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
 
 		glActiveTexture(GL_TEXTURE0);
 		sf::Texture::bind(&texture1);

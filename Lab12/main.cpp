@@ -15,8 +15,9 @@ GLint Unif_zmove;
 GLint Unif_ymove;
 
 //GLuint texture1;
-GLuint texture2;
+//GLuint texture2;
 sf::Texture texture1;
+sf::Texture texture2;
 GLuint Unif_texture1;
 GLuint Unif_texture2;
 GLuint Unif_reg;
@@ -46,6 +47,19 @@ struct VertexT {
 	GLfloat b;
 	GLfloat S;
 	GLfloat T;
+};
+
+struct VertexT2 {
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
+	GLfloat S1;
+	GLfloat T1;
+	GLfloat S2;
+	GLfloat T2;
 };
 
 // Исходный код вершинного шейдера
@@ -112,6 +126,51 @@ void main() {
 
 )";
 
+//cube with 2 texture
+const char* VertexShaderSource_WithTex2 = R"(
+#version 330 core
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 color;
+layout (location = 2) in vec2 texCoord1;
+layout (location = 3) in vec2 texCoord2;
+
+out vec3 ourColor;
+out vec2 TexCoord1;
+out vec2 TexCoord2;
+
+void main() {
+	gl_Position = vec4(position, 1.0f);
+	ourColor = color;
+	TexCoord1 = texCoord1;
+    TexCoord2 = texCoord2;
+}
+)";
+
+//cube with  2texture
+const char* FragShaderSource_WithTex2 = R"(
+#version 330 core
+in vec3 ourColor;
+in vec2 TexCoord1;
+in vec2 TexCoord2;
+
+out vec4 ColorMix;
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+uniform float reg;
+
+void main() {
+
+	vec4 texColor1 = texture(texture1, TexCoord1); // Цвет из первой текстуры
+    vec4 texColor2 = texture(texture2, TexCoord2); // Цвет из второй текстуры
+    // Смешиваем цвета из двух текстур
+    ColorMix = mix(texture(texture1, TexCoord1), texture(texture2, TexCoord2), reg);
+}
+
+)";
+
+
+
 float moveX = 0;
 float moveY = 0;
 float moveZ = 0;
@@ -161,6 +220,8 @@ void InitShader(int num_task) {
 		glShaderSource(vShader, 1, &VertexShaderSource, NULL);
 	else if(num_task == 2) 
 		glShaderSource(vShader, 1, &VertexShaderSource_WithTex, NULL);
+	else if(num_task == 3)
+		glShaderSource(vShader, 1, &VertexShaderSource_WithTex2, NULL);
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
@@ -168,7 +229,10 @@ void InitShader(int num_task) {
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (num_task == 1)
 		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
-	else glShaderSource(fShader, 1, &FragShaderSource_WithTex, NULL);
+	else if(num_task==2)
+		glShaderSource(fShader, 1, &FragShaderSource_WithTex, NULL);
+	else if(num_task==3)
+		glShaderSource(fShader, 1, &FragShaderSource_WithTex2, NULL);
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -243,7 +307,7 @@ void InitVBO(int num_task) {
 		{ 0.2f, -0.45f, -0.5f,0.0f, 1.0f, 0.0f },
 	};
 
-	// куб
+	// куб с цветом и текстурой
 	VertexT cube[] = {
 		// Передняя грань
 	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // левая низ
@@ -265,6 +329,28 @@ void InitVBO(int num_task) {
 
 	};
 
+	// куб с 2 текстурами и цветом
+	VertexT2 cube2[] = {
+		// Передняя грань
+	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f ,0.0f,0.0f}, // левая низ
+	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,1.0f, 0.0f }, // правая низ
+	  { 0.25f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f }, // правая вверх
+	  { -0.5f, 0.25f, 0.5f, 0.0f, 0.0f, 1.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
+
+	  // Правая грань
+	  { 0.5f, -0.25f, -0.5f, 1.0f, 1.0f, 0.0f,0.0f, 0.0f,0.0f, 0.0f  }, // левая низ
+	  { 0.25f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
+	  { 0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.4f, 1.0f, 1.0f,1.0f, 1.0f }, // правая вверх
+	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 0.0f ,1.0f, 0.0f}, // правая низ
+
+	  // Нижняя грань
+	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f }, // левая низ 
+	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f,0.0f, 1.0f,0.0f, 1.0f }, // левая вверх
+	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 1.0f,1.0f, 1.0f }, // правая вверх
+	  { 0.0f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,1.0f, 0.0f }, // правая низ
+
+	};
+
 
 
 	// Передаем вершины в буфер
@@ -273,6 +359,8 @@ void InitVBO(int num_task) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 	else if (num_task == 2)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	else if(num_task == 3)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(cube2), cube2, GL_STATIC_DRAW);
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
@@ -285,8 +373,8 @@ void InitTextures() {
 		return; // Ошибка загрузки текстуры
 	}
 
-	sf::Texture texture2;
-	if (!texture2.loadFromFile("tex2.png")) {
+	if (!texture2.loadFromFile("texture1.png")) {
+		std::cout << "could not find texture " << std::endl;
 		return; // Ошибка загрузки текстуры
 	}
 
@@ -294,6 +382,13 @@ void InitTextures() {
 	if (Unif_texture1 == -1)
 	{
 		std::cout << "could not bind uniform ourTexture1" << std::endl;
+		return;
+	}
+
+	Unif_texture2 = glGetUniformLocation(Program, "texture2");
+	if (Unif_texture2 == -1)
+	{
+		std::cout << "could not bind uniform ourTexture2" << std::endl;
 		return;
 	}
 }
@@ -304,7 +399,7 @@ void Init(int num_task) {
 	InitShader(num_task);
 	// Вершинный буфер
 	InitVBO(num_task);
-	if(num_task == 2)
+	if(num_task == 2 || num_task == 3)
 		InitTextures();
 
 	glEnable(GL_DEPTH_TEST);
@@ -343,12 +438,29 @@ void Draw(int num_task) {
 
 		glUniform1f(Unif_reg, reg);
 	}
+	else if (num_task == 3) {
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)0);
+		// Атрибут с цветом
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		// Атрибут с текстурными координатами
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 10 * sizeof(GLfloat), (GLvoid*)(8 * sizeof(GLfloat)));
+
+		glActiveTexture(GL_TEXTURE0);
+		sf::Texture::bind(&texture1);
+		glUniform1i(Unif_texture1, 0);
+		glActiveTexture(GL_TEXTURE1);
+		sf::Texture::bind(&texture2);
+		glUniform1i(Unif_texture2, 1);
+
+		glUniform1f(Unif_reg, reg);
+	}
 
 
 	if (num_task == 1) {
 		glDrawArrays(GL_TRIANGLES, 0, 9);
 	}
-	else if (num_task == 2) {
+	else if (num_task == 2 || num_task ==3) {
 
 		glDrawArrays(GL_QUADS, 0, 12);
 		sf::Texture::bind(NULL);

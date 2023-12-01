@@ -297,7 +297,7 @@ void InitTextures() {
 		return; // Ошибка загрузки текстуры
 	}
 
-	if (!texture2.loadFromFile("tex1.png")) {
+	if (!texture2.loadFromFile("1.png")) {
 		std::cout << "could not find texture " << std::endl;
 		return; // Ошибка загрузки текстуры
 	}

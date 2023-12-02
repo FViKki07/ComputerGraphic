@@ -7,6 +7,8 @@
 #define _USE_MATH_DEFINES
 #include "math.h"
 
+#define deg2rad M_PI /180.0
+
 // ID шейдерной программы
 GLuint Program;
 // ID атрибута
@@ -15,9 +17,6 @@ GLint Attrib_vertex;
 GLint Attrib_color;
 // ID Vertex Buffer Object
 GLuint VBO;
-GLuint VBO_position;
-// ID VBO цвета
-GLuint VBO_color;
 
 GLint Unif_xmove;
 GLint Unif_zmove;
@@ -37,11 +36,14 @@ GLuint Unif_reg;
 GLint UniformColor;
 GLboolean two_text;
 
-#define deg2rad M_PI /180.0
+const int circleVertexCount = 360;
 
 struct Vertex {
 	GLfloat x;
 	GLfloat y;
+	GLfloat r;
+	GLfloat g;
+	GLfloat b;
 };
 
 struct VertexG {
@@ -147,7 +149,9 @@ const char* VertexShaderSource_Circle = R"(
     out vec4 vert_color;
 
     void main() {
-        vec3 position = vec3(coord, 1.0) * mat3(x_scale,0,0,0,y_scale,0,0,0,1);
+        vec3 position = vec3(coord, 1.0) * mat3(x_scale, 0, 0,
+                                                0, y_scale, 0,
+                                                0,    0,    1);
         gl_Position = vec4(position[0],position[1], 0.0, 1.0);
         vert_color = color;
     }
@@ -163,6 +167,7 @@ const char* FragShaderSource_Circle = R"(
         color = vert_color;
     }
 )";
+
 
 float moveX = 0;
 float moveY = 0;
@@ -185,7 +190,6 @@ void changeTexture(float r) {
 
 float scaleX = 1.0;
 float scaleY = 1.0;
-
 // масштабирование круга
 void changeScale(float scaleXinc, float scaleYinc) {
 	scaleX += scaleXinc;
@@ -264,14 +268,6 @@ void InitShader(int num_task) {
 		return;
 	}
 
-	// Вытягиваем ID атрибута цвета
-	Attrib_color = glGetAttribLocation(Program, "color");
-	if (Attrib_color == -1)
-	{
-		std::cout << "could not bind attrib color" << std::endl;
-		return;
-	}
-
 	// Вытягиваем ID юниформ
 	const char* unif_name = "x_move";
 	Unif_xmove = glGetUniformLocation(Program, unif_name);
@@ -306,7 +302,7 @@ void InitShader(int num_task) {
 
 	unif_name = "x_scale";
 	Unif_xscale = glGetUniformLocation(Program, unif_name);
-	if (Unif_xscale == -1)
+	if (Unif_xscale == -1 && num_task == 4)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -314,7 +310,7 @@ void InitShader(int num_task) {
 
 	unif_name = "y_scale";
 	Unif_yscale = glGetUniformLocation(Program, unif_name);
-	if (Unif_yscale == -1)
+	if (Unif_yscale == -1 && num_task == 4)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -323,32 +319,25 @@ void InitShader(int num_task) {
 	checkOpenGLerror();
 }
 
-const int circleVertexCount = 360;
 
-float bytify(float color)
+std::array<float, 4> HSV2RGB(float hue, float saturation = 1.0, float value = 1.0)
 {
-	return (1 / 100.0) * color;
-}
-
-std::array<float, 4> HSVtoRGB(float hue, float saturation = 100.0, float value = 100.0)
-{
-	int sw = (int)floor(hue / 60) % 6;
-	float vmin = ((100.0f - saturation) * value) / 100.0;
-	float a = (value - vmin) * (((int)hue % 60) / 60.0);
-	float vinc = vmin + a;
-	float vdec = value - a;
-	switch (sw)
+	int hi = (int)floor(hue / 60) % 6;
+	float f = hue / 60 - hi;
+	float p = value * (1 - saturation);
+	float q = value * (1 - f * saturation);
+	float t = value * (1 - (1 - f) * saturation);
+	switch (hi)
 	{
-	case 0: return { bytify(value), bytify(vinc), bytify(vmin), 1.0 };
-	case 1: return { bytify(vdec), bytify(value), bytify(vmin), 1.0 };
-	case 2: return { bytify(vmin), bytify(value), bytify(vinc), 1.0 };
-	case 3: return { bytify(vmin), bytify(vdec), bytify(value), 1.0 };
-	case 4: return { bytify(vinc), bytify(vmin), bytify(value), 1.0 };
-	case 5: return { bytify(value), bytify(vmin), bytify(vdec), 1.0 };
+	case 0: return { value, t,  p, 1.0 };
+	case 1: return { q,  value,  p, 1.0 };
+	case 2: return { p,  value,  t, 1.0 };
+	case 3: return { p,  q,  value, 1.0 };
+	case 4: return { t,  p,  value, 1.0 };
+	case 5: return { value,  p,  q, 1.0 };
+	default: return { 0, 0, 0, 0 };
 	}
-	return { 0, 0, 0 , 0 };
 }
-
 
 void InitVBO(int num_task) {
 	glGenBuffers(1, &VBO);
@@ -368,54 +357,54 @@ void InitVBO(int num_task) {
 	};
 
 	// куб с цветом и текстурой
-	    //Передняя грань
+		//Передняя грань
 	VertexT cube[] = {
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 
-		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
 		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
 
 		//Задняя грань 
 		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 
-		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
 
 		//Левая грань
-		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
-		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, 
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
 		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
 
 		//Правая грань
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
-		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
-		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, 
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
 
 		 //Верхняя грань 
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
-		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 1.0f, 
-		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
-		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
 		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
 
 		//Нижняя грань
-		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
-		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
-		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 
-		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f  
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f
 
 	};
 
@@ -441,33 +430,29 @@ void InitVBO(int num_task) {
 	//};
 
 	//круг 
-	std::array<std::array<float, 4>, circleVertexCount * 3> colors = {};
-
 	Vertex circle[circleVertexCount * 3] = {};
+
 	for (int i = 0; i < circleVertexCount; i++) {
-		circle[i * 3] = { 0.5f * (float)cos(i * (360.0 / circleVertexCount) * deg2rad), 0.5f * (float)sin(i * (360.0 / circleVertexCount) * deg2rad) };
-		circle[i * 3 + 1] = { 0.5f * (float)cos((i + 1) * (360.0 / circleVertexCount) * deg2rad), 0.5f * (float)sin((i + 1) * (360.0 / circleVertexCount) * deg2rad) };
-		circle[i * 3 + 2] = { 0.0f, 0.0f };
-		colors[i * 3] = HSVtoRGB(i % 360);
-		colors[i * 3 + 1] = HSVtoRGB((i + 1) % 360);
-		colors[i * 3 + 2] = { 1.0, 1.0, 1.0, 1.0 };
+		circle[i * 3] = { 0.8f * (float)cos(i * (360.0 / circleVertexCount) * deg2rad), 0.8f * (float)sin(i * (360.0 / circleVertexCount) * deg2rad), HSV2RGB(i % 360).at(0), HSV2RGB(i % 360).at(1), HSV2RGB(i % 360).at(2) };
+		circle[i * 3 + 1] = { 0.8f * (float)cos((i + 1) * (360.0 / circleVertexCount) * deg2rad), 0.8f * (float)sin((i + 1) * (360.0 / circleVertexCount) * deg2rad), HSV2RGB((i + 1) % 360).at(0), HSV2RGB((i + 1) % 360).at(1),HSV2RGB((i + 1) % 360).at(2) };
+		circle[i * 3 + 2] = { 0.0f, 0.0f, 1.0, 1.0, 1.0 };
 	}
 
 	// Передаем вершины в буфер
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
 	if (num_task == 1)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 	else if (num_task == 2 || num_task == 3)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
-	else if (num_task == 4)
+	else if (num_task == 4) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(circle), circle, GL_STATIC_DRAW);
+	}
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
 
 void InitTextures() {
-
-
 	if (!texture1.loadFromFile("tex2.png")) {
 		std::cout << "could not find texture " << std::endl;
 		return; // Ошибка загрузки текстуры
@@ -491,7 +476,6 @@ void InitTextures() {
 		std::cout << "could not bind uniform ourTexture2" << std::endl;
 		return;
 	}
-
 }
 
 
@@ -524,7 +508,6 @@ void Draw(int num_task) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-
 	if (num_task == 1) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -548,12 +531,11 @@ void Draw(int num_task) {
 		glUniform1f(Unif_reg, reg);
 
 		glUniform1i(glGetUniformLocation(Program, "two_text"), two_text);
-
 	}
 
 	else if (num_task == 4) {
-		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
 	}
 
 	if (num_task == 1) {
@@ -572,8 +554,7 @@ void Draw(int num_task) {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 
-
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glUseProgram(0);
 	checkOpenGLerror();
@@ -628,6 +609,10 @@ void WindowWork(int num_task) {
 				case (sf::Keyboard::E): moveShape(0, 0, 0.2); break;
 				case (sf::Keyboard::Z): changeTexture(-0.05); break;
 				case (sf::Keyboard::X): changeTexture(0.05); break;
+				case (sf::Keyboard::Up): changeScale(0, 0.1); break;
+				case (sf::Keyboard::Down): changeScale(0, -0.1); break;
+				case (sf::Keyboard::Left): changeScale(-0.1, 0); break;
+				case (sf::Keyboard::Right): changeScale(0.1, 0); break;
 				default: break;
 				}
 			}
@@ -651,3 +636,6 @@ int main() {
 	}
 	return 0;
 }
+
+
+

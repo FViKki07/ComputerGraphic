@@ -3,16 +3,28 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <array>
+#define _USE_MATH_DEFINES
+#include "math.h"
 
 // ID шейдерной программы
 GLuint Program;
 // ID атрибута
 GLint Attrib_vertex;
+// ID атрибута цвета
+GLint Attrib_color;
 // ID Vertex Buffer Object
 GLuint VBO;
+GLuint VBO_position;
+// ID VBO цвета
+GLuint VBO_color;
+
 GLint Unif_xmove;
 GLint Unif_zmove;
 GLint Unif_ymove;
+
+GLint Unif_xscale;
+GLint Unif_yscale;
 
 //GLuint texture1;
 //GLuint texture2;
@@ -24,6 +36,8 @@ GLuint Unif_reg;
 
 GLint UniformColor;
 GLboolean two_text;
+
+#define deg2rad M_PI /180.0
 
 struct Vertex {
 	GLfloat x;
@@ -101,8 +115,7 @@ void main() {
 const char* FragShaderSource_WithTex2 = R"(
 #version 330 core
 in vec2 TexCoord;
-in vec3 ourColor;
-
+in vec3 ourColor; 
 out vec4 ColorMix;
 
 uniform sampler2D texture1;
@@ -122,11 +135,39 @@ void main() {
 
 )";
 
+// Circle
+const char* VertexShaderSource_Circle = R"(
+    #version 330 core
+    layout (location = 0) in vec2 coord;
+    layout (location = 1) in vec4 color;
 
+    uniform float x_scale;
+    uniform float y_scale;
+    
+    out vec4 vert_color;
+
+    void main() {
+        vec3 position = vec3(coord, 1.0) * mat3(x_scale,0,0,0,y_scale,0,0,0,1);
+        gl_Position = vec4(position[0],position[1], 0.0, 1.0);
+        vert_color = color;
+    }
+)";
+
+// Circle
+const char* FragShaderSource_Circle = R"(
+    #version 330 core
+    in vec4 vert_color;
+
+    out vec4 color;
+    void main() {
+        color = vert_color;
+    }
+)";
 
 float moveX = 0;
 float moveY = 0;
 float moveZ = 0;
+
 void moveShape(float moveXinc, float moveYinc, float moveZinc) {
 	moveX += moveXinc;
 	moveY += moveYinc;
@@ -140,6 +181,15 @@ void changeTexture(float r) {
 		return;
 	reg += r;
 
+}
+
+float scaleX = 1.0;
+float scaleY = 1.0;
+
+// масштабирование круга
+void changeScale(float scaleXinc, float scaleYinc) {
+	scaleX += scaleXinc;
+	scaleY += scaleYinc;
 }
 
 void ShaderLog(unsigned int shader)
@@ -169,10 +219,14 @@ void InitShader(int num_task) {
 
 
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
-	if(num_task == 1)
+	if (num_task == 1)
 		glShaderSource(vShader, 1, &VertexShaderSource, NULL);
-	else if(num_task == 3 || num_task == 2)
+	else if (num_task == 3 || num_task == 2)
 		glShaderSource(vShader, 1, &VertexShaderSource_WithTex2, NULL);
+	else if (num_task == 4)
+		glShaderSource(vShader, 1, &VertexShaderSource_Circle, NULL);
+
+
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
@@ -180,8 +234,12 @@ void InitShader(int num_task) {
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (num_task == 1)
 		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
-	else if(num_task==3 || num_task == 2)
+	else if (num_task == 3 || num_task == 2)
 		glShaderSource(fShader, 1, &FragShaderSource_WithTex2, NULL);
+	else if (num_task == 4)
+		glShaderSource(fShader, 1, &FragShaderSource_Circle, NULL);
+
+
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
@@ -190,6 +248,7 @@ void InitShader(int num_task) {
 	glAttachShader(Program, vShader);
 	glAttachShader(Program, fShader);
 	glLinkProgram(Program);
+
 	int link_ok;
 	glGetProgramiv(Program, GL_LINK_STATUS, &link_ok);
 	if (!link_ok) {
@@ -205,10 +264,18 @@ void InitShader(int num_task) {
 		return;
 	}
 
+	// Вытягиваем ID атрибута цвета
+	Attrib_color = glGetAttribLocation(Program, "color");
+	if (Attrib_color == -1)
+	{
+		std::cout << "could not bind attrib color" << std::endl;
+		return;
+	}
+
 	// Вытягиваем ID юниформ
 	const char* unif_name = "x_move";
 	Unif_xmove = glGetUniformLocation(Program, unif_name);
-	if (Unif_xmove == -1 && num_task == 1 )
+	if (Unif_xmove == -1 && num_task == 1)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -231,13 +298,57 @@ void InitShader(int num_task) {
 	}
 
 	Unif_reg = glGetUniformLocation(Program, "reg");
-	if (Unif_reg == -1 && num_task != 1)
+	if (Unif_reg == -1 && num_task != 1 && num_task != 4)
 	{
 		std::cout << "could not bind uniform " << "reg" << std::endl;
 		return;
 	}
+
+	unif_name = "x_scale";
+	Unif_xscale = glGetUniformLocation(Program, unif_name);
+	if (Unif_xscale == -1)
+	{
+		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
+	unif_name = "y_scale";
+	Unif_yscale = glGetUniformLocation(Program, unif_name);
+	if (Unif_yscale == -1)
+	{
+		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
 	checkOpenGLerror();
 }
+
+const int circleVertexCount = 360;
+
+float bytify(float color)
+{
+	return (1 / 100.0) * color;
+}
+
+std::array<float, 4> HSVtoRGB(float hue, float saturation = 100.0, float value = 100.0)
+{
+	int sw = (int)floor(hue / 60) % 6;
+	float vmin = ((100.0f - saturation) * value) / 100.0;
+	float a = (value - vmin) * (((int)hue % 60) / 60.0);
+	float vinc = vmin + a;
+	float vdec = value - a;
+	switch (sw)
+	{
+	case 0: return { bytify(value), bytify(vinc), bytify(vmin), 1.0 };
+	case 1: return { bytify(vdec), bytify(value), bytify(vmin), 1.0 };
+	case 2: return { bytify(vmin), bytify(value), bytify(vinc), 1.0 };
+	case 3: return { bytify(vmin), bytify(vdec), bytify(value), 1.0 };
+	case 4: return { bytify(vinc), bytify(vmin), bytify(value), 1.0 };
+	case 5: return { bytify(value), bytify(vmin), bytify(vdec), 1.0 };
+	}
+	return { 0, 0, 0 , 0 };
+}
+
 
 void InitVBO(int num_task) {
 	glGenBuffers(1, &VBO);
@@ -278,13 +389,27 @@ void InitVBO(int num_task) {
 
 	};
 
+	//круг 
+	std::array<std::array<float, 4>, circleVertexCount * 3> colors = {};
+
+	Vertex circle[circleVertexCount * 3] = {};
+	for (int i = 0; i < circleVertexCount; i++) {
+		circle[i * 3] = { 0.5f * (float)cos(i * (360.0 / circleVertexCount) * deg2rad), 0.5f * (float)sin(i * (360.0 / circleVertexCount) * deg2rad) };
+		circle[i * 3 + 1] = { 0.5f * (float)cos((i + 1) * (360.0 / circleVertexCount) * deg2rad), 0.5f * (float)sin((i + 1) * (360.0 / circleVertexCount) * deg2rad) };
+		circle[i * 3 + 2] = { 0.0f, 0.0f };
+		colors[i * 3] = HSVtoRGB(i % 360);
+		colors[i * 3 + 1] = HSVtoRGB((i + 1) % 360);
+		colors[i * 3 + 2] = { 1.0, 1.0, 1.0, 1.0 };
+	}
 
 	// Передаем вершины в буфер
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	if (num_task == 1)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	else if (num_task == 2 || num_task ==3)
+	else if (num_task == 2 || num_task == 3)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	else if (num_task == 4)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(circle), circle, GL_STATIC_DRAW);
 
 	checkOpenGLerror(); //Пример функции есть в лабораторной
 }
@@ -324,7 +449,7 @@ void Init(int num_task) {
 	InitShader(num_task);
 	// Вершинный буфер
 	InitVBO(num_task);
-	if(num_task == 2 || num_task == 3)
+	if (num_task == 2 || num_task == 3)
 		InitTextures();
 	if (num_task == 2)
 		two_text = false;
@@ -339,17 +464,18 @@ void Draw(int num_task) {
 	glUniform1f(Unif_xmove, moveX);
 	glUniform1f(Unif_ymove, moveY);
 	glUniform1f(Unif_zmove, moveZ);
+	glUniform1f(Unif_xscale, scaleX);
+	glUniform1f(Unif_yscale, scaleY);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+
 	if (num_task == 1) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	}
 
@@ -374,21 +500,30 @@ void Draw(int num_task) {
 
 	}
 
+	else if (num_task == 4) {
+		glVertexAttribPointer(Attrib_vertex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(Attrib_color, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	}
 
 	if (num_task == 1) {
 		glDrawArrays(GL_TRIANGLES, 0, 9);
 	}
-	else if (num_task == 2 || num_task ==3) {
+	else if (num_task == 2 || num_task == 3) {
 
 		glDrawArrays(GL_QUADS, 0, 12);
 		sf::Texture::bind(NULL);
 	}
-
+	else if (num_task == 4) {
+		glDrawArrays(GL_TRIANGLES, 0, circleVertexCount * 3);
+	}
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
+
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	glUseProgram(0);
 	checkOpenGLerror();
 }

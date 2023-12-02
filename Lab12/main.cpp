@@ -14,8 +14,16 @@ GLint Unif_xmove;
 GLint Unif_zmove;
 GLint Unif_ymove;
 
-GLuint texture;
+//GLuint texture1;
+//GLuint texture2;
+sf::Texture texture1;
+sf::Texture texture2;
+GLuint Unif_texture1;
+GLuint Unif_texture2;
+GLuint Unif_reg;
+
 GLint UniformColor;
+GLboolean two_text;
 
 struct Vertex {
 	GLfloat x;
@@ -42,6 +50,7 @@ struct VertexT {
 	GLfloat T;
 };
 
+
 // Èñõîäíûé êîä âåğøèííîãî øåéäåğà
 const char* VertexShaderSource = R"(
 #version 330 core
@@ -61,28 +70,6 @@ void main() {
 }
 )";
 
-const char* VertexShaderSource_WithTex = R"(
-#version 330 core
-layout (location = 0) in vec3 coord;
-layout (location = 1) in vec3 color; 
-layout (location = 2) in vec2 texCoord;
-
-uniform float x_move;
-uniform float y_move;
-uniform float z_move;
-
-out vec3 vertexColor; 
-out vec2 TexCoord;
-
-void main() {
-	vec3 position = vec3(coord) + vec3(x_move, y_move, z_move);
-    gl_Position = vec4(position, 1.0);
-    vertexColor = color; // Ïåğåäà÷à öâåòà âî ôğàãìåíòíûé øåéäåğ
-	TexCoord = texCoord;
-}
-)";
-
-
 // Èñõîäíûé êîä ôğàãìåíòíîãî øåéäåğà äëÿ ãğàäèåíòíîãî çàêğàøèâàíèÿ
 const char* FragShaderSource_Gradient = R"(
 #version 330 core
@@ -93,20 +80,49 @@ void main() {
 }
 )";
 
-// Èñõîäíûé êîä ôğàãìåíòíîãî øåéäåğà äëÿ ãğàäèåíòíîãî çàêğàøèâàíèÿ
-const char* FragShaderSource_WithTex = R"(
+//cube with texture
+const char* VertexShaderSource_WithTex2 = R"(
 #version 330 core
-in vec3 ourColor;
-in vec2 TexCoord;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 color;
+layout (location = 2) in vec2 texCoord;
 
-out vec4 color;
+out vec2 TexCoord;
+out vec3 ourColor;
 
-uniform sampler2D ourTexture;
 void main() {
- Color=texture(ourTexture,TexCoord)* vec4(ourColor,1.0f)
+	gl_Position = vec4(position, 1.0f);
+	 TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
+	ourColor = color;
+}
+)";
+
+//cube with texture
+const char* FragShaderSource_WithTex2 = R"(
+#version 330 core
+in vec2 TexCoord;
+in vec3 ourColor;
+
+out vec4 ColorMix;
+
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+uniform float reg;
+uniform bool two_text;
+
+void main() {
+
+	vec4 texColor1 = texture(texture1, TexCoord); // Öâåò èç ïåğâîé òåêñòóğû
+    vec4 texColor2 = texture(texture2, TexCoord); // Öâåò èç âòîğîé òåêñòóğû
+    // Ñìåøèâàåì öâåòà èç äâóõ òåêñòóğ
+	if(two_text)
+		ColorMix = mix(texColor1, texColor2, reg);
+	else ColorMix = mix(vec4(ourColor, 1.0), texColor1, reg); 
 }
 
 )";
+
+
 
 float moveX = 0;
 float moveY = 0;
@@ -115,6 +131,15 @@ void moveShape(float moveXinc, float moveYinc, float moveZinc) {
 	moveX += moveXinc;
 	moveY += moveYinc;
 	moveZ += moveZinc;
+}
+
+float reg = 0.05;
+// ğåãóëèğîâàíèå òåêñòóğ
+void changeTexture(float r) {
+	if (reg + r > 1 || reg + r < 0)
+		return;
+	reg += r;
+
 }
 
 void ShaderLog(unsigned int shader)
@@ -144,16 +169,23 @@ void InitShader(int num_task) {
 
 
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vShader, 1, &VertexShaderSource, NULL);
+	if(num_task == 1)
+		glShaderSource(vShader, 1, &VertexShaderSource, NULL);
+	else if(num_task == 3 || num_task == 2)
+		glShaderSource(vShader, 1, &VertexShaderSource_WithTex2, NULL);
 	glCompileShader(vShader);
 	std::cout << "vertex shader \n";
 	ShaderLog(vShader);
-	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
 
+	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
+	if (num_task == 1)
+		glShaderSource(fShader, 1, &FragShaderSource_Gradient, NULL);
+	else if(num_task==3 || num_task == 2)
+		glShaderSource(fShader, 1, &FragShaderSource_WithTex2, NULL);
 	glCompileShader(fShader);
 	std::cout << "fragment shader \n";
 	ShaderLog(fShader);
+
 	Program = glCreateProgram();
 	glAttachShader(Program, vShader);
 	glAttachShader(Program, fShader);
@@ -164,10 +196,11 @@ void InitShader(int num_task) {
 		std::cout << "error attach shaders \n";
 		return;
 	}
+
 	// Âûòÿãèâàåì ID àòğèáóòà èç ñîáğàííîé ïğîãğàììû
 	const char* attr_name = "coord"; //èìÿ â øåéäåğå
 	Attrib_vertex = glGetAttribLocation(Program, attr_name);
-	if (Attrib_vertex == -1) {
+	if (Attrib_vertex == -1 && num_task == 1) {
 		std::cout << "could not bind attrib " << attr_name << std::endl;
 		return;
 	}
@@ -175,7 +208,7 @@ void InitShader(int num_task) {
 	// Âûòÿãèâàåì ID şíèôîğì
 	const char* unif_name = "x_move";
 	Unif_xmove = glGetUniformLocation(Program, unif_name);
-	if (Unif_xmove == -1)
+	if (Unif_xmove == -1 && num_task == 1 )
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -183,7 +216,7 @@ void InitShader(int num_task) {
 
 	unif_name = "y_move";
 	Unif_ymove = glGetUniformLocation(Program, unif_name);
-	if (Unif_ymove == -1)
+	if (Unif_ymove == -1 && num_task == 1)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
 		return;
@@ -191,9 +224,16 @@ void InitShader(int num_task) {
 
 	unif_name = "z_move";
 	Unif_zmove = glGetUniformLocation(Program, unif_name);
-	if (Unif_zmove == -1)
+	if (Unif_zmove == -1 && num_task == 1)
 	{
 		std::cout << "could not bind uniform " << unif_name << std::endl;
+		return;
+	}
+
+	Unif_reg = glGetUniformLocation(Program, "reg");
+	if (Unif_reg == -1 && num_task != 1)
+	{
+		std::cout << "could not bind uniform " << "reg" << std::endl;
 		return;
 	}
 	checkOpenGLerror();
@@ -216,46 +256,130 @@ void InitVBO(int num_task) {
 		{ 0.2f, -0.45f, -0.5f,0.0f, 1.0f, 0.0f },
 	};
 
-	// êóá
+	// êóá ñ öâåòîì è òåêñòóğîé
+	    //Ïåğåäíÿÿ ãğàíü
 	VertexT cube[] = {
-		// Ïåğåäíÿÿ ãğàíü
-	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // ëåâàÿ íèç
-	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // ïğàâàÿ íèç
-	  { 0.25f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
-	  { -0.5f, 0.25f, 0.5f, 0.0f, 0.0f, 1.0f,0.0f, 1.0f }, // ëåâàÿ ââåğõ
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
+		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 
 
-	  // Ïğàâàÿ ãğàíü
-	  { 0.5f, -0.25f, -0.5f, 1.0f, 1.0f, 0.0f,0.0f, 0.0f  }, // ëåâàÿ íèç
-	  { 0.25f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,0.0f, 1.0f  }, // ëåâàÿ ââåğõ
-	  { 0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.4f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
-	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 0.0f }, // ïğàâàÿ íèç
+		//Çàäíÿÿ ãğàíü 
+		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
+		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
 
-	  // Íèæíÿÿ ãğàíü
-	  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // ëåâàÿ íèç 
-	  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f,0.0f, 1.0f }, // ëåâàÿ ââåğõ
-	  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
-	  { 0.0f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // ïğàâàÿ íèç
+		//Ëåâàÿ ãğàíü
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f, 
+
+		//Ïğàâàÿ ãğàíü
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 0.0f, 
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+
+		 //Âåğõíÿÿ ãğàíü 
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+		 0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 1.0f, 
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
+		 0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
+		-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 1.0f, 
+
+		//Íèæíÿÿ ãğàíü
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 
+		 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+		 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, 
+		-0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 
+		-0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f  
 
 	};
 
+	//VertexT cube[] = {
+	//	// Ïåğåäíÿÿ ãğàíü
+	//  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // ëåâàÿ íèç
+	//  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // ïğàâàÿ íèç
+	//  { 0.25f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
+	//  { -0.5f, 0.25f, 0.5f, 0.0f, 0.0f, 1.0f,0.0f, 1.0f }, // ëåâàÿ ââåğõ
+
+	//  // Ïğàâàÿ ãğàíü
+	//  { 0.5f, -0.25f, -0.5f, 1.0f, 1.0f, 0.0f,0.0f, 0.0f  }, // ëåâàÿ íèç
+	//  { 0.25f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,0.0f, 1.0f  }, // ëåâàÿ ââåğõ
+	//  { 0.5f, 0.5f, -0.5f, 0.1f, 0.6f, 0.4f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
+	//  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 0.0f }, // ïğàâàÿ íèç
+
+	//  // Íèæíÿÿ ãğàíü
+	//  { -0.25f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,0.0f, 0.0f }, // ëåâàÿ íèç 
+	//  { 0.5f, -0.25f, 0.5f, 1.0f, 1.0f, 0.0f,0.0f, 1.0f }, // ëåâàÿ ââåğõ
+	//  { 0.75f, -0.25f, -0.5f, 0.90f, 0.50f, 0.70f, 1.0f, 1.0f }, // ïğàâàÿ ââåğõ
+	//  { 0.0f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f }, // ïğàâàÿ íèç
+
+	//};
 
 
 	// Ïåğåäàåì âåğøèíû â áóôåğ
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	if (num_task == 1)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	else if (num_task == 2)
+	else if (num_task == 2 || num_task ==3)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 
 	checkOpenGLerror(); //Ïğèìåğ ôóíêöèè åñòü â ëàáîğàòîğíîé
 }
+
+void InitTextures() {
+
+
+	if (!texture1.loadFromFile("tex2.png")) {
+		std::cout << "could not find texture " << std::endl;
+		return; // Îøèáêà çàãğóçêè òåêñòóğû
+	}
+
+	if (!texture2.loadFromFile("1.png")) {
+		std::cout << "could not find texture " << std::endl;
+		return; // Îøèáêà çàãğóçêè òåêñòóğû
+	}
+
+	Unif_texture1 = glGetUniformLocation(Program, "texture1");
+	if (Unif_texture1 == -1)
+	{
+		std::cout << "could not bind uniform ourTexture1" << std::endl;
+		return;
+	}
+
+	Unif_texture2 = glGetUniformLocation(Program, "texture2");
+	if (Unif_texture2 == -1)
+	{
+		std::cout << "could not bind uniform ourTexture2" << std::endl;
+		return;
+	}
+
+}
+
 
 void Init(int num_task) {
 	// Øåéäåğû
 	InitShader(num_task);
 	// Âåğøèííûé áóôåğ
 	InitVBO(num_task);
-
+	if(num_task == 2 || num_task == 3)
+		InitTextures();
+	if (num_task == 2)
+		two_text = false;
+	else two_text = true;
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -270,6 +394,7 @@ void Draw(int num_task) {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
@@ -278,29 +403,43 @@ void Draw(int num_task) {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	}
-	else if (num_task == 2) {
 
-
+	else if (num_task == 3 || num_task == 2) {
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-		// Àòğèáóò ñ öâåòîì
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 		// Àòğèáóò ñ òåêñòóğíûìè êîîğäèíàòàìè
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		//glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+
+		glActiveTexture(GL_TEXTURE0);
+		sf::Texture::bind(&texture1);
+		glUniform1i(Unif_texture1, 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		sf::Texture::bind(&texture2);
+		glUniform1i(Unif_texture2, 1);
+
+		glUniform1f(Unif_reg, reg);
+
+		glUniform1i(glGetUniformLocation(Program, "two_text"), two_text);
 
 	}
+
 
 	if (num_task == 1) {
 		glDrawArrays(GL_TRIANGLES, 0, 9);
 	}
-	else if (num_task == 2) {
+	else if (num_task == 2 || num_task ==3) {
 
-		glDrawArrays(GL_QUADS, 0, 12);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		sf::Texture::bind(NULL);
 	}
 
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 	glUseProgram(0);
 	checkOpenGLerror();
 }
@@ -352,6 +491,8 @@ void WindowWork(int num_task) {
 				case (sf::Keyboard::D): moveShape(0.1, 0, 0); break;
 				case (sf::Keyboard::Q): moveShape(0, 0, -0.2); break;
 				case (sf::Keyboard::E): moveShape(0, 0, 0.2); break;
+				case (sf::Keyboard::Z): changeTexture(-0.05); break;
+				case (sf::Keyboard::X): changeTexture(0.05); break;
 				default: break;
 				}
 			}

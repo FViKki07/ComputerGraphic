@@ -21,12 +21,16 @@ namespace Lab9
             get { return coords[3]; }
             set { coords[3] = value; }
         }
+
+        public Vertex vert = new Vertex();
+
         public PointZ() { coords[3] = 1; }
 
         public PointZ(double x, double y, double z)
         {
             coords[0] = x; coords[1] = y; coords[2] = z;
             coords[3] = 1;
+
         }
 
         public PointZ(double[] arr)
@@ -75,6 +79,12 @@ namespace Lab9
         public static PointZ operator *(double x, PointZ v)
         {
             v.X *= x; v.Y *= x; v.Z *= x;
+            return v;
+        }
+
+        public static PointZ operator /(PointZ v, double x)
+        {
+            v.X /= x; v.Y /= x; v.Z /= x;
             return v;
         }
 

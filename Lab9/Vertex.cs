@@ -12,6 +12,8 @@ namespace Lab9
         public PointZ Coordinate { get; set; }
         public PointZ Normal { get; set; }
         public Color Color { get; set; }
+        public double Cos { get; set; }
+        public int Countnormal { get; set; }
 
         public Vertex() { }
 
@@ -20,6 +22,7 @@ namespace Lab9
             Coordinate = coordinate;
             Normal = normal;
             Color = color;
+            
         }
     }
 }

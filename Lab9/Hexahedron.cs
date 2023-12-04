@@ -98,6 +98,7 @@ namespace Lab9
                 for (int i = 0; i < v.Count(); i++)
                 {
                     var currentVert = vertices[v[i]].vert;
+                    currentVert.Coordinate = vertices[v[i]];
                     if (currentVert.Countnormal == 0)
                     {
                         currentVert.Countnormal = 1;

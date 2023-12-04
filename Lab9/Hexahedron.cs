@@ -81,5 +81,48 @@ namespace Lab9
                 return p;
             }
         }
+
+        public void CalculateNormal(Light light)
+        {
+            foreach (var v in polygons)
+            {
+                PointZ v0 = vertices[v[0]];
+                PointZ v1 = vertices[v[1]];
+                PointZ v2 = vertices[v[2]];
+
+                PointZ edge1 = v1 - v0;
+                PointZ edge2 = v2 - v0;
+
+                PointZ normal = PointZ.CrossProduct(edge1, edge2);
+
+                for (int i = 0; i < v.Count(); i++)
+                {
+                    var currentVert = vertices[v[i]].vert;
+                    if (currentVert.Countnormal == 0)
+                    {
+                        currentVert.Countnormal = 1;
+                        currentVert.Normal = normal.Normalize();
+                    }
+                    else
+                    {
+                        currentVert.Countnormal += 1;
+                        currentVert.Normal += normal;
+                        currentVert.Normal /= currentVert.Countnormal;
+                        currentVert.Normal = currentVert.Normal.Normalize();
+                    }
+                    var lightDirection = (light.position - currentVert.Coordinate).Normalize();
+                    var cosLambert = Math.Max(0, PointZ.DotProduct(currentVert.Normal, lightDirection));//проверить, что тут до 1
+
+                    //посмотреть, что тут до 255
+                    int red = (int)(currentVert.Color.R * cosLambert); 
+                    int green = (int)(currentVert.Color.G * cosLambert);
+                    int blue = (int)(currentVert.Color.B * cosLambert);
+
+                    currentVert.Color = Color.FromArgb(red, green, blue);
+
+                }
+
+            }
+        }
     }
 }

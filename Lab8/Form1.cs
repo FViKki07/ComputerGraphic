@@ -42,6 +42,8 @@ namespace Lab8
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
+            comboBox3.SelectedItem = comboBox3.Items[1];
+
             ProjectionComboBox.SelectedItem = ProjectionComboBox.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
             bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -212,7 +214,7 @@ namespace Lab8
                 }
             }
         }
-        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraForward)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
             foreach (var v in cur.getPolygons())
             {
@@ -240,7 +242,7 @@ namespace Lab8
                     normal.Z = -normal.Z;
                 }
 
-                if (PointZ.DotProduct(normal, CameraForward - p1) > 0)
+                if (PointZ.DotProduct(normal, CameraPosition) + PointZ.DotProduct(normal, p1) < 0)
                 {
                     for (int i = 0; i < v.Count; i++)
                     {
@@ -258,7 +260,7 @@ namespace Lab8
             {
                 if (non_face)
                 {
-                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.forward);
+                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.Position);
                 }
                 else if (zB)
                 {
@@ -516,6 +518,7 @@ namespace Lab8
 
         private void button5_Click(object sender, EventArgs e)
         {
+            non_face = false;
             if (points.Count >= 2)
             {
                 if (comboBox3.SelectedItem != null)

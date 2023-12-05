@@ -17,7 +17,7 @@ namespace Lab9
         public Color Color { get; set; }
         public Hexahedron(double size)
         {
-            Color = Color.LightCoral;
+            Color = Color.LightSkyBlue;
             vertices = new PointZ[8];
             polygons = new List<List<int>>();
             vertices[0] = new PointZ(-size / 2, -size / 2, -size / 2);

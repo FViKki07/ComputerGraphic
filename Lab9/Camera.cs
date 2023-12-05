@@ -58,6 +58,7 @@ namespace Lab9
         public void move(PointZ posOffset)
         {
             Position += posOffset;
+            forward += posOffset;
         }
 
         public void recalcTarget(PointZ currentRotation)

@@ -76,6 +76,8 @@ namespace Lab9
             файлToolStripMenuItem = new ToolStripMenuItem();
             сохранитьToolStripMenuItem = new ToolStripMenuItem();
             загрузитьToolStripMenuItem = new ToolStripMenuItem();
+            выбратьМетодToolStripMenuItem = new ToolStripMenuItem();
+            освещениеГуроToolStripMenuItem = new ToolStripMenuItem();
             pictureBox2 = new PictureBox();
             button5 = new Button();
             button6 = new Button();
@@ -96,9 +98,8 @@ namespace Lab9
             label20 = new Label();
             buttonHorizont = new Button();
             button8 = new Button();
-            button9 = new Button();
-            выбратьМетодToolStripMenuItem = new ToolStripMenuItem();
-            освещениеГуроToolStripMenuItem = new ToolStripMenuItem();
+            отрисовкаБезГранейToolStripMenuItem = new ToolStripMenuItem();
+            zBufferToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown15).BeginInit();
@@ -577,6 +578,20 @@ namespace Lab9
             загрузитьToolStripMenuItem.Text = "Загрузить";
             загрузитьToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
+            // выбратьМетодToolStripMenuItem
+            // 
+            выбратьМетодToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { освещениеГуроToolStripMenuItem, отрисовкаБезГранейToolStripMenuItem, zBufferToolStripMenuItem });
+            выбратьМетодToolStripMenuItem.Name = "выбратьМетодToolStripMenuItem";
+            выбратьМетодToolStripMenuItem.Size = new Size(129, 24);
+            выбратьМетодToolStripMenuItem.Text = "Выбрать метод";
+            // 
+            // освещениеГуроToolStripMenuItem
+            // 
+            освещениеГуроToolStripMenuItem.Name = "освещениеГуроToolStripMenuItem";
+            освещениеГуроToolStripMenuItem.Size = new Size(247, 26);
+            освещениеГуроToolStripMenuItem.Text = "Освещение Гуро";
+            освещениеГуроToolStripMenuItem.Click += GuroToolStripMenuItem_Click;
+            // 
             // pictureBox2
             // 
             pictureBox2.Location = new Point(1361, 41);
@@ -762,7 +777,7 @@ namespace Lab9
             // 
             // buttonHorizont
             // 
-            buttonHorizont.Location = new Point(25, 719);
+            buttonHorizont.Location = new Point(74, 719);
             buttonHorizont.Name = "buttonHorizont";
             buttonHorizont.Size = new Size(167, 63);
             buttonHorizont.TabIndex = 195;
@@ -781,36 +796,25 @@ namespace Lab9
             button8.UseVisualStyleBackColor = true;
             button8.Click += ApplyProjection_Click;
             // 
-            // button9
+            // отрисовкаБезГранейToolStripMenuItem
             // 
-            button9.Location = new Point(241, 719);
-            button9.Name = "button9";
-            button9.Size = new Size(167, 63);
-            button9.TabIndex = 197;
-            button9.Text = "Z Buffer";
-            button9.UseVisualStyleBackColor = true;
-            button9.Click += button9_Click;
+            отрисовкаБезГранейToolStripMenuItem.Name = "отрисовкаБезГранейToolStripMenuItem";
+            отрисовкаБезГранейToolStripMenuItem.Size = new Size(247, 26);
+            отрисовкаБезГранейToolStripMenuItem.Text = "Отрисовка без граней";
+            отрисовкаБезГранейToolStripMenuItem.Click += buttonNonFace_Click;
             // 
-            // выбратьМетодToolStripMenuItem
+            // zBufferToolStripMenuItem
             // 
-            выбратьМетодToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { освещениеГуроToolStripMenuItem });
-            выбратьМетодToolStripMenuItem.Name = "выбратьМетодToolStripMenuItem";
-            выбратьМетодToolStripMenuItem.Size = new Size(129, 24);
-            выбратьМетодToolStripMenuItem.Text = "Выбрать метод";
-            // 
-            // освещениеГуроToolStripMenuItem
-            // 
-            освещениеГуроToolStripMenuItem.Name = "освещениеГуроToolStripMenuItem";
-            освещениеГуроToolStripMenuItem.Size = new Size(224, 26);
-            освещениеГуроToolStripMenuItem.Text = "Освещение Гуро";
-            освещениеГуроToolStripMenuItem.Click += GuroToolStripMenuItem_Click;
+            zBufferToolStripMenuItem.Name = "zBufferToolStripMenuItem";
+            zBufferToolStripMenuItem.Size = new Size(247, 26);
+            zBufferToolStripMenuItem.Text = "Z buffer";
+            zBufferToolStripMenuItem.Click += button9_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1823, 803);
-            Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(buttonHorizont);
             Controls.Add(label20);
@@ -972,8 +976,9 @@ namespace Lab9
         private Label label20;
         private Button buttonHorizont;
         private Button button8;
-        private Button button9;
         private ToolStripMenuItem выбратьМетодToolStripMenuItem;
         private ToolStripMenuItem освещениеГуроToolStripMenuItem;
+        private ToolStripMenuItem отрисовкаБезГранейToolStripMenuItem;
+        private ToolStripMenuItem zBufferToolStripMenuItem;
     }
 }

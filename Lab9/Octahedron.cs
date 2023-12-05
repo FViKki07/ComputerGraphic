@@ -13,7 +13,7 @@ namespace Lab9
         public Color Color { get; set; }
         public Octahedron(double size)
         {
-            Color = Color.LightCoral;
+            Color = Color.LightSkyBlue;
             vertices = new PointZ[6];
 
             vertices[0] = new PointZ(-size / 2, 0, 0);

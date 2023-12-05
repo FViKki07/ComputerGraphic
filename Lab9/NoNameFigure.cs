@@ -18,7 +18,7 @@ namespace Lab9
         public Color Color { get; set; }
         public NoNameFigure(List<PointZ> points, List<List<int>> p)
         {
-            Color = Color.LightCoral;
+            Color = Color.LightSkyBlue;
             vertices = points.ToArray();
             polygons = p;
         }

@@ -282,10 +282,11 @@ namespace Lab9
             zB = false;
             figure = true;
             non_face = false;
+            guro = false;
             GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            DrawAxis(g1, GetProjectionAxis());
+            //DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
 
@@ -297,7 +298,7 @@ namespace Lab9
             currentPolyhedron.Apply(Transform.Scale(C, C, C));
 
             DrawingSelection(currentPolyhedron);
-            DrawAxis(g1, GetProjectionAxis());
+            // DrawAxis(g1, GetProjectionAxis());
 
             pictureBox1.Invalidate();
         }
@@ -311,7 +312,7 @@ namespace Lab9
 
             DrawingSelection(currentPolyhedron);
 
-            DrawAxis(g1, GetProjectionAxis());
+            //DrawAxis(g1, GetProjectionAxis());
 
             pictureBox1.Invalidate();
         }
@@ -405,42 +406,45 @@ namespace Lab9
                     }
                     break;
                 case Keys.Q:
-                    camera.Position += new PointZ(0, 0, -0.5f);
-                    //currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, 0.5f)));
+                    //camera.Position += new PointZ(0, 0, -0.5f);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, 0.5f)));
                     break;
                 case Keys.E:
-                    camera.Position += new PointZ(0, 0, 0.5f);
-                    //currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
+                    //camera.Position += new PointZ(0, 0, 0.5f);
+                    currentPolyhedron.Apply(Transform.Translate(new PointZ(0, 0, -0.5f)));
                     break;
                 case Keys.F:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.move(new PointZ(-0.5f, 0, 0));
+                        //camera.move(new PointZ(-0.5f, 0, 0));
+                        currentPolyhedron.Apply(Transform.RotateX(0) * Transform.RotateY(-10.0 / 180 * Math.PI) * Transform.RotateZ(0));
                     }
                     break;
                 case Keys.H:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.move(new PointZ(0.5f, 0, 0));
+                        currentPolyhedron.Apply(Transform.RotateX(0) * Transform.RotateY(10.0 / 180 * Math.PI) * Transform.RotateZ(0));
+
                     }
                     break;
                 case Keys.T:
                     if (Math.Abs(camera.Rotation) < 90)
                     {
-                        camera.move(new PointZ(0, 0.5f, 0));
+                        currentPolyhedron.Apply(Transform.RotateX(10.0 / 180 * Math.PI) * Transform.RotateY(0) * Transform.RotateZ(0));
                     }
                     break;
                 case Keys.G:
                     if (Math.Abs(camera.Rotation) <= 90)
                     {
-                        camera.move(new PointZ(0, -0.5f, 0));
+
+                        currentPolyhedron.Apply(Transform.RotateX(-10.0 / 180 * Math.PI) * Transform.RotateY(0) * Transform.RotateZ(0));
                     }
                     break;
             }
             g1.Clear(Color.White);
             //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawingSelection(currentPolyhedron);
-            DrawAxis(g1, GetProjectionAxis());
+            //DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -451,7 +455,7 @@ namespace Lab9
             Reflect();
             //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawingSelection(currentPolyhedron);
-            DrawAxis(g1, GetProjectionAxis());
+            //DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
         private void ApplyProjection_Click(object sender, EventArgs e)
@@ -489,7 +493,7 @@ namespace Lab9
             RotateLine();
 
             DrawingSelection(currentPolyhedron);
-            DrawAxis(g1, GetProjectionAxis());
+            //DrawAxis(g1, GetProjectionAxis());
 
             pictureBox1.Invalidate();
 
@@ -1069,7 +1073,7 @@ namespace Lab9
                     DrawBufferZ(ref ZBuffer, pictureBox1.Width, pictureBox1.Height, a, b, c);
                 }
             }
-            currentPolyhedron = new NoNameFigure(pointZ.ToList(),indpolygons );
+            currentPolyhedron = new NoNameFigure(pointZ.ToList(), indpolygons);
         }
 
         private void buttonNonFace_Click(object sender, EventArgs e)
@@ -1138,8 +1142,9 @@ namespace Lab9
                     }
                     var lightDirection = (light.position - currentVert.Coordinate).Normalize();
                     var dotpro = PointZ.DotProduct(currentVert.Normal, lightDirection);
-                    if(dotpro != 0 ) { 
-                        var b = 4; 
+                    if (dotpro != 0)
+                    {
+                        var b = 4;
                     }
                     var cosLambert = Math.Max(0, dotpro);//проверить, что тут до 1
 
@@ -1159,6 +1164,7 @@ namespace Lab9
         private void GuroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             guro = true;
+            g1.Clear(Color.White);
             CalculateNormal(light);
             pictureBox1.Invalidate();
         }

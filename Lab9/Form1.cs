@@ -1062,8 +1062,8 @@ namespace Lab9
                 for (int i = 1; i < verge.Count - 1; ++i)
                 {
                     var a = verge[0].vert;
-                    var b = verge[1].vert;
-                    var c = verge[2].vert;
+                    var b = verge[i].vert;
+                    var c = verge[i + 1].vert;
 
                     //var a = new Vertex(verge[0], new PointZ(), Color.FromArgb(k2, k, k3));
                     //var b = new Vertex(verge[i], new PointZ(), Color.FromArgb(k2, k, k3));
@@ -1080,6 +1080,7 @@ namespace Lab9
         {
             non_face = true;
             zB = false;
+            guro = false;
             g1.Clear(Color.White);
             figure = true;
             //GetCurrentPolyhedron(GetProjection());
@@ -1094,6 +1095,7 @@ namespace Lab9
             camera = new Camera(new PointZ(0, 0, 1), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             non_face = false;
             zB = true;
+            guro = false;
             g1.Clear(Color.White);
             figure = true;
             //GetCurrentPolyhedron(GetProjection());
@@ -1150,8 +1152,8 @@ namespace Lab9
 
                     //посмотреть, что тут до 255
                     int red = (int)(currentPolyhedron.Color.R * cosLambert);
-                    int green = (int)(currentPolyhedron.Color.G * cosLambert);
-                    int blue = (int)(currentPolyhedron.Color.B * cosLambert);
+                    int green = (int)(currentPolyhedron.Color.G * cosLambert) ;
+                    int blue = (int)(currentPolyhedron.Color.B * cosLambert) ;
 
                     currentVert.Color = Color.FromArgb(red, green, blue);
 
@@ -1164,8 +1166,12 @@ namespace Lab9
         private void GuroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             guro = true;
+            zB = false;
+            non_face = false;
+            figure = true;
             g1.Clear(Color.White);
             CalculateNormal(light);
+            figure = false;
             pictureBox1.Invalidate();
         }
     }

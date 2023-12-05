@@ -214,7 +214,7 @@ namespace Lab9
                 }
             }
         }
-        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraForward)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
             foreach (var v in cur.getPolygons())
             {
@@ -242,7 +242,7 @@ namespace Lab9
                     normal.Z = -normal.Z;
                 }
 
-                if (PointZ.DotProduct(normal, CameraForward - p1) > 0)
+                if (PointZ.DotProduct(normal, CameraPosition) + PointZ.DotProduct(normal, p1) < 0)
                 {
                     for (int i = 0; i < v.Count; i++)
                     {
@@ -260,7 +260,7 @@ namespace Lab9
             {
                 if (non_face)
                 {
-                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.forward);
+                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.Position);
                 }
                 else if (zB)
                 {
@@ -1086,7 +1086,7 @@ namespace Lab9
             //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            DrawAxis(g1, GetProjection());
+           // DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -1101,7 +1101,7 @@ namespace Lab9
             //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            DrawAxis(g1, GetProjection());
+            //DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 

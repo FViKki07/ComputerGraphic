@@ -8,6 +8,7 @@ namespace Lab9
 {
     interface Polyhedron
     {
+        public Color Color { get; set; }
         void Draw(Graphics g, Camera camera, Transform projection, int width, int height);
         public List<List<int>> getPolygons();
         public PointZ[] getVertice();

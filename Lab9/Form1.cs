@@ -34,7 +34,8 @@ namespace Lab9
         bool figure;
         Camera camera;
         public static bool cameraUse;
-
+        Light light;
+        bool guro;
         bool non_face;
 
         public Form1()
@@ -59,13 +60,14 @@ namespace Lab9
             non_face = false;
             zB = false;
             points = new List<PointZ>();
-
+            guro = false;
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
 
 
             DrawAxis(g1, Transform.IsometricProjection());
             camera = new Camera(new PointZ(0, 0, 2), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
+            light = new Light(new PointZ(0, 0, 2), Color.Orange);
         }
 
         //Рисует координатные оси 
@@ -263,6 +265,10 @@ namespace Lab9
                 else if (zB)
                 {
                     zBuf();
+                }
+                else if (guro)
+                {
+                    CalculateNormal(light);
                 }
                 else
                 {
@@ -1018,7 +1024,52 @@ namespace Lab9
                 }
             }
 
+            currentPolyhedron = new NoNameFigure(pointZ.ToList(), indpolygons);
+        }
 
+        public void zBufForGuro()
+        {
+            double[,] ZBuffer = new double[pictureBox1.Width, pictureBox1.Height];
+
+            for (int j = 0; j < pictureBox1.Height; ++j)
+                for (int i = 0; i < pictureBox1.Width; ++i)
+                    ZBuffer[i, j] = double.MaxValue;
+            var indpolygons = currentPolyhedron.getPolygons();
+
+            var pointZ = currentPolyhedron.getVertice();
+            List<List<PointZ>> points = new List<List<PointZ>>();
+
+            for (int i = 0; i < indpolygons.Count; i++)
+            {
+                if (indpolygons[i].Count() == 4)
+                {
+                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]], pointZ[indpolygons[i][3]] });
+
+                }
+                else
+                    points.Add(new List<PointZ> { pointZ[indpolygons[i][0]], pointZ[indpolygons[i][1]], pointZ[indpolygons[i][2]] });
+            }
+
+            Random r = new Random(256);
+
+            foreach (var verge in points)
+            {
+
+                for (int i = 1; i < verge.Count - 1; ++i)
+                {
+                    var a = verge[0].vert;
+                    var b = verge[1].vert;
+                    var c = verge[2].vert;
+
+                    //var a = new Vertex(verge[0], new PointZ(), Color.FromArgb(k2, k, k3));
+                    //var b = new Vertex(verge[i], new PointZ(), Color.FromArgb(k2, k, k3));
+                    //var c = new Vertex(verge[i + 1], new PointZ(), Color.FromArgb(k2, k, k3));
+                    // g1.DrawTriangle(a, b, c);
+                    //Graphics3D ggg = new Graphics3D(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, new PointZ(0, 0, 1));
+                    DrawBufferZ(ref ZBuffer, pictureBox1.Width, pictureBox1.Height, a, b, c);
+                }
+            }
+            currentPolyhedron = new NoNameFigure(pointZ.ToList(),indpolygons );
         }
 
         private void buttonNonFace_Click(object sender, EventArgs e)
@@ -1052,6 +1103,64 @@ namespace Lab9
         {
             FloatingHorizon form = new FloatingHorizon();
             form.Show();
+        }
+
+        void CalculateNormal(Light light)
+        {
+            var polygons = currentPolyhedron.getPolygons();
+            var vertices = currentPolyhedron.getVertice();
+            foreach (var v in polygons)
+            {
+                PointZ v0 = vertices[v[0]];
+                PointZ v1 = vertices[v[1]];
+                PointZ v2 = vertices[v[2]];
+
+                PointZ edge1 = v1 - v0;
+                PointZ edge2 = v2 - v0;
+
+                PointZ normal = PointZ.CrossProduct(edge1, edge2);
+
+                for (int i = 0; i < v.Count(); i++)
+                {
+                    var currentVert = vertices[v[i]].vert;
+                    currentVert.Coordinate = vertices[v[i]];
+                    if (currentVert.Countnormal == 0)
+                    {
+                        currentVert.Countnormal = 1;
+                        currentVert.Normal = normal.Normalize();
+                    }
+                    else
+                    {
+                        currentVert.Countnormal += 1;
+                        currentVert.Normal += normal;
+                        currentVert.Normal /= currentVert.Countnormal;
+                        currentVert.Normal = currentVert.Normal.Normalize();
+                    }
+                    var lightDirection = (light.position - currentVert.Coordinate).Normalize();
+                    var dotpro = PointZ.DotProduct(currentVert.Normal, lightDirection);
+                    if(dotpro != 0 ) { 
+                        var b = 4; 
+                    }
+                    var cosLambert = Math.Max(0, dotpro);//проверить, что тут до 1
+
+                    //посмотреть, что тут до 255
+                    int red = (int)(currentPolyhedron.Color.R * cosLambert);
+                    int green = (int)(currentPolyhedron.Color.G * cosLambert);
+                    int blue = (int)(currentPolyhedron.Color.B * cosLambert);
+
+                    currentVert.Color = Color.FromArgb(red, green, blue);
+
+                }
+            }
+
+            zBufForGuro();
+        }
+
+        private void GuroToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            guro = true;
+            CalculateNormal(light);
+            pictureBox1.Invalidate();
         }
     }
 }

@@ -10,10 +10,11 @@ namespace Lab9
     {
         private PointZ[] vertices; // 4 вершины, 4 грани
         private List<List<int>> polygons;
-        public Color color { get; set; }
+        public Color Color { get; set; }
 
         public Tetrahedron(double size)
         {
+            Color = Color.LightSkyBlue;
             vertices = new PointZ[4];
             polygons = new List<List<int>>();
             double h = Math.Sqrt(2.0 / 3.0) * size;
@@ -27,7 +28,7 @@ namespace Lab9
             polygons.Add(new List<int> { 1, 3, 0 });
             polygons.Add(new List<int> { 2, 3, 1 });
             polygons.Add(new List<int> { 0, 3, 2 });
-            color = Color.Violet;
+            
         }
 
         public void Draw(Graphics g,Camera camera, Transform projection, int width, int height)

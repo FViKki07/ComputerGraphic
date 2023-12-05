@@ -10,9 +10,10 @@ namespace Lab9
     {
         private PointZ[] vertices; // 6 вершин, 8 граней
         private List<List<int>> polygons;
-
+        public Color Color { get; set; }
         public Octahedron(double size)
         {
+            Color = Color.LightCoral;
             vertices = new PointZ[6];
 
             vertices[0] = new PointZ(-size / 2, 0, 0);

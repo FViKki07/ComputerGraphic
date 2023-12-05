@@ -15,15 +15,18 @@ namespace Lab9
 
         private PointZ[] vertices; // 6 вершин, 8 граней
         List<List<int>> polygons;
-
+        public Color Color { get; set; }
         public NoNameFigure(List<PointZ> points, List<List<int>> p)
         {
+            Color = Color.LightCoral;
             vertices = points.ToArray();
             polygons = p;
         }
 
         public NoNameFigure(List<PointZ> points, List<List<int>> p, double size)
         {
+
+            Color = Color.LightCoral;
             vertices = points.ToArray();
             polygons = p;
             for (int i = 0; i < vertices.Count(); i++)

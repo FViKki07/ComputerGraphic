@@ -97,6 +97,8 @@ namespace Lab9
             buttonHorizont = new Button();
             button8 = new Button();
             button9 = new Button();
+            выбратьМетодToolStripMenuItem = new ToolStripMenuItem();
+            освещениеГуроToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown15).BeginInit();
@@ -126,9 +128,10 @@ namespace Lab9
             // 
             // button4
             // 
-            button4.Location = new Point(134, 505);
+            button4.Location = new Point(153, 673);
+            button4.Margin = new Padding(3, 4, 3, 4);
             button4.Name = "button4";
-            button4.Size = new Size(134, 23);
+            button4.Size = new Size(153, 31);
             button4.TabIndex = 172;
             button4.Text = "Применить";
             button4.UseVisualStyleBackColor = true;
@@ -137,36 +140,37 @@ namespace Lab9
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(71, 476);
+            label13.Location = new Point(81, 635);
             label13.Name = "label13";
-            label13.Size = new Size(32, 15);
+            label13.Size = new Size(39, 20);
             label13.TabIndex = 171;
             label13.Text = "угол";
             // 
             // numericUpDown17
             // 
             numericUpDown17.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown17.Location = new Point(178, 470);
+            numericUpDown17.Location = new Point(203, 627);
+            numericUpDown17.Margin = new Padding(3, 4, 3, 4);
             numericUpDown17.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown17.Name = "numericUpDown17";
-            numericUpDown17.Size = new Size(47, 23);
+            numericUpDown17.Size = new Size(54, 27);
             numericUpDown17.TabIndex = 170;
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(65, 450);
+            label11.Location = new Point(74, 600);
             label11.Name = "label11";
-            label11.Size = new Size(47, 15);
+            label11.Size = new Size(59, 20);
             label11.TabIndex = 169;
             label11.Text = "2 точка";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(65, 413);
+            label12.Location = new Point(74, 551);
             label12.Name = "label12";
-            label12.Size = new Size(47, 15);
+            label12.Size = new Size(59, 20);
             label12.TabIndex = 168;
             label12.Text = "1 точка";
             // 
@@ -174,77 +178,82 @@ namespace Lab9
             // 
             numericUpDown14.DecimalPlaces = 2;
             numericUpDown14.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown14.Location = new Point(239, 444);
+            numericUpDown14.Location = new Point(273, 592);
+            numericUpDown14.Margin = new Padding(3, 4, 3, 4);
             numericUpDown14.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown14.Name = "numericUpDown14";
-            numericUpDown14.Size = new Size(47, 23);
+            numericUpDown14.Size = new Size(54, 27);
             numericUpDown14.TabIndex = 167;
             // 
             // numericUpDown15
             // 
             numericUpDown15.DecimalPlaces = 2;
             numericUpDown15.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown15.Location = new Point(181, 444);
+            numericUpDown15.Location = new Point(207, 592);
+            numericUpDown15.Margin = new Padding(3, 4, 3, 4);
             numericUpDown15.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown15.Name = "numericUpDown15";
-            numericUpDown15.Size = new Size(49, 23);
+            numericUpDown15.Size = new Size(56, 27);
             numericUpDown15.TabIndex = 166;
             // 
             // numericUpDown16
             // 
             numericUpDown16.DecimalPlaces = 2;
             numericUpDown16.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown16.Location = new Point(121, 444);
+            numericUpDown16.Location = new Point(138, 592);
+            numericUpDown16.Margin = new Padding(3, 4, 3, 4);
             numericUpDown16.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown16.Name = "numericUpDown16";
-            numericUpDown16.Size = new Size(49, 23);
+            numericUpDown16.Size = new Size(56, 27);
             numericUpDown16.TabIndex = 165;
             // 
             // numericUpDown11
             // 
             numericUpDown11.DecimalPlaces = 2;
             numericUpDown11.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown11.Location = new Point(240, 411);
+            numericUpDown11.Location = new Point(274, 548);
+            numericUpDown11.Margin = new Padding(3, 4, 3, 4);
             numericUpDown11.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown11.Name = "numericUpDown11";
-            numericUpDown11.Size = new Size(47, 23);
+            numericUpDown11.Size = new Size(54, 27);
             numericUpDown11.TabIndex = 164;
             // 
             // numericUpDown12
             // 
             numericUpDown12.DecimalPlaces = 2;
             numericUpDown12.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown12.Location = new Point(181, 411);
+            numericUpDown12.Location = new Point(207, 548);
+            numericUpDown12.Margin = new Padding(3, 4, 3, 4);
             numericUpDown12.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown12.Name = "numericUpDown12";
-            numericUpDown12.Size = new Size(49, 23);
+            numericUpDown12.Size = new Size(56, 27);
             numericUpDown12.TabIndex = 163;
             // 
             // numericUpDown13
             // 
             numericUpDown13.DecimalPlaces = 2;
             numericUpDown13.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown13.Location = new Point(121, 411);
+            numericUpDown13.Location = new Point(138, 548);
+            numericUpDown13.Margin = new Padding(3, 4, 3, 4);
             numericUpDown13.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown13.Name = "numericUpDown13";
-            numericUpDown13.Size = new Size(49, 23);
+            numericUpDown13.Size = new Size(56, 27);
             numericUpDown13.TabIndex = 162;
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(71, 383);
+            label10.Location = new Point(81, 511);
             label10.Name = "label10";
-            label10.Size = new Size(224, 15);
+            label10.Size = new Size(286, 20);
             label10.TabIndex = 161;
             label10.Text = "Поворот вокруг произвольной прямой\r\n";
             // 
             // button3
             // 
-            button3.Location = new Point(222, 159);
-            button3.Margin = new Padding(3, 2, 3, 2);
+            button3.Location = new Point(254, 212);
             button3.Name = "button3";
-            button3.Size = new Size(135, 22);
+            button3.Size = new Size(154, 29);
             button3.TabIndex = 160;
             button3.Text = "Применить";
             button3.UseVisualStyleBackColor = true;
@@ -254,18 +263,17 @@ namespace Lab9
             // 
             comboBox2.FormattingEnabled = true;
             comboBox2.Items.AddRange(new object[] { "Отражение по X", "Отражение по Y", "Отражение по Z" });
-            comboBox2.Location = new Point(222, 131);
-            comboBox2.Margin = new Padding(3, 2, 3, 2);
+            comboBox2.Location = new Point(254, 175);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(135, 23);
+            comboBox2.Size = new Size(154, 28);
             comboBox2.TabIndex = 159;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(222, 113);
+            label9.Location = new Point(254, 151);
             label9.Name = "label9";
-            label9.Size = new Size(72, 15);
+            label9.Size = new Size(91, 20);
             label9.TabIndex = 158;
             label9.Text = "Отражение:";
             // 
@@ -273,16 +281,18 @@ namespace Lab9
             // 
             ProjectionComboBox.FormattingEnabled = true;
             ProjectionComboBox.Items.AddRange(new object[] { "Перспективная", "Изометрическая", "Ортогональная XY", "Ортогональная XZ", "Ортогональная YZ" });
-            ProjectionComboBox.Location = new Point(222, 45);
+            ProjectionComboBox.Location = new Point(254, 60);
+            ProjectionComboBox.Margin = new Padding(3, 4, 3, 4);
             ProjectionComboBox.Name = "ProjectionComboBox";
-            ProjectionComboBox.Size = new Size(135, 23);
+            ProjectionComboBox.Size = new Size(154, 28);
             ProjectionComboBox.TabIndex = 157;
             // 
             // button2
             // 
-            button2.Location = new Point(139, 344);
+            button2.Location = new Point(159, 459);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(134, 23);
+            button2.Size = new Size(153, 31);
             button2.TabIndex = 156;
             button2.Text = "Применить";
             button2.UseVisualStyleBackColor = true;
@@ -291,17 +301,18 @@ namespace Lab9
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(33, 113);
+            label8.Location = new Point(38, 151);
             label8.Name = "label8";
-            label8.Size = new Size(144, 15);
+            label8.Size = new Size(180, 20);
             label8.TabIndex = 155;
             label8.Text = "Масштаб отн-но центра:";
             // 
             // ApplyScaleCenter
             // 
-            ApplyScaleCenter.Location = new Point(34, 157);
+            ApplyScaleCenter.Location = new Point(39, 209);
+            ApplyScaleCenter.Margin = new Padding(3, 4, 3, 4);
             ApplyScaleCenter.Name = "ApplyScaleCenter";
-            ApplyScaleCenter.Size = new Size(135, 23);
+            ApplyScaleCenter.Size = new Size(154, 31);
             ApplyScaleCenter.TabIndex = 154;
             ApplyScaleCenter.Text = "Применить";
             ApplyScaleCenter.UseVisualStyleBackColor = true;
@@ -311,29 +322,30 @@ namespace Lab9
             // 
             numericUpDown10.DecimalPlaces = 1;
             numericUpDown10.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown10.Location = new Point(33, 131);
+            numericUpDown10.Location = new Point(38, 175);
+            numericUpDown10.Margin = new Padding(3, 4, 3, 4);
             numericUpDown10.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown10.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown10.Name = "numericUpDown10";
-            numericUpDown10.Size = new Size(136, 23);
+            numericUpDown10.Size = new Size(155, 27);
             numericUpDown10.TabIndex = 153;
             numericUpDown10.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(58, 302);
+            label6.Location = new Point(66, 403);
             label6.Name = "label6";
-            label6.Size = new Size(59, 15);
+            label6.Size = new Size(72, 20);
             label6.TabIndex = 152;
             label6.Text = "Масштаб";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(60, 265);
+            label5.Location = new Point(69, 353);
             label5.Name = "label5";
-            label5.Size = new Size(55, 15);
+            label5.Size = new Size(70, 20);
             label5.TabIndex = 151;
             label5.Text = "Поворот";
             // 
@@ -341,11 +353,12 @@ namespace Lab9
             // 
             numericUpDown7.DecimalPlaces = 1;
             numericUpDown7.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown7.Location = new Point(126, 299);
+            numericUpDown7.Location = new Point(144, 399);
+            numericUpDown7.Margin = new Padding(3, 4, 3, 4);
             numericUpDown7.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown7.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown7.Name = "numericUpDown7";
-            numericUpDown7.Size = new Size(47, 23);
+            numericUpDown7.Size = new Size(54, 27);
             numericUpDown7.TabIndex = 150;
             numericUpDown7.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -353,11 +366,12 @@ namespace Lab9
             // 
             numericUpDown8.DecimalPlaces = 1;
             numericUpDown8.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown8.Location = new Point(184, 299);
+            numericUpDown8.Location = new Point(210, 399);
+            numericUpDown8.Margin = new Padding(3, 4, 3, 4);
             numericUpDown8.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown8.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown8.Name = "numericUpDown8";
-            numericUpDown8.Size = new Size(49, 23);
+            numericUpDown8.Size = new Size(56, 27);
             numericUpDown8.TabIndex = 149;
             numericUpDown8.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -365,50 +379,54 @@ namespace Lab9
             // 
             numericUpDown9.DecimalPlaces = 1;
             numericUpDown9.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDown9.Location = new Point(242, 299);
+            numericUpDown9.Location = new Point(277, 399);
+            numericUpDown9.Margin = new Padding(3, 4, 3, 4);
             numericUpDown9.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
             numericUpDown9.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             numericUpDown9.Name = "numericUpDown9";
-            numericUpDown9.Size = new Size(49, 23);
+            numericUpDown9.Size = new Size(56, 27);
             numericUpDown9.TabIndex = 148;
             numericUpDown9.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // numericUpDown4
             // 
             numericUpDown4.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown4.Location = new Point(126, 262);
+            numericUpDown4.Location = new Point(144, 349);
+            numericUpDown4.Margin = new Padding(3, 4, 3, 4);
             numericUpDown4.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown4.Minimum = new decimal(new int[] { 360, 0, 0, int.MinValue });
             numericUpDown4.Name = "numericUpDown4";
-            numericUpDown4.Size = new Size(47, 23);
+            numericUpDown4.Size = new Size(54, 27);
             numericUpDown4.TabIndex = 147;
             // 
             // numericUpDown5
             // 
             numericUpDown5.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown5.Location = new Point(184, 262);
+            numericUpDown5.Location = new Point(210, 349);
+            numericUpDown5.Margin = new Padding(3, 4, 3, 4);
             numericUpDown5.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown5.Minimum = new decimal(new int[] { 360, 0, 0, int.MinValue });
             numericUpDown5.Name = "numericUpDown5";
-            numericUpDown5.Size = new Size(49, 23);
+            numericUpDown5.Size = new Size(56, 27);
             numericUpDown5.TabIndex = 146;
             // 
             // numericUpDown6
             // 
             numericUpDown6.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            numericUpDown6.Location = new Point(242, 262);
+            numericUpDown6.Location = new Point(277, 349);
+            numericUpDown6.Margin = new Padding(3, 4, 3, 4);
             numericUpDown6.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             numericUpDown6.Minimum = new decimal(new int[] { 360, 0, 0, int.MinValue });
             numericUpDown6.Name = "numericUpDown6";
-            numericUpDown6.Size = new Size(49, 23);
+            numericUpDown6.Size = new Size(56, 27);
             numericUpDown6.TabIndex = 145;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(52, 224);
+            label4.Location = new Point(59, 299);
             label4.Name = "label4";
-            label4.Size = new Size(67, 15);
+            label4.Size = new Size(83, 20);
             label4.TabIndex = 144;
             label4.Text = "Смещение";
             label4.Click += button1_Click;
@@ -416,9 +434,9 @@ namespace Lab9
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(259, 194);
+            label3.Location = new Point(296, 259);
             label3.Name = "label3";
-            label3.Size = new Size(14, 15);
+            label3.Size = new Size(18, 20);
             label3.TabIndex = 143;
             label3.Text = "Z";
             label3.Click += button1_Click;
@@ -426,9 +444,9 @@ namespace Lab9
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(200, 194);
+            label2.Location = new Point(229, 259);
             label2.Name = "label2";
-            label2.Size = new Size(14, 15);
+            label2.Size = new Size(17, 20);
             label2.TabIndex = 142;
             label2.Text = "Y";
             label2.Click += button1_Click;
@@ -436,9 +454,9 @@ namespace Lab9
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(141, 194);
+            label7.Location = new Point(161, 259);
             label7.Name = "label7";
-            label7.Size = new Size(14, 15);
+            label7.Size = new Size(18, 20);
             label7.TabIndex = 141;
             label7.Text = "X";
             label7.Click += button1_Click;
@@ -447,49 +465,53 @@ namespace Lab9
             // 
             numericUpDown3.DecimalPlaces = 2;
             numericUpDown3.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown3.Location = new Point(245, 223);
+            numericUpDown3.Location = new Point(280, 297);
+            numericUpDown3.Margin = new Padding(3, 4, 3, 4);
             numericUpDown3.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown3.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown3.Name = "numericUpDown3";
-            numericUpDown3.Size = new Size(47, 23);
+            numericUpDown3.Size = new Size(54, 27);
             numericUpDown3.TabIndex = 140;
             // 
             // numericUpDown2
             // 
             numericUpDown2.DecimalPlaces = 2;
             numericUpDown2.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown2.Location = new Point(186, 223);
+            numericUpDown2.Location = new Point(213, 297);
+            numericUpDown2.Margin = new Padding(3, 4, 3, 4);
             numericUpDown2.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown2.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown2.Name = "numericUpDown2";
-            numericUpDown2.Size = new Size(49, 23);
+            numericUpDown2.Size = new Size(56, 27);
             numericUpDown2.TabIndex = 139;
             // 
             // numericUpDown1
             // 
             numericUpDown1.DecimalPlaces = 2;
             numericUpDown1.Increment = new decimal(new int[] { 5, 0, 0, 131072 });
-            numericUpDown1.Location = new Point(126, 223);
+            numericUpDown1.Location = new Point(144, 297);
+            numericUpDown1.Margin = new Padding(3, 4, 3, 4);
             numericUpDown1.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
             numericUpDown1.Minimum = new decimal(new int[] { 2, 0, 0, int.MinValue });
             numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(49, 23);
+            numericUpDown1.Size = new Size(56, 27);
             numericUpDown1.TabIndex = 138;
             // 
             // PerspectiveLabel
             // 
             PerspectiveLabel.AutoSize = true;
-            PerspectiveLabel.Location = new Point(222, 27);
+            PerspectiveLabel.Location = new Point(254, 36);
             PerspectiveLabel.Name = "PerspectiveLabel";
-            PerspectiveLabel.Size = new Size(124, 15);
+            PerspectiveLabel.Size = new Size(157, 20);
             PerspectiveLabel.TabIndex = 137;
             PerspectiveLabel.Text = "Выберите проекцию:";
             // 
             // button1
             // 
-            button1.Location = new Point(33, 74);
+            button1.Location = new Point(38, 99);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(136, 31);
+            button1.Size = new Size(155, 41);
             button1.TabIndex = 135;
             button1.Text = "Применить ";
             button1.UseVisualStyleBackColor = true;
@@ -498,9 +520,9 @@ namespace Lab9
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(33, 27);
+            label1.Location = new Point(38, 36);
             label1.Name = "label1";
-            label1.Size = new Size(107, 15);
+            label1.Size = new Size(133, 20);
             label1.TabIndex = 134;
             label1.Text = "Выберите фигуру:";
             // 
@@ -508,17 +530,17 @@ namespace Lab9
             // 
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Тетраэдр", "Гексаэдр", "Октаэдр" });
-            comboBox1.Location = new Point(34, 45);
+            comboBox1.Location = new Point(39, 60);
+            comboBox1.Margin = new Padding(3, 4, 3, 4);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(135, 23);
+            comboBox1.Size = new Size(154, 28);
             comboBox1.TabIndex = 133;
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(427, 31);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
+            pictureBox1.Location = new Point(488, 41);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(759, 544);
+            pictureBox1.Size = new Size(867, 725);
             pictureBox1.TabIndex = 132;
             pictureBox1.TabStop = false;
             // 
@@ -526,10 +548,11 @@ namespace Lab9
             // 
             menuStrip1.BackColor = SystemColors.ActiveBorder;
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, выбратьМетодToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1595, 24);
+            menuStrip1.Padding = new Padding(7, 3, 0, 3);
+            menuStrip1.Size = new Size(1823, 30);
             menuStrip1.TabIndex = 175;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -537,38 +560,38 @@ namespace Lab9
             // 
             файлToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { сохранитьToolStripMenuItem, загрузитьToolStripMenuItem });
             файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            файлToolStripMenuItem.Size = new Size(48, 20);
+            файлToolStripMenuItem.Size = new Size(59, 24);
             файлToolStripMenuItem.Text = "Файл";
             // 
             // сохранитьToolStripMenuItem
             // 
             сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(133, 22);
+            сохранитьToolStripMenuItem.Size = new Size(166, 26);
             сохранитьToolStripMenuItem.Text = "Сохранить";
             сохранитьToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // загрузитьToolStripMenuItem
             // 
             загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            загрузитьToolStripMenuItem.Size = new Size(133, 22);
+            загрузитьToolStripMenuItem.Size = new Size(166, 26);
             загрузитьToolStripMenuItem.Text = "Загрузить";
             загрузитьToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(1191, 31);
-            pictureBox2.Margin = new Padding(3, 2, 3, 2);
+            pictureBox2.Location = new Point(1361, 41);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(346, 231);
+            pictureBox2.Size = new Size(395, 308);
             pictureBox2.TabIndex = 176;
             pictureBox2.TabStop = false;
             pictureBox2.MouseClick += pictureBox2_MouseClick;
             // 
             // button5
             // 
-            button5.Location = new Point(1225, 476);
+            button5.Location = new Point(1400, 635);
+            button5.Margin = new Padding(3, 4, 3, 4);
             button5.Name = "button5";
-            button5.Size = new Size(97, 64);
+            button5.Size = new Size(111, 85);
             button5.TabIndex = 177;
             button5.Text = "Построить фигуру вращения";
             button5.UseVisualStyleBackColor = true;
@@ -577,10 +600,9 @@ namespace Lab9
             // button6
             // 
             button6.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point);
-            button6.Location = new Point(1225, 553);
-            button6.Margin = new Padding(3, 2, 3, 2);
+            button6.Location = new Point(1400, 737);
             button6.Name = "button6";
-            button6.Size = new Size(121, 34);
+            button6.Size = new Size(138, 45);
             button6.TabIndex = 178;
             button6.Text = "Очистить";
             button6.UseVisualStyleBackColor = true;
@@ -588,9 +610,10 @@ namespace Lab9
             // 
             // stepsNumericUpDown
             // 
-            stepsNumericUpDown.Location = new Point(1429, 296);
+            stepsNumericUpDown.Location = new Point(1633, 395);
+            stepsNumericUpDown.Margin = new Padding(3, 4, 3, 4);
             stepsNumericUpDown.Name = "stepsNumericUpDown";
-            stepsNumericUpDown.Size = new Size(131, 23);
+            stepsNumericUpDown.Size = new Size(150, 27);
             stepsNumericUpDown.TabIndex = 179;
             stepsNumericUpDown.Value = new decimal(new int[] { 13, 0, 0, 0 });
             // 
@@ -598,9 +621,9 @@ namespace Lab9
             // 
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label14.Location = new Point(1216, 299);
+            label14.Location = new Point(1390, 399);
             label14.Name = "label14";
-            label14.Size = new Size(128, 19);
+            label14.Size = new Size(160, 23);
             label14.TabIndex = 180;
             label14.Text = "Кол-во разбиений:";
             // 
@@ -608,9 +631,9 @@ namespace Lab9
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label15.Location = new Point(1216, 326);
+            label15.Location = new Point(1390, 435);
             label15.Name = "label15";
-            label15.Size = new Size(67, 19);
+            label15.Size = new Size(81, 23);
             label15.TabIndex = 182;
             label15.Text = "Функция:";
             // 
@@ -618,9 +641,9 @@ namespace Lab9
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(1225, 431);
+            label16.Location = new Point(1400, 575);
             label16.Name = "label16";
-            label16.Size = new Size(28, 19);
+            label16.Size = new Size(32, 23);
             label16.TabIndex = 183;
             label16.Text = "Y0:";
             // 
@@ -628,9 +651,9 @@ namespace Lab9
             // 
             label17.AutoSize = true;
             label17.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.Location = new Point(1225, 392);
+            label17.Location = new Point(1400, 523);
             label17.Name = "label17";
-            label17.Size = new Size(28, 19);
+            label17.Size = new Size(33, 23);
             label17.TabIndex = 184;
             label17.Text = "X0:";
             // 
@@ -638,9 +661,9 @@ namespace Lab9
             // 
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label18.Location = new Point(1390, 392);
+            label18.Location = new Point(1589, 523);
             label18.Name = "label18";
-            label18.Size = new Size(28, 19);
+            label18.Size = new Size(33, 23);
             label18.TabIndex = 186;
             label18.Text = "X1:";
             // 
@@ -648,68 +671,70 @@ namespace Lab9
             // 
             label19.AutoSize = true;
             label19.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label19.Location = new Point(1390, 431);
+            label19.Location = new Point(1589, 575);
             label19.Name = "label19";
-            label19.Size = new Size(28, 19);
+            label19.Size = new Size(32, 23);
             label19.TabIndex = 185;
             label19.Text = "Y1:";
             // 
             // y1NnumericUpDown
             // 
             y1NnumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y1NnumericUpDown.Location = new Point(1429, 431);
-            y1NnumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            y1NnumericUpDown.Location = new Point(1633, 575);
+            y1NnumericUpDown.Margin = new Padding(3, 5, 3, 5);
             y1NnumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             y1NnumericUpDown.Name = "y1NnumericUpDown";
-            y1NnumericUpDown.Size = new Size(49, 23);
+            y1NnumericUpDown.Size = new Size(56, 27);
             y1NnumericUpDown.TabIndex = 187;
             y1NnumericUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // x1NumericUpDown
             // 
             x1NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x1NumericUpDown.Location = new Point(1429, 392);
-            x1NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            x1NumericUpDown.Location = new Point(1633, 523);
+            x1NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             x1NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             x1NumericUpDown.Name = "x1NumericUpDown";
-            x1NumericUpDown.Size = new Size(49, 23);
+            x1NumericUpDown.Size = new Size(56, 27);
             x1NumericUpDown.TabIndex = 188;
             x1NumericUpDown.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // y0NumericUpDown
             // 
             y0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            y0NumericUpDown.Location = new Point(1264, 431);
-            y0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            y0NumericUpDown.Location = new Point(1445, 575);
+            y0NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             y0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             y0NumericUpDown.Name = "y0NumericUpDown";
-            y0NumericUpDown.Size = new Size(49, 23);
+            y0NumericUpDown.Size = new Size(56, 27);
             y0NumericUpDown.TabIndex = 189;
             // 
             // x0NumericUpDown
             // 
             x0NumericUpDown.Increment = new decimal(new int[] { 5, 0, 0, 0 });
-            x0NumericUpDown.Location = new Point(1264, 392);
-            x0NumericUpDown.Margin = new Padding(3, 4, 3, 4);
+            x0NumericUpDown.Location = new Point(1445, 523);
+            x0NumericUpDown.Margin = new Padding(3, 5, 3, 5);
             x0NumericUpDown.Maximum = new decimal(new int[] { 360, 0, 0, 0 });
             x0NumericUpDown.Name = "x0NumericUpDown";
-            x0NumericUpDown.Size = new Size(49, 23);
+            x0NumericUpDown.Size = new Size(56, 27);
             x0NumericUpDown.TabIndex = 190;
             x0NumericUpDown.Value = new decimal(new int[] { 10, 0, 0, 0 });
             // 
             // functiounComboBox
             // 
             functiounComboBox.FormattingEnabled = true;
-            functiounComboBox.Location = new Point(1429, 326);
+            functiounComboBox.Location = new Point(1633, 435);
+            functiounComboBox.Margin = new Padding(3, 4, 3, 4);
             functiounComboBox.Name = "functiounComboBox";
-            functiounComboBox.Size = new Size(135, 23);
+            functiounComboBox.Size = new Size(154, 28);
             functiounComboBox.TabIndex = 191;
             // 
             // button7
             // 
-            button7.Location = new Point(1390, 476);
+            button7.Location = new Point(1589, 635);
+            button7.Margin = new Padding(3, 4, 3, 4);
             button7.Name = "button7";
-            button7.Size = new Size(97, 64);
+            button7.Size = new Size(111, 85);
             button7.TabIndex = 192;
             button7.Text = "Построить график функции";
             button7.UseVisualStyleBackColor = true;
@@ -719,28 +744,27 @@ namespace Lab9
             // 
             comboBox3.FormattingEnabled = true;
             comboBox3.Items.AddRange(new object[] { "по X", "по Y", "по Z" });
-            comboBox3.Location = new Point(1429, 354);
-            comboBox3.Margin = new Padding(3, 4, 3, 4);
+            comboBox3.Location = new Point(1633, 472);
+            comboBox3.Margin = new Padding(3, 5, 3, 5);
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(135, 23);
+            comboBox3.Size = new Size(154, 28);
             comboBox3.TabIndex = 193;
             // 
             // label20
             // 
             label20.AutoSize = true;
             label20.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point);
-            label20.Location = new Point(1216, 358);
+            label20.Location = new Point(1390, 477);
             label20.Name = "label20";
-            label20.Size = new Size(104, 19);
+            label20.Size = new Size(129, 23);
             label20.TabIndex = 194;
             label20.Text = "Ось вращения:";
             // 
             // buttonHorizont
             // 
-            buttonHorizont.Location = new Point(22, 539);
-            buttonHorizont.Margin = new Padding(3, 2, 3, 2);
+            buttonHorizont.Location = new Point(25, 719);
             buttonHorizont.Name = "buttonHorizont";
-            buttonHorizont.Size = new Size(146, 47);
+            buttonHorizont.Size = new Size(167, 63);
             buttonHorizont.TabIndex = 195;
             buttonHorizont.Text = "Плавающий горизонт";
             buttonHorizont.UseVisualStyleBackColor = true;
@@ -748,9 +772,10 @@ namespace Lab9
             // 
             // button8
             // 
-            button8.Location = new Point(222, 74);
+            button8.Location = new Point(254, 99);
+            button8.Margin = new Padding(3, 4, 3, 4);
             button8.Name = "button8";
-            button8.Size = new Size(136, 31);
+            button8.Size = new Size(155, 41);
             button8.TabIndex = 196;
             button8.Text = "Применить ";
             button8.UseVisualStyleBackColor = true;
@@ -758,20 +783,33 @@ namespace Lab9
             // 
             // button9
             // 
-            button9.Location = new Point(211, 539);
-            button9.Margin = new Padding(3, 2, 3, 2);
+            button9.Location = new Point(241, 719);
             button9.Name = "button9";
-            button9.Size = new Size(146, 47);
+            button9.Size = new Size(167, 63);
             button9.TabIndex = 197;
             button9.Text = "Z Buffer";
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // выбратьМетодToolStripMenuItem
+            // 
+            выбратьМетодToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { освещениеГуроToolStripMenuItem });
+            выбратьМетодToolStripMenuItem.Name = "выбратьМетодToolStripMenuItem";
+            выбратьМетодToolStripMenuItem.Size = new Size(129, 24);
+            выбратьМетодToolStripMenuItem.Text = "Выбрать метод";
+            // 
+            // освещениеГуроToolStripMenuItem
+            // 
+            освещениеГуроToolStripMenuItem.Name = "освещениеГуроToolStripMenuItem";
+            освещениеГуроToolStripMenuItem.Size = new Size(224, 26);
+            освещениеГуроToolStripMenuItem.Text = "Освещение Гуро";
+            освещениеГуроToolStripMenuItem.Click += GuroToolStripMenuItem_Click;
+            // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1595, 602);
+            ClientSize = new Size(1823, 803);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(buttonHorizont);
@@ -835,6 +873,7 @@ namespace Lab9
             Controls.Add(pictureBox1);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form2";
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).EndInit();
@@ -934,5 +973,7 @@ namespace Lab9
         private Button buttonHorizont;
         private Button button8;
         private Button button9;
+        private ToolStripMenuItem выбратьМетодToolStripMenuItem;
+        private ToolStripMenuItem освещениеГуроToolStripMenuItem;
     }
 }

@@ -78,6 +78,11 @@ namespace Lab9
             загрузитьToolStripMenuItem = new ToolStripMenuItem();
             выбратьМетодToolStripMenuItem = new ToolStripMenuItem();
             освещениеГуроToolStripMenuItem = new ToolStripMenuItem();
+            отрисовкаБезГранейToolStripMenuItem = new ToolStripMenuItem();
+            zBufferToolStripMenuItem = new ToolStripMenuItem();
+            textureToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripMenuItem();
             pictureBox2 = new PictureBox();
             button5 = new Button();
             button6 = new Button();
@@ -98,8 +103,6 @@ namespace Lab9
             label20 = new Label();
             buttonHorizont = new Button();
             button8 = new Button();
-            отрисовкаБезГранейToolStripMenuItem = new ToolStripMenuItem();
-            zBufferToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)numericUpDown17).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown15).BeginInit();
@@ -549,7 +552,7 @@ namespace Lab9
             // 
             menuStrip1.BackColor = SystemColors.ActiveBorder;
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, выбратьМетодToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, выбратьМетодToolStripMenuItem, toolStripMenuItem1 });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 3, 0, 3);
@@ -580,7 +583,7 @@ namespace Lab9
             // 
             // выбратьМетодToolStripMenuItem
             // 
-            выбратьМетодToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { освещениеГуроToolStripMenuItem, отрисовкаБезГранейToolStripMenuItem, zBufferToolStripMenuItem });
+            выбратьМетодToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { освещениеГуроToolStripMenuItem, отрисовкаБезГранейToolStripMenuItem, zBufferToolStripMenuItem, textureToolStripMenuItem });
             выбратьМетодToolStripMenuItem.Name = "выбратьМетодToolStripMenuItem";
             выбратьМетодToolStripMenuItem.Size = new Size(129, 24);
             выбратьМетодToolStripMenuItem.Text = "Выбрать метод";
@@ -591,6 +594,41 @@ namespace Lab9
             освещениеГуроToolStripMenuItem.Size = new Size(247, 26);
             освещениеГуроToolStripMenuItem.Text = "Освещение Гуро";
             освещениеГуроToolStripMenuItem.Click += GuroToolStripMenuItem_Click;
+            // 
+            // отрисовкаБезГранейToolStripMenuItem
+            // 
+            отрисовкаБезГранейToolStripMenuItem.Name = "отрисовкаБезГранейToolStripMenuItem";
+            отрисовкаБезГранейToolStripMenuItem.Size = new Size(247, 26);
+            отрисовкаБезГранейToolStripMenuItem.Text = "Отрисовка без граней";
+            отрисовкаБезГранейToolStripMenuItem.Click += buttonNonFace_Click;
+            // 
+            // zBufferToolStripMenuItem
+            // 
+            zBufferToolStripMenuItem.Name = "zBufferToolStripMenuItem";
+            zBufferToolStripMenuItem.Size = new Size(247, 26);
+            zBufferToolStripMenuItem.Text = "Z buffer";
+            zBufferToolStripMenuItem.Click += button9_Click;
+            // 
+            // textureToolStripMenuItem
+            // 
+            textureToolStripMenuItem.Name = "textureToolStripMenuItem";
+            textureToolStripMenuItem.Size = new Size(247, 26);
+            textureToolStripMenuItem.Text = "Текстурирование";
+            textureToolStripMenuItem.Click += textureToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem3 });
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(144, 24);
+            toolStripMenuItem1.Text = "Выбрать текстуру";
+            // 
+            // toolStripMenuItem3
+            // 
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(224, 26);
+            toolStripMenuItem3.Text = "Загрузить";
+            toolStripMenuItem3.Click += LoadTextureToolStripMenuItem3_Click;
             // 
             // pictureBox2
             // 
@@ -796,20 +834,6 @@ namespace Lab9
             button8.UseVisualStyleBackColor = true;
             button8.Click += ApplyProjection_Click;
             // 
-            // отрисовкаБезГранейToolStripMenuItem
-            // 
-            отрисовкаБезГранейToolStripMenuItem.Name = "отрисовкаБезГранейToolStripMenuItem";
-            отрисовкаБезГранейToolStripMenuItem.Size = new Size(247, 26);
-            отрисовкаБезГранейToolStripMenuItem.Text = "Отрисовка без граней";
-            отрисовкаБезГранейToolStripMenuItem.Click += buttonNonFace_Click;
-            // 
-            // zBufferToolStripMenuItem
-            // 
-            zBufferToolStripMenuItem.Name = "zBufferToolStripMenuItem";
-            zBufferToolStripMenuItem.Size = new Size(247, 26);
-            zBufferToolStripMenuItem.Text = "Z buffer";
-            zBufferToolStripMenuItem.Click += button9_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -980,5 +1004,8 @@ namespace Lab9
         private ToolStripMenuItem освещениеГуроToolStripMenuItem;
         private ToolStripMenuItem отрисовкаБезГранейToolStripMenuItem;
         private ToolStripMenuItem zBufferToolStripMenuItem;
+        private ToolStripMenuItem textureToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem toolStripMenuItem3;
     }
 }

@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +21,7 @@ namespace Lab9
 {
     public partial class Form1 : Form
     {
-        bool zB;
         Random random = new Random();
-        // private ZBufferRenderer renderer;
-        // float[,] zBuffer;
-        //Color[,] colorBuffer;
         Graphics g1, g2;
         Bitmap bmp1, bmp2;
         Polyhedron currentPolyhedron;
@@ -35,14 +32,20 @@ namespace Lab9
         Camera camera;
         public static bool cameraUse;
         Light light;
+        bool zB;
         bool guro;
         bool non_face;
+        bool texturing;
+
+        Bitmap texture = new Bitmap("C:/git/Laba3/Lab9/texture4.jpg");
 
         public Form1()
         {
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
+            comboBox3.SelectedItem = comboBox3.Items[1];
+
             ProjectionComboBox.SelectedItem = ProjectionComboBox.Items[0];
             //Создаем Bitmap и Graphics для PictureBox
             bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -61,8 +64,8 @@ namespace Lab9
             zB = false;
             points = new List<PointZ>();
             guro = false;
+            texturing = false;
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
-
 
             DrawAxis(g1, Transform.IsometricProjection());
             camera = new Camera(new PointZ(0, 0, 2), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
@@ -270,6 +273,10 @@ namespace Lab9
                 {
                     CalculateNormal(light);
                 }
+                else if (texturing)
+                {
+                    zBuf();
+                }
                 else
                 {
                     currentPolyhedron.Draw(g1, camera, GetProjection(), pictureBox1.Width, pictureBox1.Height);
@@ -283,6 +290,7 @@ namespace Lab9
             figure = true;
             non_face = false;
             guro = false;
+            texturing = false;
             GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
@@ -453,9 +461,7 @@ namespace Lab9
         {
             g1.Clear(Color.White);
             Reflect();
-            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawingSelection(currentPolyhedron);
-            //DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
         private void ApplyProjection_Click(object sender, EventArgs e)
@@ -481,8 +487,6 @@ namespace Lab9
             PointZ p1 = new PointZ(X1, Y1, Z1);
             PointZ p2 = new PointZ(X2, Y2, Z2);
 
-            // p1.DrawLine(g, GetProjection(), p2,pictureBox1.Width,pictureBox1.Height, Pens.Red);
-
             double ang = (double)numericUpDown17.Value / 180 * Math.PI;
 
             currentPolyhedron.Apply(Transform.RotateLine(p1, p2, ang));
@@ -491,10 +495,7 @@ namespace Lab9
         {
             g1.Clear(Color.White);
             RotateLine();
-
             DrawingSelection(currentPolyhedron);
-            //DrawAxis(g1, GetProjectionAxis());
-
             pictureBox1.Invalidate();
 
         }
@@ -526,6 +527,10 @@ namespace Lab9
 
         private void button5_Click(object sender, EventArgs e)
         {
+            non_face = false;
+            guro = false;
+            zB = false;
+            texturing = false;
             if (points.Count >= 2)
             {
                 if (comboBox3.SelectedItem != null)
@@ -804,7 +809,6 @@ namespace Lab9
                 openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     try
                     {
                         g1.Clear(Color.White);
@@ -918,7 +922,6 @@ namespace Lab9
         }
         void DrawBufferZ(ref double[,] ZBuffer, int width, int height, Vertex first, Vertex second, Vertex third)
         {
-
             // Преобразуем вершины из трехмерного пространства в пространство экрана
             first = GetScene(first);
             second = GetScene(second);
@@ -971,20 +974,31 @@ namespace Lab9
                     if (p.Coordinate.Z < ZBuffer[(int)x, (int)y])
                     {
                         ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
+                        Color cur_сolor = p.Color;
 
-                        g1.DrawEllipse(new Pen(p.Color), (int)x, (int)y, 1, 1);
-                        g1.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                        // Получаем цвет из текстуры по текстурным координатам
+                        float u = (float)(x - l.Coordinate.X) / (float)(r.Coordinate.X - l.Coordinate.X);
+                        float v = (float)(y - f0.Coordinate.Y) / (float)(f1.Coordinate.Y - f0.Coordinate.Y);
+
+                        if (texturing) cur_сolor = GetTextureColor(u, v);
+
+                        g1.DrawEllipse(new Pen(cur_сolor), (int)x, (int)y, 1, 1);
+                        g1.FillEllipse(new SolidBrush(cur_сolor), (int)x, (int)y, 1, 1);
                         //pictureBox1.Invalidate();
                         // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
             }
         }
+        Color GetTextureColor(float u, float v)
+        {
+            int x = (int)(u * (texture.Width - 1));
+            int y = (int)(v * (texture.Height - 1));
 
+            Color textureColor = texture.GetPixel(x, y);
 
-
-
-
+            return textureColor;
+        }
         private void zBuf()
         {
             double[,] ZBuffer = new double[pictureBox1.Width, pictureBox1.Height];
@@ -1083,10 +1097,8 @@ namespace Lab9
             guro = false;
             g1.Clear(Color.White);
             figure = true;
-            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-           // DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -1096,12 +1108,11 @@ namespace Lab9
             non_face = false;
             zB = true;
             guro = false;
+            texturing = false;
             g1.Clear(Color.White);
             figure = true;
-            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            //DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -1152,17 +1163,15 @@ namespace Lab9
 
                     //посмотреть, что тут до 255
                     int red = (int)(currentPolyhedron.Color.R * cosLambert);
-                    int green = (int)(currentPolyhedron.Color.G * cosLambert) ;
-                    int blue = (int)(currentPolyhedron.Color.B * cosLambert) ;
+                    int green = (int)(currentPolyhedron.Color.G * cosLambert);
+                    int blue = (int)(currentPolyhedron.Color.B * cosLambert);
 
                     currentVert.Color = Color.FromArgb(red, green, blue);
-
                 }
             }
-
             zBufForGuro();
         }
-
+      
         private void GuroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             guro = true;
@@ -1173,6 +1182,43 @@ namespace Lab9
             CalculateNormal(light);
             figure = false;
             pictureBox1.Invalidate();
+        }
+
+        private void textureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            texturing = true;
+            guro = false;
+            zB = false;
+            non_face = false;
+            figure = true;
+            g1.Clear(Color.White);
+            DrawingSelection(currentPolyhedron);
+            figure = false;
+            pictureBox1.Invalidate();
+        }
+
+        private void LoadTextureToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Image files|*.png;*.jpg;*.jpeg;*.bmp|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var textureFilename = openFileDialog.FileName;
+                        texture = new Bitmap(textureFilename);
+                        texturing = true;
+                        DrawingSelection(currentPolyhedron);
+                        pictureBox1.Invalidate();
+                    }
+                    catch (Exception ex)
+                    {
+                        DialogResult result = MessageBox.Show($"Error loading texture: {ex.Message}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

@@ -1155,8 +1155,11 @@ namespace Lab9
                     int green = (int)(currentPolyhedron.Color.G * cosLambert) ;
                     int blue = (int)(currentPolyhedron.Color.B * cosLambert) ;
 
-                    currentVert.Color = Color.FromArgb(red, green, blue);
-
+                    if (red < 255 && red > 0 &&
+                        green < 255 && green > 0 &&
+                        blue < 255 && blue > 0)
+                        currentVert.Color = Color.FromArgb(red, green, blue);
+                    else currentVert.Color = Color.Black;
                 }
             }
 

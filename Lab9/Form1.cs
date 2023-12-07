@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +21,7 @@ namespace Lab9
 {
     public partial class Form1 : Form
     {
-        bool zB;
         Random random = new Random();
-        // private ZBufferRenderer renderer;
-        // float[,] zBuffer;
-        //Color[,] colorBuffer;
         Graphics g1, g2;
         Bitmap bmp1, bmp2;
         Polyhedron currentPolyhedron;
@@ -35,16 +32,22 @@ namespace Lab9
         Camera camera;
         public static bool cameraUse;
         Light light;
+        bool zB;
         bool guro;
         bool non_face;
+        bool texturing;
+
+        Bitmap texture = new Bitmap("C:/git/Laba3/Lab9/texture4.jpg");
 
         public Form1()
         {
             InitializeComponent();
             comboBox1.SelectedItem = comboBox1.Items[0];
             comboBox2.SelectedItem = comboBox2.Items[0];
+            comboBox3.SelectedItem = comboBox3.Items[1];
+
             ProjectionComboBox.SelectedItem = ProjectionComboBox.Items[0];
-            //Создаем Bitmap и Graphics для PictureBox
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ Bitmap пїЅ Graphics пїЅпїЅпїЅ PictureBox
             bmp1 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             g1 = Graphics.FromImage(bmp1);
 
@@ -61,8 +64,8 @@ namespace Lab9
             zB = false;
             points = new List<PointZ>();
             guro = false;
+            texturing = false;
             functiounComboBox.Items.AddRange(new object[] { "10 * sin(x) + 10 * sin(y)", "10 * cos(x) * cos(y)", "x^2 / 100" });
-
 
             DrawAxis(g1, Transform.IsometricProjection());
             camera = new Camera(new PointZ(0, 0, 2), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
@@ -70,7 +73,7 @@ namespace Lab9
             light = new Light(new PointZ(0, 0, 2), Color.Orange);
         }
 
-        //Рисует координатные оси 
+        //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ 
         private void DrawAxis(Graphics g, Transform t)
         {
             List<PointZ> p = new List<PointZ>();
@@ -96,24 +99,24 @@ namespace Lab9
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
-                    case "Перспективная":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             return Transform.PerspectiveProjection(2, camera);
 
                         }
-                    case "Изометрическая":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             return Transform.IsometricProjection();
                         }
-                    case "Ортогональная XY":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XY":
                         {
                             return Transform.OrthographicXYProjection();
                         }
-                    case "Ортогональная XZ":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XZ":
                         {
                             return Transform.OrthographicXZProjection();
                         }
-                    case "Ортогональная YZ":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ YZ":
                         {
                             return Transform.OrthographicYZProjection();
                         }
@@ -121,12 +124,12 @@ namespace Lab9
                         {
                             return Transform.IsometricProjection();
                         }/*
-                    case "Изометрическая":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             return Transform.IsometricProjection();
                         }
 
-                    case "Перcпективная":
+                    case "пїЅпїЅпїЅcпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             var projection = Transform.PerspectiveProjection(-0.1, 0.1, -0.1, 0.1, 0.1, 20);
                             camera = new Camera(new PointZ(1, 1, 1), Math.PI / 4, -Math.PI / 4, projection);
@@ -144,26 +147,26 @@ namespace Lab9
             {
                 switch (ProjectionComboBox.SelectedItem.ToString())
                 {
-                    case "Перспективная":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             return Transform.PerspectiveProjection(2, camera);
 
                         }
-                    case "Изометрическая":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             return Transform.IsometricProjection();
 
                         }
-                    case "Ортогональная XY":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XY":
                         {
                             return Transform.OrthographicXZProjection();
                         }
-                    case "Ортогональная XZ":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ XZ":
                         {
 
                             return Transform.OrthographicXZProjection();
                         }
-                    case "Ортогональная YZ":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ YZ":
                         {
                             return Transform.OrthographicYZProjection();
                         }
@@ -188,17 +191,17 @@ namespace Lab9
             {
                 switch (comboBox1.SelectedItem.ToString())
                 {
-                    case "Тетраэдр":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             currentPolyhedron = new Tetrahedron(1);
                             break;
                         }
-                    case "Гексаэдр":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             currentPolyhedron = new Hexahedron(0.5);
                             break;
                         }
-                    case "Октаэдр":
+                    case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ":
                         {
                             currentPolyhedron = new Octahedron(1);
                             break;
@@ -214,7 +217,7 @@ namespace Lab9
                 }
             }
         }
-        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraForward)
+        void DrawWithoutNonFace(Graphics g, Transform projection, int width, int height, Polyhedron cur, PointZ CameraPosition)
         {
             foreach (var v in cur.getPolygons())
             {
@@ -242,7 +245,7 @@ namespace Lab9
                     normal.Z = -normal.Z;
                 }
 
-                if (PointZ.DotProduct(normal, CameraForward - p1) > 0)
+                if (PointZ.DotProduct(normal, CameraPosition) + PointZ.DotProduct(normal, p1) < 0)
                 {
                     for (int i = 0; i < v.Count; i++)
                     {
@@ -260,7 +263,7 @@ namespace Lab9
             {
                 if (non_face)
                 {
-                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.forward);
+                    DrawWithoutNonFace(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height, currentPolyhedron, camera.Position);
                 }
                 else if (zB)
                 {
@@ -269,6 +272,10 @@ namespace Lab9
                 else if (guro)
                 {
                     CalculateNormal(light);
+                }
+                else if (texturing)
+                {
+                    zBuf();
                 }
                 else
                 {
@@ -283,6 +290,7 @@ namespace Lab9
             figure = true;
             non_face = false;
             guro = false;
+            texturing = false;
             GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
@@ -290,7 +298,7 @@ namespace Lab9
             pictureBox1.Invalidate();
         }
 
-        //масштаб относительно центра
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         private void ApplyScaleCenter_Click(object sender, EventArgs e)
         {
             g1.Clear(Color.White);
@@ -325,7 +333,7 @@ namespace Lab9
             currentPolyhedron.Apply(Transform.Translate(X, Y, Z));
         }
 
-        //Поворот
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         private void Rotate()
         {
             double X = (double)numericUpDown4.Value / 180 * Math.PI;
@@ -334,7 +342,7 @@ namespace Lab9
             currentPolyhedron.Apply(Transform.RotateX(X) * Transform.RotateY(Y) * Transform.RotateZ(Z));
         }
 
-        //Масштаб
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         private void Scale()
         {
             double X = (double)numericUpDown7.Value;
@@ -344,22 +352,22 @@ namespace Lab9
 
         }
 
-        //Отражение
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         private void Reflect()
         {
             switch (comboBox2.SelectedItem.ToString())
             {
-                case "Отражение по X":
+                case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ X":
                     {
                         currentPolyhedron.Apply(Transform.ReflectX());
                         break;
                     }
-                case "Отражение по Y":
+                case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Y":
                     {
                         currentPolyhedron.Apply(Transform.ReflectY());
                         break;
                     }
-                case "Отражение по Z":
+                case "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Z":
                     {
                         currentPolyhedron.Apply(Transform.ReflectZ());
                         break;
@@ -453,9 +461,7 @@ namespace Lab9
         {
             g1.Clear(Color.White);
             Reflect();
-            //currentPolyhedron.Draw(g1, GetProjection(), pictureBox1.Width, pictureBox1.Height);
             DrawingSelection(currentPolyhedron);
-            //DrawAxis(g1, GetProjectionAxis());
             pictureBox1.Invalidate();
         }
         private void ApplyProjection_Click(object sender, EventArgs e)
@@ -481,8 +487,6 @@ namespace Lab9
             PointZ p1 = new PointZ(X1, Y1, Z1);
             PointZ p2 = new PointZ(X2, Y2, Z2);
 
-            // p1.DrawLine(g, GetProjection(), p2,pictureBox1.Width,pictureBox1.Height, Pens.Red);
-
             double ang = (double)numericUpDown17.Value / 180 * Math.PI;
 
             currentPolyhedron.Apply(Transform.RotateLine(p1, p2, ang));
@@ -491,10 +495,7 @@ namespace Lab9
         {
             g1.Clear(Color.White);
             RotateLine();
-
             DrawingSelection(currentPolyhedron);
-            //DrawAxis(g1, GetProjectionAxis());
-
             pictureBox1.Invalidate();
 
         }
@@ -526,6 +527,10 @@ namespace Lab9
 
         private void button5_Click(object sender, EventArgs e)
         {
+            non_face = false;
+            guro = false;
+            zB = false;
+            texturing = false;
             if (points.Count >= 2)
             {
                 if (comboBox3.SelectedItem != null)
@@ -534,27 +539,27 @@ namespace Lab9
                     centerPoints();
                     rotationFigure();
                 }
-                else MessageBox.Show("Выберите ось");
+                else MessageBox.Show("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
 
             }
-            else MessageBox.Show("Выберите минимум 2 точки");
+            else MessageBox.Show("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2 пїЅпїЅпїЅпїЅпїЅ");
         }
 
         private PointZ chooseAxis(PointZ p, float angle)
         {
             switch (comboBox3.SelectedItem.ToString())
             {
-                case "по X":
+                case "пїЅпїЅ X":
                     {
                         p.Apply(Transform.RotateX(angle / 180 * Math.PI));
                         return p;
                     }
-                case "по Y":
+                case "пїЅпїЅ Y":
                     {
                         p.Apply(Transform.RotateY(angle / 180 * Math.PI));
                         return p;
                     }
-                case "по Z":
+                case "пїЅпїЅ Z":
                     {
                         p.Apply(Transform.RotateZ(angle / 180 * Math.PI));
                         return p;
@@ -570,18 +575,18 @@ namespace Lab9
         {
             switch (comboBox3.SelectedItem.ToString())
             {
-                case "по X":
+                case "пїЅпїЅ X":
                     {
                         currentPolyhedron.Apply(Transform.ReflectX());
                         break;
                     }
-                case "по Y":
+                case "пїЅпїЅ Y":
                     {
                         currentPolyhedron.Apply(Transform.ReflectY());
                         currentPolyhedron.Apply(Transform.Translate(0, 1, 0));
                         break;
                     }
-                case "по Z":
+                case "пїЅпїЅ Z":
                     {
                         currentPolyhedron.Apply(Transform.ReflectZ());
                         break;
@@ -804,7 +809,6 @@ namespace Lab9
                 openFileDialog.Filter = "Obj files (*.obj)|*.obj|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     try
                     {
                         g1.Clear(Color.White);
@@ -869,7 +873,7 @@ namespace Lab9
 
             if (function == null)
             {
-                MessageBox.Show("Выберите функцию!");
+                MessageBox.Show("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
             }
             else
             {
@@ -918,13 +922,12 @@ namespace Lab9
         }
         void DrawBufferZ(ref double[,] ZBuffer, int width, int height, Vertex first, Vertex second, Vertex third)
         {
-
-            // Преобразуем вершины из трехмерного пространства в пространство экрана
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             first = GetScene(first);
             second = GetScene(second);
             third = GetScene(third);
 
-            // Сортировка вершин по их координатам Y
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Y
             if (first.Coordinate.Y > second.Coordinate.Y)
                 Swap(ref first, ref second);
             if (first.Coordinate.Y > third.Coordinate.Y)
@@ -938,7 +941,7 @@ namespace Lab9
 
             for (double y = first.Coordinate.Y; y < third.Coordinate.Y; ++y)
             {
-                // Пропускаем рисование, если текущая координата Y находится за пределами экрана
+                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Y пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 if (y < 0 || y > (height - 1))
                     continue;
 
@@ -957,34 +960,45 @@ namespace Lab9
 
                 for (double x = l.Coordinate.X; x < r.Coordinate.X; ++x)
                 {
-                    // Пропускаем рисование, если текущая координата X находится за пределами экрана
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ X пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     if (x < 0 || x > (width - 1))
                         continue;
 
                     Interpolate(l, r, (x - l.Coordinate.X) / (r.Coordinate.X - l.Coordinate.X), ref p);
 
-                    // Пропускаем рисование, если текущая глубина вершины находится за пределами диапазона
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     if (p.Coordinate.Z > 1 || p.Coordinate.Z < -1)
                         continue;
 
-                    // Обновление буфера глубины и буфера цвета
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     if (p.Coordinate.Z < ZBuffer[(int)x, (int)y])
                     {
                         ZBuffer[(int)x, (int)y] = p.Coordinate.Z;
+                        Color cur_пїЅolor = p.Color;
 
-                        g1.DrawEllipse(new Pen(p.Color), (int)x, (int)y, 1, 1);
-                        g1.FillEllipse(new SolidBrush(p.Color), (int)x, (int)y, 1, 1);
+                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        float u = (float)(x - l.Coordinate.X) / (float)(r.Coordinate.X - l.Coordinate.X);
+                        float v = (float)(y - f0.Coordinate.Y) / (float)(f1.Coordinate.Y - f0.Coordinate.Y);
+
+                        if (texturing) cur_пїЅolor = GetTextureColor(u, v);
+
+                        g1.DrawEllipse(new Pen(cur_пїЅolor), (int)x, (int)y, 1, 1);
+                        g1.FillEllipse(new SolidBrush(cur_пїЅolor), (int)x, (int)y, 1, 1);
                         //pictureBox1.Invalidate();
                         // ColorBuffer.SetPixel((int)x, (int)y, p.Color);
                     }
                 }
             }
         }
+        Color GetTextureColor(float u, float v)
+        {
+            int x = (int)(u * (texture.Width - 1));
+            int y = (int)(v * (texture.Height - 1));
 
+            Color textureColor = texture.GetPixel(x, y);
 
-
-
-
+            return textureColor;
+        }
         private void zBuf()
         {
             double[,] ZBuffer = new double[pictureBox1.Width, pictureBox1.Height];
@@ -1083,10 +1097,8 @@ namespace Lab9
             guro = false;
             g1.Clear(Color.White);
             figure = true;
-            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -1096,12 +1108,11 @@ namespace Lab9
             non_face = false;
             zB = true;
             guro = false;
+            texturing = false;
             g1.Clear(Color.White);
             figure = true;
-            //GetCurrentPolyhedron(GetProjection());
             DrawingSelection(currentPolyhedron);
             figure = false;
-            DrawAxis(g1, GetProjection());
             pictureBox1.Invalidate();
         }
 
@@ -1148,24 +1159,24 @@ namespace Lab9
                     {
                         var b = 4;
                     }
-                    var cosLambert = Math.Max(0, dotpro);//проверить, что тут до 1
+                    var cosLambert = Math.Max(0, dotpro);//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ 1
 
-                    //посмотреть, что тут до 255
+                    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ 255
                     int red = (int)(currentPolyhedron.Color.R * cosLambert);
-                    int green = (int)(currentPolyhedron.Color.G * cosLambert) ;
-                    int blue = (int)(currentPolyhedron.Color.B * cosLambert) ;
+                    int green = (int)(currentPolyhedron.Color.G * cosLambert);
+                    int blue = (int)(currentPolyhedron.Color.B * cosLambert);
 
                     if (red < 255 && red > 0 &&
                         green < 255 && green > 0 &&
                         blue < 255 && blue > 0)
                         currentVert.Color = Color.FromArgb(red, green, blue);
                     else currentVert.Color = Color.Black;
+
                 }
             }
-
             zBufForGuro();
         }
-
+      
         private void GuroToolStripMenuItem_Click(object sender, EventArgs e)
         {
             guro = true;
@@ -1176,6 +1187,43 @@ namespace Lab9
             CalculateNormal(light);
             figure = false;
             pictureBox1.Invalidate();
+        }
+
+        private void textureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            texturing = true;
+            guro = false;
+            zB = false;
+            non_face = false;
+            figure = true;
+            g1.Clear(Color.White);
+            DrawingSelection(currentPolyhedron);
+            figure = false;
+            pictureBox1.Invalidate();
+        }
+
+        private void LoadTextureToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Image files|*.png;*.jpg;*.jpeg;*.bmp|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var textureFilename = openFileDialog.FileName;
+                        texture = new Bitmap(textureFilename);
+                        texturing = true;
+                        DrawingSelection(currentPolyhedron);
+                        pictureBox1.Invalidate();
+                    }
+                    catch (Exception ex)
+                    {
+                        DialogResult result = MessageBox.Show($"Error loading texture: {ex.Message}",
+                            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Lab9
         double xStep = 0, zStep = 0;
         double angleX = 0, angleY = 0, angleZ = 0;
         Graphics graphics;
-        Bitmap bitmap;
+        Bitmap bmp;
         Color backColor, mainColor;
         Point3D bodyCenter;
         bool isInverted;
@@ -37,7 +37,7 @@ namespace Lab9
         {
             this.imageWidth = imageWidth;
             this.imageHeight = imageWidth;
-            bitmap = new Bitmap(imageWidth, imageHeight);
+            bmp = new Bitmap(imageWidth, imageHeight);
             lowerHorizon = new double[imageWidth];
             upperHorizon = new double[imageWidth];
             backColor = Color.White;
@@ -49,27 +49,24 @@ namespace Lab9
             for (int i = 0; i < imageWidth; ++i)
             {
                 lowerHorizon[i] = imageHeight;
-                upperHorizon[i] = 0; 
+                upperHorizon[i] = 0;
             }
         }
 
         public void SetBoundsOnX(double xMin, double xMax)
         {
-            Debug.Assert(xMin < xMax);
             this.xMax = xMax;
             this.xMin = xMin;
         }
 
         public void SetBoundsOnZ(double zMin, double zMax)
         {
-            Debug.Assert(zMin < zMax);
             this.zMax = zMax;
             this.zMin = zMin;
         }
 
         public void SetXZsteps(double xStep, double zStep)
         {
-            Debug.Assert(zStep > 0 && xStep > 0);
             this.zStep = zStep;
             this.xStep = xStep;
         }
@@ -113,13 +110,9 @@ namespace Lab9
 
         public void Draw(Graphics imageGraphics, functionType function)
         {
-            Debug.Assert(imageGraphics != null);
-            Debug.Assert(zMin != EMPTY_VALUE && zMax != EMPTY_VALUE && xMin != EMPTY_VALUE &&
-                xMax != EMPTY_VALUE);
-            Debug.Assert(xStep != 0 && zStep != 0);
 
             CalcBodyCenter(function);
-            graphics = Graphics.FromImage(bitmap);
+            graphics = Graphics.FromImage(bmp);
             graphics.Clear(backColor);
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             //StartDoubleBuffering();
@@ -129,20 +122,9 @@ namespace Lab9
             currentFunction = function;
             functionType wrapperFunc = new functionType(functionWrapper);
 
-            try
-            {
-                DrawHelperZ(imageGraphics, wrapperFunc);
+            DrawHelperZ(imageGraphics, wrapperFunc);
+            imageGraphics.DrawImage(bmp, 0, 0);
 
-            }
-            catch (Exception)
-            {
-                Debug.Assert(false);
-            }
-            finally
-            {
-                imageGraphics.DrawImage(bitmap, 0, 0);
-                //FinishDoubleBuffering(imageGraphics);
-            }
         }
 
         private bool CheckPoint(Point2D point)
@@ -350,32 +332,33 @@ namespace Lab9
 
         private void Smooth(Point2D firstPoint, Point2D secondPoint)
         {
-            Debug.Assert(secondPoint.X >= 0 && secondPoint.X < imageWidth);
-            Debug.Assert(firstPoint.X >= 0 && firstPoint.X < imageWidth);
+            if (secondPoint.X >= 0 && secondPoint.X < imageWidth && firstPoint.X >= 0 && firstPoint.X < imageWidth)
+            {
 
-            if (Math.Round(firstPoint.X) == Math.Round(secondPoint.X))
-            {
-                upperHorizon[(int)Math.Round(secondPoint.X)] = Math.Max(upperHorizon[(int)Math.Round(secondPoint.X)], Math.Max(secondPoint.Y, firstPoint.Y));
-                lowerHorizon[(int)Math.Round(secondPoint.X)] = Math.Min(lowerHorizon[(int)Math.Round(secondPoint.X)], Math.Min(secondPoint.Y, firstPoint.Y));
-            }
-            else
-            {
-                if (secondPoint.X < firstPoint.X)
-                    SwapPoints(ref firstPoint, ref secondPoint);
-                double lineCoef = (secondPoint.Y - firstPoint.Y) / (secondPoint.X - firstPoint.X);
-                double currentY;
-                // optimization here
-                for (int currentX = (int)Math.Round(firstPoint.X); currentX <= Math.Round(secondPoint.X); ++currentX)
+                if (Math.Round(firstPoint.X) == Math.Round(secondPoint.X))
                 {
-                    currentY = lineCoef * (currentX - firstPoint.X) + firstPoint.Y;
-                    upperHorizon[currentX] = Math.Max(upperHorizon[currentX], currentY);
-                    lowerHorizon[currentX] = Math.Min(lowerHorizon[currentX], currentY);
+                    upperHorizon[(int)Math.Round(secondPoint.X)] = Math.Max(upperHorizon[(int)Math.Round(secondPoint.X)], Math.Max(secondPoint.Y, firstPoint.Y));
+                    lowerHorizon[(int)Math.Round(secondPoint.X)] = Math.Min(lowerHorizon[(int)Math.Round(secondPoint.X)], Math.Min(secondPoint.Y, firstPoint.Y));
                 }
-                for (int currentX = (int)Math.Round(secondPoint.X); currentX <= Math.Round(firstPoint.X); ++currentX)
+                else
                 {
-                    currentY = lineCoef * (currentX - secondPoint.X) + secondPoint.Y;
-                    upperHorizon[currentX] = Math.Max(upperHorizon[currentX], currentY);
-                    lowerHorizon[currentX] = Math.Min(lowerHorizon[currentX], currentY);
+                    if (secondPoint.X < firstPoint.X)
+                        SwapPoints(ref firstPoint, ref secondPoint);
+                    double lineCoef = (secondPoint.Y - firstPoint.Y) / (secondPoint.X - firstPoint.X);
+                    double currentY;
+                    // optimization here
+                    for (int currentX = (int)Math.Round(firstPoint.X); currentX <= Math.Round(secondPoint.X); ++currentX)
+                    {
+                        currentY = lineCoef * (currentX - firstPoint.X) + firstPoint.Y;
+                        upperHorizon[currentX] = Math.Max(upperHorizon[currentX], currentY);
+                        lowerHorizon[currentX] = Math.Min(lowerHorizon[currentX], currentY);
+                    }
+                    for (int currentX = (int)Math.Round(secondPoint.X); currentX <= Math.Round(firstPoint.X); ++currentX)
+                    {
+                        currentY = lineCoef * (currentX - secondPoint.X) + secondPoint.Y;
+                        upperHorizon[currentX] = Math.Max(upperHorizon[currentX], currentY);
+                        lowerHorizon[currentX] = Math.Min(lowerHorizon[currentX], currentY);
+                    }
                 }
             }
         }

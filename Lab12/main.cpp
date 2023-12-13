@@ -433,10 +433,28 @@ void InitVBO(int num_task) {
 	Vertex circle[circleVertexCount * 3] = {};
 
 	for (int i = 0; i < circleVertexCount; i++) {
-		circle[i * 3] = { 0.8f * (float)cos(i * (360.0 / circleVertexCount) * deg2rad), 0.8f * (float)sin(i * (360.0 / circleVertexCount) * deg2rad), HSV2RGB(i % 360).at(0), HSV2RGB(i % 360).at(1), HSV2RGB(i % 360).at(2) };
-		circle[i * 3 + 1] = { 0.8f * (float)cos((i + 1) * (360.0 / circleVertexCount) * deg2rad), 0.8f * (float)sin((i + 1) * (360.0 / circleVertexCount) * deg2rad), HSV2RGB((i + 1) % 360).at(0), HSV2RGB((i + 1) % 360).at(1),HSV2RGB((i + 1) % 360).at(2) };
+		// вычисление координат x и y для текущей вершины круга
+		circle[i * 3] = {
+			0.8f * (float)cos(i * (360.0 / circleVertexCount) * deg2rad),
+			0.8f * (float)sin(i * (360.0 / circleVertexCount) * deg2rad),
+			HSV2RGB(i % 360).at(0),  
+			HSV2RGB(i % 360).at(1),  
+			HSV2RGB(i % 360).at(2)   
+		};
+
+		// след вершина круга
+		circle[i * 3 + 1] = {
+			0.8f * (float)cos((i + 1) * (360.0 / circleVertexCount) * deg2rad),
+			0.8f * (float)sin((i + 1) * (360.0 / circleVertexCount) * deg2rad),
+			HSV2RGB((i + 1) % 360).at(0),
+			HSV2RGB((i + 1) % 360).at(1),
+			HSV2RGB((i + 1) % 360).at(2)
+		};
+
+		// центральная вершина круга
 		circle[i * 3 + 2] = { 0.0f, 0.0f, 1.0, 1.0, 1.0 };
 	}
+
 
 	// Передаем вершины в буфер
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);

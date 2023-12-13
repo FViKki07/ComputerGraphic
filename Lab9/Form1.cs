@@ -37,7 +37,7 @@ namespace Lab9
         bool non_face;
         bool texturing;
 
-        Bitmap texture = new Bitmap("C:/git/Laba3/Lab9/texture4.jpg");
+        Bitmap texture ;
 
         public Form1()
         {
@@ -70,7 +70,7 @@ namespace Lab9
             DrawAxis(g1, Transform.IsometricProjection());
             camera = new Camera(new PointZ(0, 0, 2), 0, new PointZ(0, 0, 0), pictureBox1.Width, pictureBox1.Height);
             cameraUse = false;
-            light = new Light(new PointZ(0, 0, 2), Color.Orange);
+            light = new Light(new PointZ(0, 0, -2), Color.Orange);
         }
 
         //Рисует координатные оси 

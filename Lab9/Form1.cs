@@ -1116,12 +1116,6 @@ namespace Lab9
             pictureBox1.Invalidate();
         }
 
-        private void buttonHoryzont_Click(object sender, EventArgs e)
-        {
-            FloatingHorizon form = new FloatingHorizon();
-            form.Show();
-        }
-
         void CalculateNormal(Light light)
         {
             var polygons = currentPolyhedron.getPolygons();

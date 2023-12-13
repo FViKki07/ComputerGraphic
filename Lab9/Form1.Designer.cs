@@ -812,16 +812,7 @@ namespace Lab9
             label20.Size = new Size(129, 23);
             label20.TabIndex = 194;
             label20.Text = "Ось вращения:";
-            // 
-            // buttonHorizont
-            // 
-            buttonHorizont.Location = new Point(74, 719);
-            buttonHorizont.Name = "buttonHorizont";
-            buttonHorizont.Size = new Size(167, 63);
-            buttonHorizont.TabIndex = 195;
-            buttonHorizont.Text = "Плавающий горизонт";
-            buttonHorizont.UseVisualStyleBackColor = true;
-            buttonHorizont.Click += buttonHoryzont_Click;
+  
             // 
             // button8
             // 

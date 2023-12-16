@@ -1,114 +1,209 @@
-#ifndef MESH_H
-#define MESH_H
+#pragma once
 
 #include "Camera.h"
+#include <array>
 #include <vector>
-#include <iostream>
+#include <string>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <iostream>
 
-struct Vertex
+static std::vector<std::string> split(const std::string& s, char delim) {
+	std::stringstream ss(s);
+	std::string item;
+	std::vector<std::string> elems;
+	while (std::getline(ss, item, delim)) {
+		if (item.empty()) continue;
+		elems.push_back(item);
+	}
+	return elems;
+}
+
+class Mesh
 {
-    glm::vec3 Position;
-    glm::vec3 Normal;
-    glm::vec2 TexCoords;
+	std::vector<GLfloat> vertices;
+
+	GLuint VBO;
+	GLuint VAO;
+
+	void parseFile(const std::string& filePath) {
+		try {
+			std::ifstream obj(filePath);
+
+			if (!obj.is_open()) {
+				throw std::exception("File cannot be opened");
+			}
+
+			std::vector<std::vector<float>> v;
+			std::vector<std::vector<float>> vt;
+			std::vector<std::vector<float>> vn;
+
+			std::vector <std::string> indexAccordance{};
+			std::string line;
+			while (std::getline(obj, line))
+			{
+				std::istringstream iss(line);
+				std::string type;
+				iss >> type;
+				if (type == "v") {
+					auto vertex = split(line, ' ');
+					std::vector<float> cv{};
+					for (size_t j = 1; j < vertex.size(); j++)
+					{
+						cv.push_back(std::stof(vertex[j]));
+					}
+					v.push_back(cv);
+				}
+				else if (type == "vn") {
+					auto normale = split(line, ' ');
+					std::vector<float> cvn{};
+					for (size_t j = 1; j < normale.size(); j++)
+					{
+						cvn.push_back(std::stof(normale[j]));
+					}
+					vn.push_back(cvn);
+				}
+				else if (type == "vt") {
+					auto texture = split(line, ' ');
+					std::vector<float> cvt{};
+					for (size_t j = 1; j < texture.size(); j++)
+					{
+						cvt.push_back(std::stof(texture[j]));
+					}
+					vt.push_back(cvt);
+				}
+				else if (type == "f") {
+					auto splitted = split(line, ' ');
+					if (splitted.size() < 5) {
+						for (size_t i = 1; i < splitted.size(); i++)
+						{
+							auto triplet = split(splitted[i], '/');
+							int positionIndex = std::stoi(triplet[0]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(v[positionIndex][j]);
+							}
+							int normaleIndex = std::stoi(triplet[2]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(vn[normaleIndex][j]);
+							}
+							int textureIndex = std::stoi(triplet[1]) - 1;
+							for (int j = 0; j < 2; j++) {
+								vertices.push_back(vt[textureIndex][j]);
+							}
+						}
+					}
+					else {
+						std::array<std::vector<std::string>, 4> verts = {
+							split(splitted[1], '/'),
+							split(splitted[2], '/'),
+							split(splitted[3], '/'),
+							split(splitted[4], '/'),
+						};
+
+						std::array<std::vector<std::string>, 3> triang0 = {
+							verts[0], verts[1], verts[2]
+						};
+						for (auto& triplet : triang0) {
+							int positionIndex = std::stoi(triplet[0]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(v[positionIndex][j]);
+							}
+							int normaleIndex = std::stoi(triplet[2]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(vn[normaleIndex][j]);
+							}
+							int textureIndex = std::stoi(triplet[1]) - 1;
+							for (int j = 0; j < 2; j++) {
+								vertices.push_back(vt[textureIndex][j]);
+							}
+
+						}
+
+						std::array<std::vector<std::string>, 3> triang1 = {
+							verts[0], verts[2], verts[3]
+						};
+						for (auto& triplet : triang1) {
+							int positionIndex = std::stoi(triplet[0]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(v[positionIndex][j]);
+							}
+							int normaleIndex = std::stoi(triplet[2]) - 1;
+							for (int j = 0; j < 3; j++) {
+								vertices.push_back(vn[normaleIndex][j]);
+							}
+							int textureIndex = std::stoi(triplet[1]) - 1;
+							for (int j = 0; j < 2; j++) {
+								vertices.push_back(vt[textureIndex][j]);
+							}
+						}
+					}
+
+				}
+				else {
+					continue;
+				}
+			}
+			return;
+
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+		std::cout << "Vertices loaded: " << vertices.size() << std::endl;
+	}
+
+	void InitPositionBuffers()
+	{
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+
+		glBindVertexArray(VAO);
+
+		auto i0 = 0;
+		auto i1 = 1;
+		auto i2 = 2;
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+
+		// 3. Устанавливаем указатели на вершинные атрибуты
+		// Атрибут с координатами
+		glVertexAttribPointer(i0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(i0);
+		// Атрибут с нормалями
+		glVertexAttribPointer(i1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(i1);
+		// Атрибут с текстурными координатами
+		glVertexAttribPointer(i2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(i2);
+
+		//Отвязываем VAO
+		glBindVertexArray(0);
+		glDisableVertexAttribArray(i0);
+		glDisableVertexAttribArray(i1);
+		glDisableVertexAttribArray(i2);
+		//checkOpenGLerror(1);
+	}
+
+public:
+
+	Mesh(const std::string& objPath) {
+		parseFile(objPath);
+		InitPositionBuffers();
+		//InitTextures(texturePath);
+	}
+
+	~Mesh() {
+
+	}
+
+
+	void ReleaseVBO()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDeleteBuffers(1, &VBO);
+		glDeleteVertexArrays(1, &VAO);
+	}
 };
-
-class Mesh {
-
-    std::vector<Vertex> vertices;
-    std::vector<GLint> polygons;
-
-    Mesh(std::string pathfile) {
-
-       
-    }
-
-};
-
-void ParseStr(const std::string& st, std::vector<float>& values) {
-    std::istringstream iss(st);
-    std::string val;
-    while (iss >> val) {
-        values.emplace_back(std::stof(val));
-    }
-}
-
-void Parser(std::string pathfile) {
-    std::vector<std::vector<float>> points;
-    std::vector<std::vector<float>> normals;
-    std::vector<std::vector<float>> texture;
-  
-    std::vector<Vertex> vertices;
-    std::vector<std::vector<int>> polygons;
-
-    std::ifstream file(pathfile);
-
-    if (!file.is_open()) {
-        std::cerr << "Unable to open the file" << std::endl;
-        return;
-    }
-
-    std::string line;
-
-    while (std::getline(file, line)) {
-        line.erase(line.find_last_not_of(" \t\r\n") + 1);  // Trim whitespace
-
-        if (line.empty()) {
-            continue;
-        }
-
-        std::istringstream iss(line);
-        std::string type;
-        iss >> type;
-        std::vector<float> values;
-        ParseStr(type.substr(3), values);
-
-        if (type == "v") points.emplace_back(values);
-        else if (type == "vt") texture.emplace_back(values);
-        else if (type == "vn") normals.emplace_back(values);
-        else if (type == "f") {
-
-        }
-
-        /*
-        switch (line[1]) {
-        case 'v': {
-            std::string x, y, z;
-            iss >> x >> y >> z;
-            x.replace(x.find_first_of('.'),1, ",");
-            y.replace(x.find_first_of('.'), 1, ",");
-            z.replace(x.find_first_of('.'), 1, ",");
-            if (line[2] == 't') {
-                texture.push_back({ stod(x), stod(y), stod(z) });
-                texture.emplace_back(stod(x), stod(y), stod(z));
-            }
-            else {
-                if(line[2] == 'n')
-                    normals.emplace_back(stod(x), stod(y), stod(z));
-                else points.emplace_back(stod(x), stod(y), stod(z));
-            }
-            break;
-        }
-        case 'f': {
-            std::vector<int> polygon;
-            char* vertexIdx;
-            while (iss >> vertexIdx) {
-                auto p = strtok(vertexIdx, "/");
-                Vertex vert ={ points[p[0]],
-                    normals[p[2]],
-                    texture[p[1]] } ;
-                vertices.push_back(vert);
-            }
-            polygons.push_back(polygon);
-            break;
-        }
-        default:
-            break;
-        }*/
-    }
-
-    return;
-
-}
-#endif

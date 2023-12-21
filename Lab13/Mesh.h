@@ -1,13 +1,22 @@
 #pragma once
 
-#include "Camera.h"
-#include <array>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <iostream>
+#include "Headers.h"
+#include "Shader.h"
+
+struct Vertex
+{
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+};
+
+struct Texture
+{
+	GLuint id;
+	std::string type;
+	sf::Texture texture;
+};
+
 
 static std::vector<std::string> split(const std::string& s, char delim) {
 	std::stringstream ss(s);
@@ -20,12 +29,17 @@ static std::vector<std::string> split(const std::string& s, char delim) {
 	return elems;
 }
 
+
 class Mesh
 {
-	std::vector<GLfloat> vertices;
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	Texture texture;
+	GLuint count;
 
 	GLuint VBO;
 	GLuint VAO;
+	GLuint EBO;
 
 	void parseFile(const std::string& filePath) {
 		try {
@@ -35,9 +49,9 @@ class Mesh
 				throw std::exception("File cannot be opened");
 			}
 
-			std::vector<std::vector<float>> v;
-			std::vector<std::vector<float>> vt;
-			std::vector<std::vector<float>> vn;
+			std::vector<glm::vec3> v;
+			std::vector<glm::vec2> vt;
+			std::vector<glm::vec3> vn;
 
 			std::vector <std::string> indexAccordance{};
 			std::string line;
@@ -47,102 +61,80 @@ class Mesh
 				std::string type;
 				iss >> type;
 				if (type == "v") {
+
 					auto vertex = split(line, ' ');
-					std::vector<float> cv{};
+					glm::vec3 cv{};
 					for (size_t j = 1; j < vertex.size(); j++)
 					{
-						cv.push_back(std::stof(vertex[j]));
+						cv[j - 1] = std::stof(vertex[j]);
 					}
 					v.push_back(cv);
 				}
 				else if (type == "vn") {
 					auto normale = split(line, ' ');
-					std::vector<float> cvn{};
+					glm::vec3 cv{};
 					for (size_t j = 1; j < normale.size(); j++)
 					{
-						cvn.push_back(std::stof(normale[j]));
+						cv[j - 1] = std::stof(normale[j]);
 					}
-					vn.push_back(cvn);
+					vn.push_back(cv);
 				}
 				else if (type == "vt") {
 					auto texture = split(line, ' ');
-					std::vector<float> cvt{};
+					glm::vec2 cv{};
 					for (size_t j = 1; j < texture.size(); j++)
 					{
-						cvt.push_back(std::stof(texture[j]));
+						cv[j - 1] = std::stof(texture[j]);
 					}
-					vt.push_back(cvt);
+					vt.push_back(cv);
 				}
 				else if (type == "f") {
 					auto splitted = split(line, ' ');
-					if (splitted.size() < 5) {
-						for (size_t i = 1; i < splitted.size(); i++)
+					auto first = split(splitted[1], '/');
+					for (int i = 2; i < splitted.size() - 1; i++)
+					{
+						auto cur = split(splitted[i], '/');
+						auto next = split(splitted[i + 1], '/');
+
+						Vertex vertex0;
+						int positionIndex = std::stoi(first[0]) - 1;
+						vertex0.Position = glm::vec3(v[positionIndex][0], v[positionIndex][1], v[positionIndex][2]);
+						if (first.size() > 1)
 						{
-							auto triplet = split(splitted[i], '/');
-							int positionIndex = std::stoi(triplet[0]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(v[positionIndex][j]);
-							}
-							int normaleIndex = std::stoi(triplet[2]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(vn[normaleIndex][j]);
-							}
-							int textureIndex = std::stoi(triplet[1]) - 1;
-							for (int j = 0; j < 2; j++) {
-								vertices.push_back(vt[textureIndex][j]);
-							}
+							int textureIndex = std::stoi(first[1]) - 1;
+							vertex0.TexCoords = glm::vec2(vt[textureIndex][0], vt[textureIndex][1]);
 						}
+						vertices.push_back(vertex0);
+						indices.push_back(indices.size());
+
+						Vertex vertex1;
+						positionIndex = std::stoi(cur[0]) - 1;
+						vertex1.Position = glm::vec3(v[positionIndex][0], v[positionIndex][1], v[positionIndex][2]);
+						if (cur.size() > 1)
+						{
+							int textureIndex = std::stoi(cur[1]) - 1;
+							vertex1.TexCoords = glm::vec2(vt[textureIndex][0], vt[textureIndex][1]);
+						}
+						vertices.push_back(vertex1);
+						indices.push_back(indices.size());
+
+						Vertex vertex2;
+						positionIndex = std::stoi(next[0]) - 1;
+						vertex2.Position = glm::vec3(v[positionIndex][0], v[positionIndex][1], v[positionIndex][2]);
+						if (next.size() > 1)
+						{
+							int textureIndex = std::stoi(next[1]) - 1;
+							vertex2.TexCoords = glm::vec2(vt[textureIndex][0], vt[textureIndex][1]);
+						}
+						vertices.push_back(vertex2);
+						indices.push_back(indices.size());
+
 					}
-					else {
-						std::array<std::vector<std::string>, 4> verts = {
-							split(splitted[1], '/'),
-							split(splitted[2], '/'),
-							split(splitted[3], '/'),
-							split(splitted[4], '/'),
-						};
-
-						std::array<std::vector<std::string>, 3> triang0 = {
-							verts[0], verts[1], verts[2]
-						};
-						for (auto& triplet : triang0) {
-							int positionIndex = std::stoi(triplet[0]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(v[positionIndex][j]);
-							}
-							int normaleIndex = std::stoi(triplet[2]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(vn[normaleIndex][j]);
-							}
-							int textureIndex = std::stoi(triplet[1]) - 1;
-							for (int j = 0; j < 2; j++) {
-								vertices.push_back(vt[textureIndex][j]);
-							}
-
-						}
-
-						std::array<std::vector<std::string>, 3> triang1 = {
-							verts[0], verts[2], verts[3]
-						};
-						for (auto& triplet : triang1) {
-							int positionIndex = std::stoi(triplet[0]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(v[positionIndex][j]);
-							}
-							int normaleIndex = std::stoi(triplet[2]) - 1;
-							for (int j = 0; j < 3; j++) {
-								vertices.push_back(vn[normaleIndex][j]);
-							}
-							int textureIndex = std::stoi(triplet[1]) - 1;
-							for (int j = 0; j < 2; j++) {
-								vertices.push_back(vt[textureIndex][j]);
-							}
-						}
-					}
-
 				}
 				else {
 					continue;
 				}
+				
 			}
 			return;
 
@@ -154,10 +146,11 @@ class Mesh
 		std::cout << "Vertices loaded: " << vertices.size() << std::endl;
 	}
 
-	void InitPositionBuffers()
+	void InitializeBuffers()
 	{
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &EBO);
 
 		glBindVertexArray(VAO);
 
@@ -166,17 +159,20 @@ class Mesh
 		auto i2 = 2;
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
 		// 3. Устанавливаем указатели на вершинные атрибуты
 		// Атрибут с координатами
-		glVertexAttribPointer(i0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+		glVertexAttribPointer(i0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 		glEnableVertexAttribArray(i0);
 		// Атрибут с нормалями
-		glVertexAttribPointer(i1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(i1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(i1);
 		// Атрибут с текстурными координатами
-		glVertexAttribPointer(i2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+		glVertexAttribPointer(i2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(i2);
 
 		//Отвязываем VAO
@@ -185,14 +181,56 @@ class Mesh
 		glDisableVertexAttribArray(i1);
 		glDisableVertexAttribArray(i2);
 		//checkOpenGLerror(1);
+
+
+		glm::mat4* modelMatrices = new glm::mat4[count];
+		srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+		float radius = 30.0;
+		float offset = 10.1f;
+		for (GLuint i = 0; i < count; i++)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+			float angle = (float)i / (float)count * 360.0f;
+			float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			float x = sin(angle) * radius + displacement;
+			displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
+			displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			float z = cos(angle) * radius + displacement;
+			model = glm::translate(model, glm::vec3(x, y, z));
+
+			//model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+
+			modelMatrices[i] = model;
+		}
+	}
+
+	void InitializeTexture(const std::string& texturePath)
+	{
+		sf::Texture texture1;
+		texture1.loadFromFile(texturePath);
+		texture1.setRepeated(true);
+		texture = { 0, "testing", texture1 };
 	}
 
 public:
 
-	Mesh(const std::string& objPath) {
+	Mesh(const std::string& objPath, const std::string& texturePath, GLuint c) {
+		count = c;
 		parseFile(objPath);
-		InitPositionBuffers();
-		//InitTextures(texturePath);
+		InitializeBuffers();
+		InitializeTexture(texturePath);
+	}
+
+	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures, GLuint c)
+	{
+		count = c;
+		this->vertices = vertices;
+		this->indices = indices;
+		this->texture = textures[0];
+
+		InitializeBuffers();
 	}
 
 	~Mesh() {
@@ -205,5 +243,23 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDeleteBuffers(1, &VBO);
 		glDeleteVertexArrays(1, &VAO);
+	}
+
+
+	virtual void Draw(Shader& shader) const
+	{
+		shader.Use();
+		{
+			glActiveTexture(GL_TEXTURE0);
+			shader.SetUniformInt("texture1", 0);
+			sf::Texture::bind(&texture.texture);
+			glBindVertexArray(VAO);
+			//???
+			glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, count);
+			glBindVertexArray(0);
+			sf::Texture::bind(NULL);
+
+		}
+		glUseProgram(0);
 	}
 };

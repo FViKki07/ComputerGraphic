@@ -1,0 +1,21 @@
+#pragma once
+
+#include <array>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <chrono>
+#include <ctime>  

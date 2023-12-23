@@ -1,77 +1,61 @@
-#pragma once
+#ifndef SCENE_H
+#define SCENE_H
 
-#include "Headers.h"
 #include "Shader.h"
 #include "Mesh.h"
-#include "Entity.h"
+#include "SceneObject.h"
+#include "Camera.h";
 
-#include "Camera.h"
 
 class Scene
 {
-protected:
-
-	float deltaTime;
-	sf::Clock cl;
-	sf::Clock globalCl;
-
 public:
-
-	inline const float GetDeltaTime() { return deltaTime; }
-
-	inline void ResetClock() {
-		deltaTime = cl.getElapsedTime().asSeconds();
-		cl.restart();
-	}
-
-	std::vector<Shader> shaders;
-	std::vector<Material> materials;
-	std::vector<Mesh> meshes; // graphical representation
-	std::vector<Entity> entities; // actual models
+	std::vector<Shader*> shaders;
+	std::vector<SceneObject*> sceneObjects;
 	Camera camera;
 
-	Scene() {}
+	Scene()
+	{
+		
+		Camera camera();
 
-	Scene(const std::vector<std::pair<const char*, const char*>> shader_paths,
-		const std::vector<const char*> texture_paths,
-		const std::vector<const char*> mesh_paths) {
-
-		camera = Camera(glm::vec3(0.f, 0.f, 0.f));
-		for (auto& vert_frag : shader_paths) {
-			shaders.push_back(Shader(vert_frag.first, vert_frag.second));
-		}
-
-		for (auto& tex_path : texture_paths) {
-			materials.push_back(Material(tex_path));
-		}
-
-		for (auto& obj_path : mesh_paths) {
-			meshes.push_back(Mesh(obj_path));
-		}
-
-		/*lights.push_back(DirLight());
-		for (auto& s : shaders) {
-			lights[0].SetUniforms(&s);
-		}*/
 	}
 
-	~Scene() {
-		for (auto& s : shaders) {
-			s.Release();
-		}
-		for (auto& m : meshes) {
-			m.ReleaseVBO();
-		}
+	void AddShaderProgram(Shader& sp)
+	{
+		shaders.push_back(&sp);
 	}
 
-	virtual void Draw() {
-		for (auto& s : shaders) {
-			camera.UpdateUniforms(&s);
+	void AddSceneObject(SceneObject& so)
+	{
+		sceneObjects.push_back(&so);
+	}
+
+	void Draw(float rotationAngle)
+	{
+
+
+
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)800, 0.1f, 1000.0f);
+
+		for (auto& shader : shaders)
+		{
+			shader->Use();
+			shader->SetUniformMat4("projection", projection);
+			shader->SetUniformMat4("view", camera.GetViewMatrix());
+			glUseProgram(0);
 		}
 
-		for (auto& ent : entities) {
-			ent.Draw();
+		for (auto& sceneObject : sceneObjects)
+		{
+			sceneObject->rotation.y = rotationAngle;
+			sceneObject->Draw();
 		}
 	}
 
+private:
+	std::vector<Mesh> meshes;
 };
+
+
+#endif

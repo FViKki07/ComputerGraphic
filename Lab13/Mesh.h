@@ -184,32 +184,54 @@ class Mesh
 
 		if (count > 1) {
 			glm::mat4* modelMatrices = new glm::mat4[count];
-			srand(static_cast<unsigned>(time(nullptr)));
+			srand((time(0)));
 			//srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			float radius = 20.0;
 			float offset = 10.1f;
 			glm::vec3 rotation{ 0.f, 0.f, 0.f };
 			rotation.x += 90;
 			glm::vec3 scale{ 1.f, 1.f, 1.f };
-			scale *= 0.55;
+			scale *= 0.40;
+			//for (GLuint i = 0; i < count; i++)
+			//{
+			//	glm::mat4 model = glm::mat4(1.0f);
+			//	// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+			//	float angle = (float)i / (float)count * 360.0f;
+			//	float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			//	float x = sin(angle) * radius + displacement;
+			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			//	float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
+			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+			//	float z = cos(angle) * radius + displacement;
+			//	model = glm::translate(model, glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
+			//		* glm::scale(glm::mat4(1.f), scale);
+
+			//	//model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+
+			//	modelMatrices[i] = model;
+			//}
+
 			for (GLuint i = 0; i < count; i++)
 			{
+				// Создаем матрицу модели, изначально единичную (без трансформаций)
 				glm::mat4 model = glm::mat4(1.0f);
-				// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+
+				// Рассчитываем угол для текущего экземпляра вокруг круга
 				float angle = (float)i / (float)count * 360.0f;
-				float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float x = sin(angle) * radius + displacement;
-				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-				float z = cos(angle) * radius + displacement;
-				model = glm::translate(model, glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
+
+				// Рассчитываем координаты x, y на круге с радиусом radius и равномерно распределенными углами
+				float x = cos(glm::radians(angle)) * radius;
+				float y = sin(glm::radians(angle)) * radius;
+
+				model = glm::translate(model, glm::vec3(x, 0.0f, y)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
 					* glm::scale(glm::mat4(1.f), scale);
 
-				//model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
-
+				// Сохраняем полученную матрицу модели в массив для дальнейшего использования
 				modelMatrices[i] = model;
 			}
+
+
+
 
 			GLuint buffer;
 

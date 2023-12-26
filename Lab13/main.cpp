@@ -18,7 +18,7 @@ bool isCamActive = false;
 bool isCamTouched = false;
 glm::vec2 mousePos;
 glm::vec2 mouseDelta;
-
+ 
 int main()
 {
     sf::Window window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Lab13", sf::Style::Default, sf::ContextSettings(24));
@@ -83,7 +83,7 @@ int main()
         elapsedTime = clock.getElapsedTime();
         if (elapsedTime > sf::milliseconds(5))
         {
-            rotationAngle += 0.01f;
+            rotationAngle += 0.02f;
             if (rotationAngle > 360)
                 rotationAngle = 360.0f;
             elapsedTime = clock.restart();

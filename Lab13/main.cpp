@@ -33,10 +33,10 @@ int main()
     Mesh mesh = Mesh("meshes\\jaguar.obj", "meshes\\jaguar.jpg");
     SceneObject sun = SceneObject(&mesh, &ourShader);
     sun.scale = sun.scale * 0.55f;
+    sun.rotation.x += 90;
 
-    Mesh meshPlanet = Mesh("meshes\\bird.obj", "meshes\\bird.jpg", 4);
+    Mesh meshPlanet = Mesh("meshes\\bird.obj", "meshes\\bird.jpg", 6);
     SceneObject planet = SceneObject(&meshPlanet, &planetShader);
-    planet.scale *= 0.05f;
 
     Scene mainScene = Scene();
     mainScene.AddSceneObject(sun);
@@ -65,12 +65,12 @@ int main()
             else if (event.type == sf::Event::KeyPressed)
             {
                 switch (event.key.code) {
-                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(FORWARD, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(BACKWARD, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::A): mainScene.camera.ProcessKeyboard(LEFT, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::D): mainScene.camera.ProcessKeyboard(RIGHT, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::J): mainScene.camera.ProcessKeyboard(LROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::L): mainScene.camera.ProcessKeyboard(RROTATION, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::I): mainScene.camera.ProcessKeyboard(UPROTATION, elapsedTime.asSeconds()); break;

@@ -16,7 +16,6 @@ public:
 
 	Scene()
 	{
-		
 		Camera camera();
 
 	}
@@ -33,9 +32,7 @@ public:
 
 	void Draw(float rotationAngle)
 	{
-
-
-
+	
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)800, 0.1f, 1000.0f);
 
 		for (auto& shader : shaders)

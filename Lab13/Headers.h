@@ -19,6 +19,7 @@
 #include <string>
 #include <chrono>
 #include <ctime>  
+#include <SOIL/SOIL.h> 
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800

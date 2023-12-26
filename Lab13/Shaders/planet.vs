@@ -24,5 +24,5 @@ void main()
             0,               0, 0,              1) 
         * instancedModelMatrix ;
     gl_Position = projection * view * position * vec4(rotatedAlongAxis, 1.0f); 
-    TexCoord = textPosition;
+    TexCoord = vec2(textPosition.x, 1.0 - textPosition.y);
 }

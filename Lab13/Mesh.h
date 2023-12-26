@@ -184,9 +184,14 @@ class Mesh
 
 		if (count > 1) {
 			glm::mat4* modelMatrices = new glm::mat4[count];
-			srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
-			float radius = 30.0;
+			srand(static_cast<unsigned>(time(nullptr)));
+			//srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+			float radius = 20.0;
 			float offset = 10.1f;
+			glm::vec3 rotation{ 0.f, 0.f, 0.f };
+			rotation.x += 90;
+			glm::vec3 scale{ 1.f, 1.f, 1.f };
+			scale *= 0.55;
 			for (GLuint i = 0; i < count; i++)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
@@ -198,7 +203,8 @@ class Mesh
 				float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
 				displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
 				float z = cos(angle) * radius + displacement;
-				model = glm::translate(model, glm::vec3(x, y, z));
+				model = glm::translate(model, glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
+					* glm::scale(glm::mat4(1.f), scale);
 
 				//model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
 
@@ -230,6 +236,7 @@ class Mesh
 			glBindVertexArray(0);
 		}
 	}
+
 
 	void InitializeTexture(const std::string& texturePath)
 	{
@@ -281,6 +288,7 @@ public:
 			glBindVertexArray(VAO);
 			//???
 			glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, count);
+			//glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 			sf::Texture::bind(NULL);
 

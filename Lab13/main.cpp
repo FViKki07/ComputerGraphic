@@ -28,7 +28,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Shader ourShader = Shader("Shaders\\sun.vs","Shaders\\sun.frag");
-    Shader planetShader = Shader("Shaders\\planet.vs", "Shaders\\planet.frag");
+    Shader planetShader = Shader("Shaders\\planet.vs", "Shaders\\sun.frag");
 
     Mesh mesh = Mesh("meshes\\jaguar.obj", "meshes\\jaguar.jpg");
     SceneObject sun = SceneObject(&mesh, &ourShader);

@@ -101,8 +101,8 @@ int main()
                 switch (event.key.code) {
                 case (sf::Keyboard::A): mainScene.camera.ProcessKeyboard(LEFT, elapsedTime.asSeconds()); break;
                 case (sf::Keyboard::D): mainScene.camera.ProcessKeyboard(RIGHT, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::R): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
-                case (sf::Keyboard::F): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::W): mainScene.camera.ProcessKeyboard(UP, elapsedTime.asSeconds()); break;
+                case (sf::Keyboard::S): mainScene.camera.ProcessKeyboard(DOWN, elapsedTime.asSeconds()); break;
               
                 default: break;
                 }

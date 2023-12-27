@@ -12,11 +12,15 @@ uniform float rotationY;
 
 void main() 
 {
-    vec3 position = mat3(
+     vec3 position = mat3(
             cos(rotationY),  0, sin(rotationY),
             0,               1, 0,
             -sin(rotationY), 0, cos(rotationY)) 
-        * vec3(vertexPosition.x,vertexPosition.y,vertexPosition.z) ;
+        * mat3(
+            1, 0,          0,
+            0, cos(1.6),  -sin(1.6),
+            0, sin(1.6),  cos(1.6))
+            * vec3(vertexPosition.x,vertexPosition.y,vertexPosition.z) ;
     gl_Position = projection * view * model * vec4(position, 1.0f); 
     TexCoord = vec2(textPosition.x, 1.0 - textPosition.y);
 }

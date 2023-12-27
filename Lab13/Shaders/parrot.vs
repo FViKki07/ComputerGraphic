@@ -16,6 +16,10 @@ void main()
             cos(rotationY),  0, sin(rotationY),
             0,               1, 0,
             -sin(rotationY), 0, cos(rotationY))
+            * mat3(
+            1, 0,          0,
+            0, cos(1.6),  -sin(1.6),
+            0, sin(1.6),  cos(1.6))
         * vertexPosition;
     mat4 position = mat4(
             cos(rotationY),  0, sin(rotationY), 0,

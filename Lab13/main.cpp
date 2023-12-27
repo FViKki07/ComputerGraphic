@@ -27,23 +27,23 @@ int main()
     glewInit();
     glEnable(GL_DEPTH_TEST);
 
-    Shader ourShader = Shader("Shaders\\sun.vs","Shaders\\sun.frag");
-    Shader planetShader = Shader("Shaders\\planet.vs", "Shaders\\sun.frag");
+    Shader jaguar_shader = Shader("Shaders\\jaguar.vs","Shaders\\all.frag");
+    Shader parrot_Shader = Shader("Shaders\\parrot.vs", "Shaders\\all.frag");
 
     Mesh mesh = Mesh("meshes\\jaguar.obj", "meshes\\jaguar.jpg");
-    SceneObject sun = SceneObject(&mesh, &ourShader);
-    sun.scale = sun.scale * 1.5f;
+    SceneObject jaguar = SceneObject(&mesh, &jaguar_shader);
+    jaguar.scale = jaguar.scale * 1.5f;
     //sun.rotation.x += 90;
     //sun.position.x += 15;
 
-    Mesh meshPlanet = Mesh("meshes\\bird.obj", "meshes\\bird.jpg", 6);
-    SceneObject planet = SceneObject(&meshPlanet, &planetShader);
+    Mesh meshbird = Mesh("meshes\\bird.obj", "meshes\\bird.jpg", 6);
+    SceneObject bird = SceneObject(&meshbird, &parrot_Shader);
 
     Scene mainScene = Scene();
-    mainScene.AddSceneObject(sun);
-    mainScene.AddSceneObject(planet);
-    mainScene.AddShaderProgram(ourShader);
-    mainScene.AddShaderProgram(planetShader);
+    mainScene.AddSceneObject(jaguar);
+    mainScene.AddSceneObject(bird);
+    mainScene.AddShaderProgram(jaguar_shader);
+    mainScene.AddShaderProgram(parrot_Shader);
 
     sf::Time elapsedTime;
     sf::Clock clock;

@@ -20,7 +20,7 @@ public:
 
 	Scene()
 	{
-		Camera camera();
+		camera = Camera(glm::vec3(0.0f, 0.0f, 70.0f));
 
 	}
 

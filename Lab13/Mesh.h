@@ -208,7 +208,7 @@ class Mesh
 				double d = 0.2 + (double)rand() / RAND_MAX * (0.6 - 0.2);
 				scale *= d;
 
-				model = glm::translate(model, glm::vec3(x, 0.0f, z)) * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
+				model = glm::translate(model, glm::vec3(x, 0.0f, z))// * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
 					* glm::scale(glm::mat4(1.f), scale);
 
 

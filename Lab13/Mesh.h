@@ -36,6 +36,7 @@ class Mesh
 	std::vector<GLuint> indices;
 	Texture texture;
 	GLuint count;
+	GLboolean rot;
 
 	GLuint VBO;
 	GLuint VAO;
@@ -183,50 +184,34 @@ class Mesh
 		//checkOpenGLerror(1);
 
 		if (count > 1) {
+
 			glm::mat4* modelMatrices = new glm::mat4[count];
 			srand((time(0)));
-			//srand(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 			float radius = 20.0;
 			float offset = 10.1f;
-			glm::vec3 rotation{ 0.f, 0.f, 0.f };
-			rotation.x += 90;
 			glm::vec3 scale{ 1.f, 1.f, 1.f };
 			scale *= 0.40;
-			//for (GLuint i = 0; i < count; i++)
-			//{
-			//	glm::mat4 model = glm::mat4(1.0f);
-			//	// 1. translation: displace along circle with 'radius' in range [-offset, offset]
-			//	float angle = (float)i / (float)count * 360.0f;
-			//	float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float x = sin(angle) * radius + displacement;
-			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-			//	displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-			//	float z = cos(angle) * radius + displacement;
-			//	model = glm::translate(model, glm::vec3(x, y, z)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
-			//		* glm::scale(glm::mat4(1.f), scale);
-
-			//	//model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
-
-			//	modelMatrices[i] = model;
-			//}
 
 			for (GLuint i = 0; i < count; i++)
 			{
-				// Создаем матрицу модели, изначально единичную (без трансформаций)
+				scale = { 1.f, 1.f, 1.f };
 				glm::mat4 model = glm::mat4(1.0f);
 
-				// Рассчитываем угол для текущего экземпляра вокруг круга
+				radius = 20.0 + (double)rand() / RAND_MAX * (45.0 - 20.0);
+				//угол для текущего объекта вокруг круга
 				float angle = (float)i / (float)count * 360.0f;
 
-				// Рассчитываем координаты x, y на круге с радиусом radius и равномерно распределенными углами
+				// координаты x, y на круге с radius и равномерно распределяем
 				float x = cos(glm::radians(angle)) * radius;
-				float y = sin(glm::radians(angle)) * radius;
+				float z = sin(glm::radians(angle)) * radius;
 
-				model = glm::translate(model, glm::vec3(x, 0.0f, y)) * glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
+				double d = 0.2 + (double)rand() / RAND_MAX * (0.6 - 0.2);
+				scale *= d;
+
+				model = glm::translate(model, glm::vec3(x, 0.0f, z)) * glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
 					* glm::scale(glm::mat4(1.f), scale);
 
-				// Сохраняем полученную матрицу модели в массив для дальнейшего использования
+
 				modelMatrices[i] = model;
 			}
 
@@ -240,7 +225,6 @@ class Mesh
 			glBufferData(GL_ARRAY_BUFFER, count * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
 
 			glBindVertexArray(VAO);
-			// set attribute pointers for matrix (4 times vec4)
 			glEnableVertexAttribArray(3);
 			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
 			glEnableVertexAttribArray(4);
@@ -279,6 +263,7 @@ public:
 
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const std::vector<Texture>& textures, GLuint c)
 	{
+		rot = false;
 		count = c;
 		this->vertices = vertices;
 		this->indices = indices;

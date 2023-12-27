@@ -23,3 +23,21 @@
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
+
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
+const float SPEED = 10.5f;
+const float SENSITIVITY = 0.1f;
+
+enum Camera_Movement {
+    FORWARD,
+    BACKWARD,
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+    LROTATION,
+    RROTATION,
+    UPROTATION,
+    DOWNROTATION
+};

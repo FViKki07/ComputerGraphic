@@ -9,6 +9,10 @@
 
 class Scene
 {
+	sf::Time deltaTime;
+	sf::Clock clock;
+	sf::Clock unstopClock;
+
 public:
 	std::vector<Shader*> shaders;
 	std::vector<SceneObject*> sceneObjects;
@@ -49,7 +53,10 @@ public:
 			sceneObject->Draw();
 		}
 	}
-
+	float getDeltaTime()
+	{
+		return deltaTime.asSeconds();
+	}
 private:
 	std::vector<Mesh> meshes;
 };

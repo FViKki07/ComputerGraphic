@@ -16,7 +16,7 @@ void main()
             cos(rotationY),  0, sin(rotationY),
             0,               1, 0,
             -sin(rotationY), 0, cos(rotationY)) 
-        * vertexPosition;
+        * vec3(vertexPosition.x,vertexPosition.y,vertexPosition.z) ;
     gl_Position = projection * view * model * vec4(position, 1.0f); 
     TexCoord = vec2(textPosition.x, 1.0 - textPosition.y);
 }

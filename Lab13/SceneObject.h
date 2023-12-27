@@ -13,6 +13,7 @@ class SceneObject
 private:
 	Mesh* mesh;
 	Shader* shader;
+	int i = 0;
 
 public:
 	glm::vec3 position{ 0.f, 0.f, 0.f };
@@ -27,10 +28,11 @@ public:
 
 	void Draw()
 	{
-		glm::mat4 model = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f))
-			* glm::rotate(glm::mat4(1.0f), rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+
+		glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f))
 			* glm::translate(glm::mat4(1.f), position)
 			* glm::scale(glm::mat4(1.f), scale);
+		//rotation.x = 0;
 		shader->Use();
 		shader->SetUniformMat4("model", model);
 		shader->SetUniformFloat("rotationY", rotation.y);
